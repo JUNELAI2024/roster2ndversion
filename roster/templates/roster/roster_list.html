@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Roster List</title>
+</head>
+<body>
+    <h1>Roster List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>Day</th>
+                <th>Shift Start</th>
+                <th>Shift End</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for roster in rosters %}
+                <tr>
+                    <td>{{ roster.staff.name }}</td>
+                    <td>{{ roster.day }}</td>
+                    <td>{{ roster.shift_start }}</td>
+                    <td>{{ roster.shift_end }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4">No roster entries found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'roster_create' %}">Create New Roster Entry</a>
+    <a href="{% url 'staff_list' %}">Back to Staff List</a>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Roster</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Create Roster</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff Name</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                    <th>Sun</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for staff in staff_list %}
+                    <tr>
+                        <td>{{ staff.name }}</td>
+                        {% for day in 'Mon Tue Wed Thu Fri Sat Sun'.split %}
+                            <td>
+                                <select name="{{ staff.id }}_{{ day }}">
+                                    <option value="">Select</option>
+                                    <option value="AM">A.M. (9:00 A.M. to 2:00 P.M.)</option>
+                                    <option value="PM">P.M. (2:00 P.M. to 7:00 P.M.)</option>
+                                    <option value="FULL">Full Day (9:00 A.M. to 7:00 P.M.)</option>
+                                </select>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit">Save Roster</button>
+    </form>
+    <a href="{% url 'staff_list' %}">Back to Staff List</a>
+</body>
+</html>
