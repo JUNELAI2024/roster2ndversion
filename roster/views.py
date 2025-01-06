@@ -7,9 +7,11 @@ def staff_list(request):
 
 def roster_create(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
+    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
+
     if request.method == 'POST':
         for staff in active_staff:
-            for day in ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']:
+            for day in days_of_week:
                 time_choice = request.POST.get(f"{staff.id}_{day}")
                 if time_choice:
                     if time_choice == 'AM':
@@ -19,7 +21,8 @@ def roster_create(request):
                     elif time_choice == 'FULL':
                         Roster.objects.create(staff=staff, day=day, shift_start='09:00:00', shift_end='19:00:00')
         return redirect('roster_list')
-    return render(request, 'roster/roster_create.html', {'staff_list': active_staff})
+
+    return render(request, 'roster/roster_create.html', {'staff_list': active_staff, 'days': days_of_week})
 
 def roster_list(request):
     rosters = Roster.objects.all()
