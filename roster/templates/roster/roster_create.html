@@ -27,20 +27,16 @@
             <thead>
                 <tr>
                     <th>Staff Name</th>
-                    <th>Mon</th>
-                    <th>Tue</th>
-                    <th>Wed</th>
-                    <th>Thu</th>
-                    <th>Fri</th>
-                    <th>Sat</th>
-                    <th>Sun</th>
+                    {% for day in days %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
                 </tr>
             </thead>
             <tbody>
                 {% for staff in staff_list %}
                     <tr>
                         <td>{{ staff.name }}</td>
-                        {% for day in 'Mon Tue Wed Thu Fri Sat Sun'.split %}
+                        {% for day in days %}
                             <td>
                                 <select name="{{ staff.id }}_{{ day }}">
                                     <option value="">Select</option>
