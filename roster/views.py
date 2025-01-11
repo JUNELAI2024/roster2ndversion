@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
+from rest_framework import viewsets
 from .models import Staff, Roster
+from .serializers import StaffSerializer, RosterSerializer
 
+# Original views for rendering templates
 def staff_list(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get only active staff
     return render(request, 'roster/staff_list.html', {'staff_list': active_staff})
@@ -27,4 +30,14 @@ def roster_create(request):
 def roster_list(request):
     rosters = Roster.objects.all()
     return render(request, 'roster/roster_list.html', {'rosters': rosters})
+
+# New API views using Django REST Framework
+class StaffViewSet(viewsets.ModelViewSet):
+    queryset = Staff.objects.all()
+    serializer_class = StaffSerializer
+
+class RosterViewSet(viewsets.ModelViewSet):
+    queryset = Roster.objects.all()
+    serializer_class = RosterSerializer
+
 
