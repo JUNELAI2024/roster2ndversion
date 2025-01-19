@@ -5,29 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shift Statistics</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Shift Statistics</h1>
-    <canvas id="shiftChart" width="400" height="200"></canvas>
+    <canvas id="shiftChart" width="800" height="400"></canvas>
 
     <script>
         const ctx = document.getElementById('shiftChart').getContext('2d');
+        const totalShifts = {{ total_shifts|safe }};
+        
+        const shiftTypes = Object.keys(totalShifts);
+        const shiftCounts = Object.values(totalShifts);
+
         const myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: {{ staff_names|safe }},  // Use Django template to insert data
+                labels: shiftTypes,  // Shift types on the x-axis
                 datasets: [{
-                    label: 'Number of Shifts',
-                    data: {{ counts|safe }},  // Use Django template to insert data
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    label: 'Total Shifts',
+                    data: shiftCounts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
             },
             options: {
                 scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Shift Types'
+                        }
+                    },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Number of Shifts'
+                        }
                     }
                 }
             }

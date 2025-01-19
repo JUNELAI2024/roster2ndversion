@@ -36,20 +36,18 @@ def roster_list(request):
 
 # New view for displaying shift statistics
 def statistics_view(request):
-    # Fetch data for shift counts
-    shift_counts = (
-        Roster.objects
-        .values('staff__name')  # Group by staff name
-        .annotate(count=Count('id'))
-    )
+    # Calculate total shifts per type for all staff members
+    total_shifts = {
+        'AM': Roster.objects.filter(shift_start='09:00:00').count(),
+        'PM': Roster.objects.filter(shift_start='14:00:00').count(),
+        'Full Day': Roster.objects.filter(shift_start='09:00:00', shift_end='19:00:00').count(),
+    }
 
-    # Prepare data for the bar chart
-    staff_names = [item['staff__name'] for item in shift_counts]
-    counts = [item['count'] for item in shift_counts]
+    staff_names = Staff.objects.filter(is_active=True).values_list('name', flat=True)
 
     return render(request, 'roster/statistics.html', {
+        'total_shifts': total_shifts,
         'staff_names': staff_names,
-        'counts': counts,
     })
 
 # New API views using Django REST Framework
