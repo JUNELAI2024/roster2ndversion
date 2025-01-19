@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import Staff, Roster
 from .serializers import StaffSerializer, RosterSerializer
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.db.models import Count, Q
 
 # Original views for rendering templates
 def staff_list(request):
@@ -40,4 +43,16 @@ class RosterViewSet(viewsets.ModelViewSet):
     queryset = Roster.objects.all()
     serializer_class = RosterSerializer
 
-
+# New API endpoint for shift counts
+@api_view(['GET'])
+def staff_shift_counts(request):
+    shift_counts = (
+        Roster.objects
+        .values('staff__name')  # Group by staff name
+        .annotate(
+            am_count=Count('id', filter=Q(shift_start='09:00:00')),
+            pm_count=Count('id', filter=Q(shift_start='14:00:00')),
+            full_count=Count('id', filter=Q(shift_start='09:00:00', shift_end='19:00:00'))
+        )
+    )
+    return Response(shift_counts)

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Counts</title>
+</head>
+<body>
+    <h1>Shift Counts</h1>
+    <table id="shift-table">
+        <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>AM Shifts</th>
+                <th>PM Shifts</th>
+                <th>Full Day Shifts</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be appended here -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchShiftCounts() {
+            const response = await fetch('/api/statistics/');
+            const data = await response.json();
+
+            const tbody = document.getElementById('shift-table').querySelector('tbody');
+            tbody.innerHTML = ''; // Clear existing data
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.staff__name}</td>
+                    <td>${item.am_count}</td>
+                    <td>${item.pm_count}</td>
+                    <td>${item.full_count}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Fetch shift counts on page load
+        window.onload = fetchShiftCounts;
+    </script>
+</body>
+</html>
