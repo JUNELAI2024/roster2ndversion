@@ -10,6 +10,10 @@
             font-family: Arial, sans-serif;
             margin: 20px;
         }
+        canvas {
+            max-width: 800px;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
@@ -18,58 +22,66 @@
 
     <script>
         const ctx = document.getElementById('shiftChart').getContext('2d');
-        
-        const staffNames = {{ staff_names|safe }};
-        const amCounts = {{ am_counts|safe }};
-        const pmCounts = {{ pm_counts|safe }};
-        const fullCounts = {{ full_counts|safe }};
 
-        const myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: staffNames,  // Staff names on the x-axis
-                datasets: [
-                    {
-                        label: 'A.M. Shifts',
-                        data: amCounts,
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
+        // Fetch data from the Staff API
+        fetch('/api/staff/')  // This URL points to your StaffViewSet
+            .then(response => response.json())
+            .then(staffData => {
+                // Prepare the data for the bar chart
+                const staffNames = staffData.map(item => item.name); // Assuming 'name' is a field in your Staff model
+                const amCounts = staffData.map(item => item.am_count); // Replace with your actual field for A.M. shifts
+                const pmCounts = staffData.map(item => item.pm_count); // Replace with your actual field for P.M. shifts
+                const fullCounts = staffData.map(item => item.full_count); // Replace with your actual field for Full Day shifts
+
+                // Create the bar chart
+                const myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: staffNames,  // Staff names on the x-axis
+                        datasets: [
+                            {
+                                label: 'A.M. Shifts',
+                                data: amCounts,
+                                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'P.M. Shifts',
+                                data: pmCounts,
+                                backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Full Day Shifts',
+                                data: fullCounts,
+                                backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1
+                            }
+                        ]
                     },
-                    {
-                        label: 'P.M. Shifts',
-                        data: pmCounts,
-                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Full Day Shifts',
-                        data: fullCounts,
-                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                scales: {
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Staff Members'
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Staff Members'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Shifts'
+                                }
+                            }
                         }
-                    },
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Shifts'
-                        }
                     }
-                }
-            }
-        });
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
     </script>
 </body>
 </html>
