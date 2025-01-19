@@ -18,37 +18,53 @@
 
     <script>
         const ctx = document.getElementById('shiftChart').getContext('2d');
-        const totalShifts = {{ total_shifts|safe }};
         
-        const shiftTypes = Object.keys(totalShifts);
-        const shiftCounts = Object.values(totalShifts);
+        const staffNames = {{ staff_names|safe }};
+        const amCounts = {{ am_counts|safe }};
+        const pmCounts = {{ pm_counts|safe }};
+        const fullCounts = {{ full_counts|safe }};
 
         const myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: shiftTypes,  // Shift types on the x-axis
-                datasets: [{
-                    label: 'Total Shifts',
-                    data: shiftCounts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
+                labels: staffNames,  // Staff names on the x-axis
+                datasets: [
+                    {
+                        label: 'A.M. Shifts',
+                        data: amCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'P.M. Shifts',
+                        data: pmCounts,
+                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Full Day Shifts',
+                        data: fullCounts,
+                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 1
+                    }
+                ]
             },
             options: {
                 scales: {
                     x: {
-                        beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Shift Types'
+                            text: 'Staff Members'
                         }
                     },
                     y: {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Total Number of Shifts'
+                            text: 'Number of Shifts'
                         }
                     }
                 }
