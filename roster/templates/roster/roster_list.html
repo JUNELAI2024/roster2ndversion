@@ -5,6 +5,12 @@
 </head>
 <body>
     <h1>Roster List</h1>
+    
+    <!-- Button to go to Statistics Page -->
+    <a href="{% url 'statistics' %}" style="display: inline-block; margin-bottom: 20px;">
+        <button>View Shift Statistics</button>
+    </a>
+
     <table>
         <thead>
             <tr>
@@ -29,6 +35,7 @@
             {% endfor %}
         </tbody>
     </table>
+
     <a href="{% url 'roster_create' %}">Create New Roster Entry</a>
     <a href="{% url 'staff_list' %}">Back to Staff List</a>
 </body>
