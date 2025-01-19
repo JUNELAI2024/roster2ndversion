@@ -3,46 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shift Counts</title>
+    <title>Shift Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Shift Counts</h1>
-    <table id="shift-table">
-        <thead>
-            <tr>
-                <th>Staff Name</th>
-                <th>AM Shifts</th>
-                <th>PM Shifts</th>
-                <th>Full Day Shifts</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Data will be appended here -->
-        </tbody>
-    </table>
+    <h1>Shift Statistics</h1>
+    <canvas id="shiftChart" width="400" height="200"></canvas>
 
     <script>
-        async function fetchShiftCounts() {
-            const response = await fetch('/api/statistics/');
-            const data = await response.json();
-
-            const tbody = document.getElementById('shift-table').querySelector('tbody');
-            tbody.innerHTML = ''; // Clear existing data
-
-            data.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.staff__name}</td>
-                    <td>${item.am_count}</td>
-                    <td>${item.pm_count}</td>
-                    <td>${item.full_count}</td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Fetch shift counts on page load
-        window.onload = fetchShiftCounts;
+        const ctx = document.getElementById('shiftChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ staff_names|safe }},  // Use Django template to insert data
+                datasets: [{
+                    label: 'Number of Shifts',
+                    data: {{ counts|safe }},  // Use Django template to insert data
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>

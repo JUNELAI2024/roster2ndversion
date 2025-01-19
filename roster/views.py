@@ -34,6 +34,24 @@ def roster_list(request):
     rosters = Roster.objects.all()
     return render(request, 'roster/roster_list.html', {'rosters': rosters})
 
+# New view for displaying shift statistics
+def statistics_view(request):
+    # Fetch data for shift counts
+    shift_counts = (
+        Roster.objects
+        .values('staff__name')  # Group by staff name
+        .annotate(count=Count('id'))
+    )
+
+    # Prepare data for the bar chart
+    staff_names = [item['staff__name'] for item in shift_counts]
+    counts = [item['count'] for item in shift_counts]
+
+    return render(request, 'roster/statistics.html', {
+        'staff_names': staff_names,
+        'counts': counts,
+    })
+
 # New API views using Django REST Framework
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
