@@ -23,15 +23,15 @@
     <script>
         const ctx = document.getElementById('shiftChart').getContext('2d');
 
-        // Fetch data from the Staff API
-        fetch('/api/staff/')  // This URL points to your StaffViewSet
+        // Fetch data from the new shift counts API
+        fetch('/api/shift-counts/')
             .then(response => response.json())
-            .then(staffData => {
+            .then(shiftData => {
                 // Prepare the data for the bar chart
-                const staffNames = staffData.map(item => item.name); // Assuming 'name' is a field in your Staff model
-                const amCounts = staffData.map(item => item.am_count); // Replace with your actual field for A.M. shifts
-                const pmCounts = staffData.map(item => item.pm_count); // Replace with your actual field for P.M. shifts
-                const fullCounts = staffData.map(item => item.full_count); // Replace with your actual field for Full Day shifts
+                const staffNames = shiftData.map(item => item['staff__name']); // Staff names
+                const amCounts = shiftData.map(item => item.am_count || 0); // A.M. counts
+                const pmCounts = shiftData.map(item => item.pm_count || 0); // P.M. counts
+                const fullCounts = shiftData.map(item => item.full_count || 0); // Full counts
 
                 // Create the bar chart
                 const myChart = new Chart(ctx, {

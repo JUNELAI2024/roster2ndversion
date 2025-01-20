@@ -60,6 +60,21 @@ def statistics_view(request):
         'full_counts': full_counts,
     })
 
+# New API view to get shift counts similar to statistics_view
+@api_view(['GET'])
+def api_shift_counts(request):
+    shift_counts = (
+        Roster.objects
+        .values('staff__name')
+        .annotate(
+            am_count=Count('id', filter=Q(shift_start='09:00:00')),
+            pm_count=Count('id', filter=Q(shift_start='14:00:00')),
+            full_count=Count('id', filter=Q(shift_start='09:00:00', shift_end='19:00:00'))
+        )
+    )
+
+    return Response(shift_counts)
+
 # New API views using Django REST Framework
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
@@ -68,17 +83,3 @@ class StaffViewSet(viewsets.ModelViewSet):
 class RosterViewSet(viewsets.ModelViewSet):
     queryset = Roster.objects.all()
     serializer_class = RosterSerializer
-
-# New API endpoint for shift counts
-@api_view(['GET'])
-def staff_shift_counts(request):
-    shift_counts = (
-        Roster.objects
-        .values('staff__name')  # Group by staff name
-        .annotate(
-            am_count=Count('id', filter=Q(shift_start='09:00:00')),
-            pm_count=Count('id', filter=Q(shift_start='14:00:00')),
-            full_count=Count('id', filter=Q(shift_start='09:00:00', shift_end='19:00:00'))
-        )
-    )
-    return Response(shift_counts)

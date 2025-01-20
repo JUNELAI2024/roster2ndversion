@@ -12,4 +12,5 @@ urlpatterns = [
     path('staff/', views.staff_list, name='staff_list'),
     path('statistics/', views.statistics_view, name='statistics'),  # Statistics page
     path('api/', include(router.urls)),
+    path('api/shift-counts/', views.api_shift_counts, name='api_shift_counts'),  # New API endpoint
 ]
