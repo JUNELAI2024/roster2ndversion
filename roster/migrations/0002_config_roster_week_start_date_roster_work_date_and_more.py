@@ -11,29 +11,29 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='Config',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('duty_role', models.CharField(max_length=100)),
-                ('time_slot', models.TimeField()),
-            ],
-        ),
-        migrations.AddField(
-            model_name='roster',
-            name='week_start_date',
-            field=models.DateField(default=20250123),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='roster',
-            name='work_date',
-            field=models.DateField(default=20250123),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='roster',
-            name='duty_role',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='roster.config'),
-        ),
-    ]
+    # migrations.CreateModel(
+    #     name='Config',
+    #     fields=[
+    #         ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+    #         ('duty_role', models.CharField(max_length=100)),
+    #         ('time_slot', models.TimeField()),
+    #     ],
+    # ),
+    migrations.AddField(
+        model_name='roster',
+        name='week_start_date',
+        field=models.DateField(default=20250123),
+        preserve_default=False,
+    ),
+    migrations.AddField(
+        model_name='roster',
+        name='work_date',
+        field=models.DateField(default=20250123),
+        preserve_default=False,
+    ),
+    migrations.AddField(
+        model_name='roster',
+        name='duty_role',
+        field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='roster.config'),
+    ),
+]
