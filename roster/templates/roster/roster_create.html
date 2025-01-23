@@ -4,54 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Roster</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
         }
         th, td {
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+            text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #f4f4f4;
+        }
+        .disabled {
+            background-color: #e9ecef;
         }
     </style>
 </head>
 <body>
     <h1>Create Roster</h1>
-    <form method="POST">
+
+    <form method="post">
         {% csrf_token %}
+        <h2>Week Starting: {{ week_start_date }}</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Staff Name</th>
-                    {% for day in days %}
-                        <th>{{ day }}</th>
-                    {% endfor %}
+                    <th>Staff Member</th>
+                    <th>Shift Details</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <span>Mon</span><br>
+                        <select name="shift_start_{{ staff.id }}_Mon" {% if rosters|get_roster:staff.id:'Mon' %}disabled{% endif %}>
+                            <option value="">Start</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Mon' and rosters|get_roster:staff.id:'Mon'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="shift_end_{{ staff.id }}_Mon" {% if rosters|get_roster:staff.id:'Mon' %}disabled{% endif %}>
+                            <option value="">End</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Mon' and rosters|get_roster:staff.id:'Mon'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="duty_role_{{ staff.id }}_Mon" {% if rosters|get_roster:staff.id:'Mon' %}disabled{% endif %}>
+                            <option value="">Select Duty Role</option>
+                            {% for role in duty_roles %}
+                                <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Mon' and rosters|get_roster:staff.id:'Mon'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </th>
+                    <th>
+                        <span>Tue</span><br>
+                        <select name="shift_start_{{ staff.id }}_Tue" {% if rosters|get_roster:staff.id:'Tue' %}disabled{% endif %}>
+                            <option value="">Start</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Tue' and rosters|get_roster:staff.id:'Tue'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="shift_end_{{ staff.id }}_Tue" {% if rosters|get_roster:staff.id:'Tue' %}disabled{% endif %}>
+                            <option value="">End</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Tue' and rosters|get_roster:staff.id:'Tue'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="duty_role_{{ staff.id }}_Tue" {% if rosters|get_roster:staff.id:'Tue' %}disabled{% endif %}>
+                            <option value="">Select Duty Role</option>
+                            {% for role in duty_roles %}
+                                <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Tue' and rosters|get_roster:staff.id:'Tue'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {% for staff in staff_list %}
                     <tr>
                         <td>{{ staff.name }}</td>
-                        {% for day in days %}
-                            <td>
-                                <select name="{{ staff.id }}_{{ day }}">
-                                    <option value="">Select</option>
-                                    <option value="AM">A.M. (9:00 A.M. to 2:00 P.M.)</option>
-                                    <option value="PM">P.M. (2:00 P.M. to 7:00 P.M.)</option>
-                                    <option value="FULL">Full Day (9:00 A.M. to 7:00 P.M.)</option>
+                        <td>
+                            <th>
+                                <span>Wed</span><br>
+                                <select name="shift_start_{{ staff.id }}_Wed" {% if rosters|get_roster:staff.id:'Wed' %}disabled{% endif %}>
+                                    <option value="">Start</option>
+                                    {% for slot in time_slots %}
+                                        <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Wed' and rosters|get_roster:staff.id:'Wed'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                                    {% endfor %}
                                 </select>
-                            </td>
-                        {% endfor %}
+                                <select name="shift_end_{{ staff.id }}_Wed" {% if rosters|get_roster:staff.id:'Wed' %}disabled{% endif %}>
+                                    <option value="">End</option>
+                                    {% for slot in time_slots %}
+                                        <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Wed' and rosters|get_roster:staff.id:'Wed'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="duty_role_{{ staff.id }}_Wed" {% if rosters|get_roster:staff.id:'Wed' %}disabled{% endif %}>
+                                    <option value="">Select Duty Role</option>
+                                    {% for role in duty_roles %}
+                                        <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Wed' and rosters|get_roster:staff.id:'Wed'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                        </td>
+                        <td>
+                            <th>
+                                <span>Thu</span><br>
+                                <select name="shift_start_{{ staff.id }}_Thu" {% if rosters|get_roster:staff.id:'Thu' %}disabled{% endif %}>
+                                    <option value="">Start</option>
+                                    {% for slot in time_slots %}
+                                        <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Thu' and rosters|get_roster:staff.id:'Thu'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="shift_end_{{ staff.id }}_Thu" {% if rosters|get_roster:staff.id:'Thu' %}disabled{% endif %}>
+                                    <option value="">End</option>
+                                    {% for slot in time_slots %}
+                                        <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Thu' and rosters|get_roster:staff.id:'Thu'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                                    {% endfor %}
+                                </select>
+                                <select name="duty_role_{{ staff.id }}_Thu" {% if rosters|get_roster:staff.id:'Thu' %}disabled{% endif %}>
+                                    <option value="">Select Duty Role</option>
+                                    {% for role in duty_roles %}
+                                        <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Thu' and rosters|get_roster:staff.id:'Thu'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </th>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <button type="submit">Save Roster</button>
-    </form>
-    <a href="{% url 'staff_list' %}">Back to Staff List</a>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>
+                        <span>Fri</span><br>
+                        <select name="shift_start_{{ staff.id }}_Fri" {% if rosters|get_roster:staff.id:'Fri' %}disabled{% endif %}>
+                            <option value="">Start</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Fri' and rosters|get_roster:staff.id:'Fri'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="shift_end_{{ staff.id }}_Fri" {% if rosters|get_roster:staff.id:'Fri' %}disabled{% endif %}>
+                            <option value="">End</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Fri' and rosters|get_roster:staff.id:'Fri'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="duty_role_{{ staff.id }}_Fri" {% if rosters|get_roster:staff.id:'Fri' %}disabled{% endif %}>
+                            <option value="">Select Duty Role</option>
+                            {% for role in duty_roles %}
+                                <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Fri' and rosters|get_roster:staff.id:'Fri'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </th>
+                    <th>
+                        <span>Sat</span><br>
+                        <select name="shift_start_{{ staff.id }}_Sat" {% if rosters|get_roster:staff.id:'Sat' %}disabled{% endif %}>
+                            <option value="">Start</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Sat' and rosters|get_roster:staff.id:'Sat'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="shift_end_{{ staff.id }}_Sat" {% if rosters|get_roster:staff.id:'Sat' %}disabled{% endif %}>
+                            <option value="">End</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Sat' and rosters|get_roster:staff.id:'Sat'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="duty_role_{{ staff.id }}_Sat" {% if rosters|get_roster:staff.id:'Sat' %}disabled{% endif %}>
+                            <option value="">Select Duty Role</option>
+                            {% for role in duty_roles %}
+                                <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Sat' and rosters|get_roster:staff.id:'Sat'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </th>
+                </tr>
+            {% endfor %}
+        </tbody>
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    <span>Sun</span><br>
+                    <select name="shift_start_{{ staff.id }}_Sun" {% if rosters|get_roster:staff.id:'Sun' %}disabled{% endif %}>
+                        <option value="">Start</option>
+                        {% for slot in time_slots %}
+                            <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Sun' and rosters|get_roster:staff.id:'Sun'.shift_start == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="shift_end_{{ staff.id }}_Sun" {% if rosters|get_roster:staff.id:'Sun' %}disabled{% endif %}>
+                        <option value="">End</option>
+                        {% for slot in time_slots %}
+                            <option value="{{ slot.time_slot }}" {% if rosters|get_roster:staff.id:'Sun' and rosters|get_roster:staff.id:'Sun'.shift_end == slot.time_slot %}selected{% endif %}>{{ slot.time_slot|time:"H:i" }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="duty_role_{{ staff.id }}_Sun" {% if rosters|get_roster:staff.id:'Sun' %}disabled{% endif %}>
+                        <option value="">Select Duty Role</option>
+                        {% for role in duty_roles %}
+                            <option value="{{ role.id }}" {% if rosters|get_roster:staff.id:'Sun' and rosters|get_roster:staff.id:'Sun'.duty_role.id == role.id %}selected{% endif %}>{{ role.name }}</option>
+                        {% endfor %}
+                    </select>
+                </th>
+            </tr>
+        </thead>
+    </table>
+    <button type="submit">Create Roster</button>
+</form>
 </body>
 </html>

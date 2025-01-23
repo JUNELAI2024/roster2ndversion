@@ -5,6 +5,9 @@ from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Count, Q
+from django.utils import timezone
+from django.contrib import messages
+from datetime import timedelta
 
 # Original views for rendering templates
 def staff_list(request):
@@ -14,21 +17,54 @@ def staff_list(request):
 def roster_create(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
+    week_start_date = timezone.now().date()  # Default to today's date
 
     if request.method == 'POST':
         for staff in active_staff:
             for day in days_of_week:
                 time_choice = request.POST.get(f"{staff.id}_{day}")
                 if time_choice:
+                    # Calculate the work date based on the week start date and day
+                    work_date = week_start_date + timedelta(days=days_of_week.index(day))
+
+                    # Check for existing entries to prevent duplicates
+                    if Roster.objects.filter(staff=staff, day=day, work_date=work_date).exists():
+                        messages.error(request, f"Shift for {staff.name} on {day} already exists.")
+                        continue
+
+                    # Create roster entry based on time choice
                     if time_choice == 'AM':
-                        Roster.objects.create(staff=staff, day=day, shift_start='09:00:00', shift_end='14:00:00')
+                        Roster.objects.create(
+                            staff=staff,
+                            day=day,
+                            shift_start='09:00:00',
+                            shift_end='14:00:00',
+                            week_start_date=week_start_date,
+                            work_date=work_date  # Store the calculated work date
+                        )
                     elif time_choice == 'PM':
-                        Roster.objects.create(staff=staff, day=day, shift_start='14:00:00', shift_end='19:00:00')
+                        Roster.objects.create(
+                            staff=staff,
+                            day=day,
+                            shift_start='14:00:00',
+                            shift_end='19:00:00',
+                            week_start_date=week_start_date,
+                            work_date=work_date  # Store the calculated work date
+                        )
                     elif time_choice == 'FULL':
-                        Roster.objects.create(staff=staff, day=day, shift_start='09:00:00', shift_end='19:00:00')
+                        Roster.objects.create(
+                            staff=staff,
+                            day=day,
+                            shift_start='09:00:00',
+                            shift_end='19:00:00',
+                            week_start_date=week_start_date,
+                            work_date=work_date  # Store the calculated work date
+                        )
+
+        messages.success(request, "Roster created successfully!")
         return redirect('roster_list')
 
-    return render(request, 'roster/roster_create.html', {'staff_list': active_staff, 'days': days_of_week})
+    return render(request, 'roster/roster_create.html', {'staff_list': active_staff, 'days': days_of_week, 'week_start_date': week_start_date})
 
 def roster_list(request):
     rosters = Roster.objects.all()
