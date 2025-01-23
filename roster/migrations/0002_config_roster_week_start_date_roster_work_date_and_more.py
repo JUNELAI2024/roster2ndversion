@@ -22,13 +22,13 @@ class Migration(migrations.Migration):
     migrations.AddField(
         model_name='roster',
         name='week_start_date',
-        field=models.DateField(default=20250123),
+        field=models.DateField(default=date.today),
         preserve_default=False,
     ),
     migrations.AddField(
         model_name='roster',
         name='work_date',
-        field=models.DateField(default=20250123),
+        field=models.DateField(default=date.today),
         preserve_default=False,
     ),
     migrations.AddField(
