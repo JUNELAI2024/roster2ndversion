@@ -2,7 +2,7 @@
 
 import django.db.models.deletion
 from django.db import migrations, models
-
+from datetime import date
 
 class Migration(migrations.Migration):
 
