@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Staff, Roster
+from .models import Staff, Roster, RosterConfig
 from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
