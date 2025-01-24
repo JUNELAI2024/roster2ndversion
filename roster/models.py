@@ -31,7 +31,7 @@ class Roster(models.Model):
     shift_start = models.TimeField()
     shift_end = models.TimeField()
     duty_role = models.ForeignKey(Config, on_delete=models.SET_NULL, null=True)
-    week_start_date = models.DateField()  # New field for the week start date
+    week_start_date = models.DateField(default=date.today)  # New field for the week start date
     work_date = models.DateField()  # New field for the specific date of the shift
 
     def __str__(self):
