@@ -20,13 +20,13 @@ def roster_create(request):
     week_start_date = timezone.now().date()  # Default to today's date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
 
-     if request.method == 'POST':
+    if request.method == 'POST':  # Ensure this line is aligned correctly
         for staff in active_staff:
             for day in days_of_week:
                 shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
                 shift_end = request.POST.get(f"shift_end_{staff.id}_{day}")
-                duty_role = request.POST.get(f"duty_role_{staff.id}_{day}")
-                
+                duty_role = request.POST.get(f"duty_role_{staff.id}_{day}")  # Duty role not used in creation
+
                 if shift_start and shift_end:
                     # Calculate the work date based on the week start date and day
                     work_date = week_start_date + timedelta(days=days_of_week.index(day))
@@ -45,7 +45,6 @@ def roster_create(request):
                         week_start_date=week_start_date,
                         work_date=work_date  # Store the calculated work date
                     )
-
 
         messages.success(request, "Roster created successfully!")
         return redirect('roster_list')
