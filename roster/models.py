@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date
 
 class Staff(models.Model):
     name = models.CharField(max_length=100)
