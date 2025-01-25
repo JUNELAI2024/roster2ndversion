@@ -58,7 +58,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 100%; /* Full width button */
+            width: 30%; /* Full width button */
             font-size: 16px; /* Larger button text */
             margin-top: 20px; /* Space above the button */
         }
@@ -92,144 +92,158 @@
                 <tr>
                     <td>{{ staff.name }}</td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Mon">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Mon">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Mon">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Mon">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Mon">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Mon">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Tue">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Tue">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Tue">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Tue">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Tue">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Tue">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Wed">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Wed">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Wed">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Wed">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Wed">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Wed">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Thu">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Thu">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Thu">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Thu">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Thu">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Thu">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Fri">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Fri">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Fri">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Fri">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Fri">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Fri">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Sat">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Sat">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Sat">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Sat">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Sat">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Sat">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                     <td>
-                        <select name="shift_start_{{ staff.id }}_Sun">
-                            <option value="">Start</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="shift_end_{{ staff.id }}_Sun">
-                            <option value="">End</option>
-                            {% for slot in time_slots %}
-                                <option value="{{ slot }}">{{ slot }}</option>
-                            {% endfor %}
-                        </select>
-                        <select name="duty_role_{{ staff.id }}_Sun">
-                            <option value="">Select Duty Role</option>
-                            {% for role in duty_roles %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                            {% endfor %}
-                        </select>
+                        <div>
+                            <select name="shift_start_{{ staff.id }}_Sun">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="shift_end_{{ staff.id }}_Sun">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="duty_role_{{ staff.id }}_Sun">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
