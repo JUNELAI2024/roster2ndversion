@@ -9,10 +9,10 @@ class Staff(models.Model):
     def __str__(self):
         return self.name
     
-class RosterConfig(models.Model):
-     time_slot = models.TimeField()
+#class RosterConfig(models.Model):
+ #    time_slot = models.TimeField()
 
-class Config(models.Model):
+class RosterConfig(models.Model):
     duty_role = models.CharField(max_length=100)
     time_slot = models.TimeField()
 
