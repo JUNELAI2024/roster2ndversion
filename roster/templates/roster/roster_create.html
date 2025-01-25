@@ -6,7 +6,7 @@
     <title>Create Roster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-         body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0; /* Remove default margin */
             padding: 20px;
@@ -14,15 +14,16 @@
             height: 100vh; /* Full viewport height */
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            overflow: hidden; /* Prevent overflow */
         }
         h1 {
             color: #333;
+            margin-bottom: 20px; /* Space below the title */
         }
         form {
             width: 100%; /* Full width */
-            max-width: 1200px; /* Limit max width for larger screens */
+            max-width: 100%; /* Allow full width */
             background-color: white; /* Background for the form */
             border-radius: 8px; /* Rounded corners */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
@@ -31,12 +32,16 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed; /* Fixed layout for consistent column widths */
             margin-bottom: 20px;
         }
         th, td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: center;
+            overflow: hidden; /* Prevent overflow */
+            text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+            white-space: nowrap; /* Prevent line breaks */
         }
         th {
             background-color: #f4f4f4;
@@ -55,12 +60,10 @@
             cursor: pointer;
             width: 100%; /* Full width button */
             font-size: 16px; /* Larger button text */
+            margin-top: 20px; /* Space above the button */
         }
         button:hover {
             background-color: #4cae4c;
-        }
-        .day-column {
-            width: 100px; /* Adjust width as needed */
         }
     </style>
 </head>
@@ -74,13 +77,21 @@
         <table>
             <thead>
                 <tr>
-                    <th>Staff Member</th>
-                    <th>Shift Details</th>
+                    <th style="width: 20%;">Staff Member</th>
+                    <th style="width: 11.43%;">Mon</th>
+                    <th style="width: 11.43%;">Tue</th>
+                    <th style="width: 11.43%;">Wed</th>
+                    <th style="width: 11.43%;">Thu</th>
+                    <th style="width: 11.43%;">Fri</th>
+                    <th style="width: 11.43%;">Sat</th>
+                    <th style="width: 11.43%;">Sun</th>
                 </tr>
+            </thead>
+            <tbody>
+                {% for staff in staff_list %}
                 <tr>
-                    <th></th>
-                    <th>
-                        <span>Mon</span><br>
+                    <td>{{ staff.name }}</td>
+                    <td>
                         <select name="shift_start_{{ staff.id }}_Mon">
                             <option value="">Start</option>
                             {% for slot in time_slots %}
@@ -99,9 +110,8 @@
                                 <option value="{{ role.id }}">{{ role.name }}</option>
                             {% endfor %}
                         </select>
-                    </th>
-                    <th>
-                        <span>Tue</span><br>
+                    </td>
+                    <td>
                         <select name="shift_start_{{ staff.id }}_Tue">
                             <option value="">Start</option>
                             {% for slot in time_slots %}
@@ -120,69 +130,48 @@
                                 <option value="{{ role.id }}">{{ role.name }}</option>
                             {% endfor %}
                         </select>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for staff in staff_list %}
-                    <tr>
-                        <td>{{ staff.name }}</td>
-                        <td>
-                            <th>
-                                <span>Wed</span><br>
-                                <select name="shift_start_{{ staff.id }}_Wed">
-                                    <option value="">Start</option>
-                                    {% for slot in time_slots %}
-                                        <option value="{{ slot }}">{{ slot }}</option>
-                                    {% endfor %}
-                                </select>
-                                <select name="shift_end_{{ staff.id }}_Wed">
-                                    <option value="">End</option>
-                                    {% for slot in time_slots %}
-                                        <option value="{{ slot }}">{{ slot }}</option>
-                                    {% endfor %}
-                                </select>
-                                <select name="duty_role_{{ staff.id }}_Wed">
-                                    <option value="">Select Duty Role</option>
-                                    {% for role in duty_roles %}
-                                        <option value="{{ role.id }}">{{ role.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </th>
-                        </td>
-                        <td>
-                            <th>
-                                <span>Thu</span><br>
-                                <select name="shift_start_{{ staff.id }}_Thu">
-                                    <option value="">Start</option>
-                                    {% for slot in time_slots %}
-                                        <option value="{{ slot }}">{{ slot }}</option>
-                                    {% endfor %}
-                                </select>
-                                <select name="shift_end_{{ staff.id }}_Thu">
-                                    <option value="">End</option>
-                                    {% for slot in time_slots %}
-                                        <option value="{{ slot }}">{{ slot }}</option>
-                                    {% endfor %}
-                                </select>
-                                <select name="duty_role_{{ staff.id }}_Thu">
-                                    <option value="">Select Duty Role</option>
-                                    {% for role in duty_roles %}
-                                        <option value="{{ role.id }}">{{ role.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            </th>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>
-                        <span>Fri</span><br>
+                    </td>
+                    <td>
+                        <select name="shift_start_{{ staff.id }}_Wed">
+                            <option value="">Start</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot }}">{{ slot }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="shift_end_{{ staff.id }}_Wed">
+                            <option value="">End</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot }}">{{ slot }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="duty_role_{{ staff.id }}_Wed">
+                            <option value="">Select Duty Role</option>
+                            {% for role in duty_roles %}
+                                <option value="{{ role.id }}">{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="shift_start_{{ staff.id }}_Thu">
+                            <option value="">Start</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot }}">{{ slot }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="shift_end_{{ staff.id }}_Thu">
+                            <option value="">End</option>
+                            {% for slot in time_slots %}
+                                <option value="{{ slot }}">{{ slot }}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="duty_role_{{ staff.id }}_Thu">
+                            <option value="">Select Duty Role</option>
+                            {% for role in duty_roles %}
+                                <option value="{{ role.id }}">{{ role.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
                         <select name="shift_start_{{ staff.id }}_Fri">
                             <option value="">Start</option>
                             {% for slot in time_slots %}
@@ -201,9 +190,8 @@
                                 <option value="{{ role.id }}">{{ role.name }}</option>
                             {% endfor %}
                         </select>
-                    </th>
-                    <th>
-                        <span>Sat</span><br>
+                    </td>
+                    <td>
                         <select name="shift_start_{{ staff.id }}_Sat">
                             <option value="">Start</option>
                             {% for slot in time_slots %}
@@ -222,14 +210,8 @@
                                 <option value="{{ role.id }}">{{ role.name }}</option>
                             {% endfor %}
                         </select>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th></th>
-                    <th>
-                        <span>Sun</span><br>
+                    </td>
+                    <td>
                         <select name="shift_start_{{ staff.id }}_Sun">
                             <option value="">Start</option>
                             {% for slot in time_slots %}
@@ -248,8 +230,9 @@
                                 <option value="{{ role.id }}">{{ role.name }}</option>
                             {% endfor %}
                         </select>
-                    </th>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
         <button type="submit">Create Roster</button>
