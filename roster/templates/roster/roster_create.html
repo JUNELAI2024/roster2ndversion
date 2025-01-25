@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Roster</title>
+    <title>Saint Germain Roster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
        body {
@@ -15,7 +15,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow: hidden; /* Prevent overflow */
+            overflow: hidden; /* Prevent body overflow */
         }
         h1 {
             color: #333;
@@ -28,6 +28,8 @@
             border-radius: 8px; /* Rounded corners */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             padding: 20px; /* Padding for the form */
+            overflow-y: auto; /* Enable vertical scrolling */
+            max-height: 80vh; /* Limit the height of the form */
         }
         table {
             width: 100%;
@@ -113,12 +115,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Mon">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Mon">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                     <td>
@@ -135,12 +138,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Tue">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Tue">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                     <td>
@@ -157,12 +161,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Wed">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Wed">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                     <td>
@@ -179,12 +184,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Thu">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Thu">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                     <td>
@@ -201,12 +207,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Fri">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Fri">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                     <td>
@@ -223,12 +230,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Sat">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Sat">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                     <td>
@@ -245,12 +253,13 @@
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="duty_role_{{ staff.id }}_Sun">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Sun">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
                         </div>
                     </td>
                 </tr>

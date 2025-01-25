@@ -19,13 +19,14 @@ def roster_create(request):
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
     week_start_date = timezone.now().date()  # Default to today's date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
+    duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
-    if request.method == 'POST':  # Ensure this line is aligned correctly
+    if request.method == 'POST':
         for staff in active_staff:
             for day in days_of_week:
                 shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
                 shift_end = request.POST.get(f"shift_end_{staff.id}_{day}")
-                duty_role = request.POST.get(f"duty_role_{staff.id}_{day}")  # Duty role not used in creation
+                duty_role_id = request.POST.get(f"duty_role_{staff.id}_{day}")  # Get duty role ID
 
                 if shift_start and shift_end:
                     # Calculate the work date based on the week start date and day
@@ -42,6 +43,7 @@ def roster_create(request):
                         day=day,
                         shift_start=shift_start,
                         shift_end=shift_end,
+                        duty_role_id=duty_role_id,  # Store the duty role ID
                         week_start_date=week_start_date,
                         work_date=work_date  # Store the calculated work date
                     )
@@ -54,8 +56,8 @@ def roster_create(request):
         'days': days_of_week,
         'week_start_date': week_start_date,
         'time_slots': time_slots,  # Pass time slots to the template
+        'duty_roles': duty_roles,  # Pass duty roles to the template
     })
-
 
 def roster_list(request):
     rosters = Roster.objects.all()
