@@ -6,13 +6,32 @@
     <title>Create Roster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        body {
+         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0; /* Remove default margin */
+            padding: 20px;
+            background-color: #f9f9f9;
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            width: 100%; /* Full width */
+            max-width: 1200px; /* Limit max width for larger screens */
+            background-color: white; /* Background for the form */
+            border-radius: 8px; /* Rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            padding: 20px; /* Padding for the form */
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-bottom: 20px;
         }
         th, td {
             padding: 10px;
@@ -22,8 +41,26 @@
         th {
             background-color: #f4f4f4;
         }
-        .disabled {
-            background-color: #e9ecef;
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%; /* Full width button */
+            font-size: 16px; /* Larger button text */
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .day-column {
+            width: 100px; /* Adjust width as needed */
         }
     </style>
 </head>
