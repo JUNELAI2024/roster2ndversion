@@ -62,18 +62,28 @@
             margin-top: 5px;
         }
         button {
-            background-color: #5cb85c;
+            position: sticky; /* Makes the button sticky */
+            bottom: 20px; /* Distance from the bottom */
+            left: 20px; /* Distance from the left */
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
             color: white;
-            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: 100%; /* Full width button */
-            font-size: 16px; /* Larger button text */
-            margin-top: 20px; /* Space above the button */
+            width: calc(100% - 40px); /* Full width minus padding */
+            z-index: 1000; /* Keep it above other elements */
         }
+
         button:hover {
-            background-color: #4cae4c;
+            background-color: #0056b3;
+        }
+
+        /* Ensure the container is tall enough to allow scrolling */
+        .container {
+            min-height: 100vh; /* Full height of the viewport */
+            padding-bottom: 60px; /* Space for the button */
         }
     </style>
     <!--use javascript to handle h2 date shown-->
