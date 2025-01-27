@@ -18,6 +18,7 @@ def staff_list(request):
     return render(request, 'roster/staff_list.html', {'staff_list': active_staff})
 
 def roster_create(request):
+    logger.debug("Roster create view accessed.")
     if request.method == 'POST':
         logger.debug("Form submitted")
         active_staff = Staff.objects.filter(is_active=True)  # Get active staff
@@ -46,6 +47,7 @@ def roster_create(request):
                     no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
                                             timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
 
+                    # Create the roster entry
                     Roster.objects.create(
                         staff_name=staff.name,  # Store the staff member's name
                         day=day,
@@ -56,9 +58,10 @@ def roster_create(request):
                         work_date=work_date,
                         no_of_work_hr=no_of_work_hr  # Store the calculated working hours
                     )
-
+                    logger.debug(f"Roster created for {staff.name} on {day}.")
+        
         messages.success(request, "Roster created successfully!")
-        return redirect('roster_list')
+        return redirect('roster_list')  # Redirect after processing all entries
 
     # If not POST, render the form
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
