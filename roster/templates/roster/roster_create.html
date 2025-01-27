@@ -124,7 +124,7 @@
 
     <h1>Create Roster</h1>
 
-    <form id="rosterForm" form method="post">
+    <form id="rosterForm" form method="post" action="{% url 'roster_create' %}">
         {% csrf_token %}
         <!-- Date Picker for Week Starting -->
         <label for="week_start_date">Please select Week Starting date:</label>
