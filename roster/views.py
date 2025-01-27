@@ -17,15 +17,18 @@ def staff_list(request):
 def roster_create(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
-    week_start_date = timezone.now().date()  # Default to today's date
+    week_start_date = None  # Initialize week_start_date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
     formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]
     duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
     if request.method == 'POST':
-        for staff in active_staff:
-            for day in days_of_week:
-                shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
+         week_start_date = request.POST.get('week_start_date')  # Get week_start_date from POST
+         if week_start_date:
+            week_start_date = timezone.datetime.strptime(week_start_date, "%Y-%m-%d").date()  # Convert to date
+            for staff in active_staff:
+                for day in days_of_week:
+                    shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
                 shift_end = request.POST.get(f"shift_end_{staff.id}_{day}")
                 duty_role = request.POST.get(f"duty_role_{staff.id}_{day}")  # Get duty role name directly
 
@@ -52,14 +55,13 @@ def roster_create(request):
                         work_date=work_date,
                         no_of_work_hr=no_of_work_hr  # Store the calculated working hours
                     )
-
-        messages.success(request, "Roster created successfully!")
-        return redirect('roster_list')
+                    messages.success(request, "Roster created successfully!")
+                    return redirect('roster_list')
     
     return render(request, 'roster/roster_create.html', {
         'staff_list': active_staff,
         'days': days_of_week,
-        'week_start_date': week_start_date,
+        'week_start_date': week_start_date or timezone.now().date(),  # Set to today if not provided
         'time_slots': formatted_time_slots,
         'duty_roles': duty_roles,  # Pass duty roles to the template if needed
     })

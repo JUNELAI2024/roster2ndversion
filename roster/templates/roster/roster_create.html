@@ -76,6 +76,30 @@
             background-color: #4cae4c;
         }
     </style>
+    <!--use javascript to handle h2 date shown-->
+    <script>
+        function updateWeekStartDate() {
+            const dateInput = document.getElementById('week_start_date').value;
+            const displayDate = document.getElementById('display_week_start_date');
+            const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const dateCells = document.querySelectorAll('.work-date');
+
+            if (dateInput) {
+                displayDate.textContent = `Week Starting: ${new Date(dateInput).toLocaleDateString()}`;
+
+                // Calculate and display corresponding work dates
+                const weekStart = new Date(dateInput);
+                daysOfWeek.forEach((day, index) => {
+                    const workDate = new Date(weekStart);
+                    workDate.setDate(weekStart.getDate() + index);
+                    dateCells[index].textContent = workDate.toLocaleDateString();  // Display the date
+                });
+            } else {
+                displayDate.textContent = 'Week Starting: ';
+                dateCells.forEach(dateCell => dateCell.textContent = '');  // Clear previous dates
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -83,9 +107,23 @@
 
     <form method="post">
         {% csrf_token %}
-        <h2>Week Starting: {{ week_start_date }}</h2>
+        <!-- Date Picker for Week Starting -->
+        <label for="week_start_date">Please select Week Starting date:</label>
+        <input type="date" id="week_start_date" name="week_start_date" required onchange="updateWeekStartDate()">
+        
+        <h2 id="display_week_start_date">Week Starting: </h2> <!-- Updated to show the selected date -->
         <table>
             <thead>
+                <tr>
+                    <th style="width: 20%;">Work Date</th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;" class="work-date"></th>
+                </tr>
                 <tr>
                     <th style="width: 20%;">Staff Member</th>
                     <th style="width: 11.43%;">Mon</th>
