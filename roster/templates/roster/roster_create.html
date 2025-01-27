@@ -101,13 +101,20 @@
                 dateCells.forEach(dateCell => dateCell.textContent = '');  // Clear previous dates
             }
         }
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById('rosterForm').onsubmit = function(event) {
+                console.log("Form submitted");
+                // Optional: prevent default to see if the function is being called
+                event.preventDefault(); // Comment this line out to allow form submission
+            };
+        });
     </script>
 </head>
 <body>
 
     <h1>Create Roster</h1>
 
-    <form method="post">
+    <form id="rosterForm" form method="post">
         {% csrf_token %}
         <!-- Date Picker for Week Starting -->
         <label for="week_start_date">Please select Week Starting date:</label>
