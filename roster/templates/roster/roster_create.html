@@ -79,6 +79,7 @@
     <!--use javascript to handle h2 date shown-->
     <script>
         function updateWeekStartDate() {
+            console.log("updateWeekStartDate called"); // Debugging line
             const dateInput = document.getElementById('week_start_date').value;
             const displayDate = document.getElementById('display_week_start_date');
             const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -305,6 +306,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        <form method="post" onsubmit="console.log('Form submitted');"></form> <!--log to the console whenever the form is submitted-->
         <button type="submit">Create Roster</button>
     </form>
 </body>
