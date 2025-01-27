@@ -85,14 +85,15 @@
             const dateCells = document.querySelectorAll('.work-date');
 
             if (dateInput) {
-                displayDate.textContent = `Week Starting: ${new Date(dateInput).toLocaleDateString()}`;
+                const formattedDate = new Date(dateInput).toISOString().split('T')[0]; // Format to YYYY-MM-DD
+                displayDate.textContent = `Week Starting: ${formattedDate}`;
 
                 // Calculate and display corresponding work dates
                 const weekStart = new Date(dateInput);
                 daysOfWeek.forEach((day, index) => {
                     const workDate = new Date(weekStart);
                     workDate.setDate(weekStart.getDate() + index);
-                    dateCells[index].textContent = workDate.toLocaleDateString();  // Display the date
+                    dateCells[index].textContent = workDate.toISOString().split('T')[0];  // Display the date in YYYY-MM-DD format
                 });
             } else {
                 displayDate.textContent = 'Week Starting: ';
