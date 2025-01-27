@@ -32,7 +32,8 @@ def roster_create(request):
                 if shift_start and shift_end:
                     work_date = week_start_date + timedelta(days=days_of_week.index(day))
 
-                    if Roster.objects.filter(staff=staff, day=day, work_date=work_date).exists():
+                     # Check if a roster entry already exists
+                    if Roster.objects.filter(staff_name=staff.name, day=day, work_date=work_date).exists():
                         messages.error(request, f"Shift for {staff.name} on {day} already exists.")
                         continue
 
@@ -42,7 +43,7 @@ def roster_create(request):
                                             timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
                     
                     Roster.objects.create(
-                        staff=staff,
+                        staff_name=staff.name,  # Store the staff member's name
                         day=day,
                         shift_start=shift_start_time,
                         shift_end=shift_end_time,

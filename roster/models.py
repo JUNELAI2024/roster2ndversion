@@ -36,7 +36,7 @@ class Roster(models.Model):
         ('Sun', 'Sunday'),
     ]
 
-    staff = models.ForeignKey('Staff', on_delete=models.CASCADE)
+    staff_name = models.CharField(max_length=100)  # Change from ForeignKey to CharField
     day = models.CharField(max_length=3, choices=DAY_CHOICES)
     shift_start = models.TimeField()
     shift_end = models.TimeField()
@@ -54,4 +54,4 @@ class Roster(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.staff} - {self.day} ({self.shift_start} to {self.shift_end})"
+        return f"{self.staff_name} - {self.day} ({self.shift_start} to {self.shift_end})"
