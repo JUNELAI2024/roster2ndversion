@@ -35,13 +35,22 @@ class Roster(models.Model):
         ('Sun', 'Sunday'),
     ]
 
-    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    staff = models.ForeignKey('Staff', on_delete=models.CASCADE)
     day = models.CharField(max_length=3, choices=DAY_CHOICES)
     shift_start = models.TimeField()
     shift_end = models.TimeField()
-    duty_role = models.ForeignKey(Config, on_delete=models.SET_NULL, null=True)
-    week_start_date = models.DateField(default=date.today)  # New field for the week start date
-    work_date = models.DateField(default=date.today)  # New field for the specific date of the shift
+    duty_role = models.CharField(max_length=50)  # Store duty role as a string
+    week_start_date = models.DateField(default=date.today)
+    work_date = models.DateField(default=date.today)
+    no_of_work_hr = models.FloatField(default=0.0)  # Store working hours with one decimal precision
+
+    def save(self, *args, **kwargs):
+        # Calculate the number of work hours before saving
+        if self.shift_start and self.shift_end:
+            start_time = timezone.datetime.combine(self.work_date, self.shift_start)
+            end_time = timezone.datetime.combine(self.work_date, self.shift_end)
+            self.no_of_work_hr = round((end_time - start_time).seconds / 3600.0, 1)  # Round to 1 decimal place
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.staff.name} - {self.day}: {self.shift_start} to {self.shift_end}"
+        return f"{self.staff} - {self.day} ({self.shift_start} to {self.shift_end})"
