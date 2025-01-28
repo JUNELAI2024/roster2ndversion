@@ -8,9 +8,14 @@ from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
 from datetime import timedelta
+from django import forms
 import logging
 logger = logging.getLogger(__name__)
 
+class RosterForm(forms.Form):
+    week_start_date = forms.DateField()
+    work_date = forms.DateField()
+    # Define other fields as necessary
 
 # Original views for rendering templates
 def staff_list(request):
@@ -18,17 +23,27 @@ def staff_list(request):
     return render(request, 'roster/staff_list.html', {'staff_list': active_staff})
 
 def roster_create(request):
-      logger.debug("Roster create view accessed.")
-      active_staff = Staff.objects.filter(is_active=True)  # Get active staff
-      days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
-      today = timezone.now().date()  # Get today's date
-      week_start_date = today  # Initialize week_start_date to today
-      if request.method == 'POST':
+    logger.debug("Roster create view accessed.")
+    active_staff = Staff.objects.filter(is_active=True)  # Get active staff
+    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
+    today = timezone.now().date()  # Get today's date
+    week_start_date = today  # Initialize week_start_date to today
+
+    if request.method == 'POST':
         logger.debug("Form submitted")
         week_start_date_str = request.POST.get('week_start_date')
 
         if week_start_date_str:
             week_start_date = timezone.datetime.strptime(week_start_date_str, "%Y-%m-%d").date()
+        else:
+            messages.error(request, "Week starting date is required.")
+            return render(request, 'roster/roster_create.html', {
+                'staff_list': active_staff,
+                'days': days_of_week,
+                'today': today,
+                'time_slots': [],
+                'duty_roles': [],
+            })
 
         for staff in active_staff:
             for day in days_of_week:
@@ -66,11 +81,11 @@ def roster_create(request):
         return redirect('roster_list')
 
     # If not POST, prepare data for the form
-    
-      time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
-      formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]
-      duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
-      return render(request, 'roster/roster_create.html', {
+    time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
+    formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]
+    duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
+
+    return render(request, 'roster/roster_create.html', {
         'staff_list': active_staff,
         'days': days_of_week,
         'today': today,  # Pass today's date to the template
