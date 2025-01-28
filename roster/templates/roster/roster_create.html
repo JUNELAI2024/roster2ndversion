@@ -86,39 +86,7 @@
             padding-bottom: 60px; /* Space for the button */
         }
     </style>
-    <!--use javascript to handle h2 date shown-->
-    <!--<script>
-        function updateWeekStartDate() {
-            console.log("updateWeekStartDate called"); // Debugging line
-            const dateInput = document.getElementById('week_start_date').value;
-            const displayDate = document.getElementById('display_week_start_date');
-            const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            const dateCells = document.querySelectorAll('.work-date');
-
-            if (dateInput) {
-                const formattedDate = new Date(dateInput).toISOString().split('T')[0]; // Format to YYYY-MM-DD
-                displayDate.textContent = `Week Starting: ${formattedDate}`;
-
-                // Calculate and display corresponding work dates
-                const weekStart = new Date(dateInput);
-                daysOfWeek.forEach((day, index) => {
-                    const workDate = new Date(weekStart);
-                    workDate.setDate(weekStart.getDate() + index);
-                    dateCells[index].textContent = workDate.toISOString().split('T')[0];  // Display the date in YYYY-MM-DD format
-                });
-            } else {
-                displayDate.textContent = 'Week Starting: ';
-                dateCells.forEach(dateCell => dateCell.textContent = '');  // Clear previous dates
-            }
-        }
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById('rosterForm').onsubmit = function(event) {
-                console.log("Form submitted");
-                // Optional: prevent default to see if the function is being called
-               // event.preventDefault(); // Comment this line out to allow form submission
-            };
-        });
-    </script>-->
+   
 </head>
 <body>
 
@@ -126,36 +94,13 @@
 
     <form id="rosterForm" form method="post" action="{% url 'roster_create' %}">
         {% csrf_token %}
-        <label for="week_start_date">Week Starting Date:</label>
-        <input type="date" id="week_start_date" name="week_start_date" value="{{ today }}" required><br>
+       <!-- Hidden input for week start date -->
+       <input type="hidden" name="week_start_date" value="{{ today }}">
 
-        <h2>Week Starting: <span id="display_week_start_date">{{ today }}</span></h2>
+       <h2>Week Starting Date: {{ today }}</h2>
         <table>
             <thead>
-               <!--<tr>
-                    <th style="width: 20%;">Work Date</th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_mon" placeholder="YYYY-MM-DD" required>
-                    </th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_tue" placeholder="YYYY-MM-DD">
-                    </th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_wed" placeholder="YYYY-MM-DD">
-                    </th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_thu" placeholder="YYYY-MM-DD">
-                    </th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_fri" placeholder="YYYY-MM-DD">
-                    </th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_sat" placeholder="YYYY-MM-DD">
-                    </th>
-                    <th style="width: 11.43%;">
-                        <input type="text" class="work-date" name="work_date_sun" placeholder="YYYY-MM-DD">
-                    </th>
-                </tr>-->
+              
                 <tr>
                     <th style="width: 20%;">Staff Member</th>
                     <th style="width: 11.43%;">Mon</th>
