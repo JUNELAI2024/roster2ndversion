@@ -87,7 +87,7 @@
         }
     </style>
     <!--use javascript to handle h2 date shown-->
-    <script>
+    <!--<script>
         function updateWeekStartDate() {
             console.log("updateWeekStartDate called"); // Debugging line
             const dateInput = document.getElementById('week_start_date').value;
@@ -118,7 +118,7 @@
                // event.preventDefault(); // Comment this line out to allow form submission
             };
         });
-    </script>
+    </script>-->
 </head>
 <body>
 
@@ -128,20 +128,34 @@
         {% csrf_token %}
         <!-- Date Picker for Week Starting -->
         <label for="week_start_date">Please select Week Starting date:</label>
-        <input type="date" id="week_start_date" name="week_start_date" required onchange="updateWeekStartDate()">
+        <input type="date" id="week_start_date" name="week_start_date" required><br>
         
-        <h2 id="display_week_start_date">Week Starting: </h2> <!-- Updated to show the selected date -->
+        <h2>Week Starting: </h2> <!-- Updated to show the selected date -->
         <table>
             <thead>
                 <tr>
                     <th style="width: 20%;">Work Date</th>
-                    <th style="width: 11.43%;" class="work-date"></th>
-                    <th style="width: 11.43%;" class="work-date"></th>
-                    <th style="width: 11.43%;" class="work-date"></th>
-                    <th style="width: 11.43%;" class="work-date"></th>
-                    <th style="width: 11.43%;" class="work-date"></th>
-                    <th style="width: 11.43%;" class="work-date"></th>
-                    <th style="width: 11.43%;" class="work-date"></th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_mon" placeholder="YYYY-MM-DD" required>
+                    </th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_tue" placeholder="YYYY-MM-DD">
+                    </th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_wed" placeholder="YYYY-MM-DD">
+                    </th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_thu" placeholder="YYYY-MM-DD">
+                    </th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_fri" placeholder="YYYY-MM-DD">
+                    </th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_sat" placeholder="YYYY-MM-DD">
+                    </th>
+                    <th style="width: 11.43%;">
+                        <input type="text" class="work-date" name="work_date_sun" placeholder="YYYY-MM-DD">
+                    </th>
                 </tr>
                 <tr>
                     <th style="width: 20%;">Staff Member</th>
