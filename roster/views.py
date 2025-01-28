@@ -25,8 +25,6 @@ def roster_create(request):
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
     week_start_date = timezone.now().date()  # Default to today's date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
-     # Format time slots for dropdowns (HH:MM)
-    formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]
     duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
     if request.method == 'POST':
@@ -44,13 +42,15 @@ def roster_create(request):
                     if Roster.objects.filter(staff_name=staff.name, day=day, work_date=work_date).exists():
                         messages.error(request, f"Shift for {staff.name} on {day} already exists.")
                         continue
-                shift_start_time = timezone.datetime.strptime(shift_start, "%H:%M").time()
-                shift_end_time = timezone.datetime.strptime(shift_end, "%H:%M").time()
-                no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
+
+                    # Convert to TimeField directly
+                    shift_start_time = timezone.datetime.strptime(shift_start, "%H:%M").time()
+                    shift_end_time = timezone.datetime.strptime(shift_end, "%H:%M").time()
+                    no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
                                             timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
-                    
+
                     # Create roster entry
-            Roster.objects.create(
+                    Roster.objects.create(
                         staff_name=staff.name,  # Store the staff member's name
                         day=day,
                         shift_start=shift_start_time,
@@ -68,11 +68,9 @@ def roster_create(request):
         'staff_list': active_staff,
         'days': days_of_week,
         'week_start_date': week_start_date,
-        'time_slots': formatted_time_slots, # Pass time slots to the template
+        'time_slots': time_slots,  # Pass time slots directly
         'duty_roles': duty_roles,  # Pass duty roles to the template
     })
-
-
 
 def roster_list(request):
     rosters = Roster.objects.all()
