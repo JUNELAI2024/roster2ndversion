@@ -15,7 +15,8 @@ class RosterConfig(models.Model):
   time_slot = models.TimeField()
 
 def __str__(self):
-        return f"{self.duty_role} - {self.time_slot}"
+        return f"{self.duty_role} - {self.time_slot.strftime('%H:%M')}"
+
 
 
 class Config(models.Model):
