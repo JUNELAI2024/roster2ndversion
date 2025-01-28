@@ -242,14 +242,27 @@
                     </td>
                     <td>
                         <div>
-                            <select name="duty_role_{{ staff.id }}_Sun">
-                                <option value="">Select Duty Role</option>
-                                {% for role in duty_roles %}
-                                    <option value="{{ role.id }}">{{ role.duty_role }}</option>
+                            <select name="shift_start_{{ staff.id }}_Sun">
+                                <option value="">Start</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                                                </div>
-                                            </td>
+                            <select name="shift_end_{{ staff.id }}_Sun">
+                                <option value="">End</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                     <!-- Duty role dropdown populated from RosterConfig -->
+    <select name="duty_role_{{ staff.id }}_Sun">
+        <option value="">Select Duty Role</option>
+        {% for role in duty_roles %}
+            <option value="{{ role.id }}">{{ role.duty_role }}</option>
+        {% endfor %}
+    </select>
+                        </div>
+                    </td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>

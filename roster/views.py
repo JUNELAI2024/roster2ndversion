@@ -68,7 +68,7 @@ def roster_create(request):
         'staff_list': active_staff,
         'days': days_of_week,
         'week_start_date': week_start_date,
-'time_slots': formatted_time_slots, # Pass time slots to the template
+        'time_slots': formatted_time_slots, # Pass time slots to the template
         'duty_roles': duty_roles,  # Pass duty roles to the template
     })
 
