@@ -97,7 +97,7 @@
        <!-- Hidden input for week start date -->
        <input type="hidden" name="week_start_date" value="{{ today }}">
 
-       <h2>Week Starting Date: {{ today }}</h2>
+       <h2>Week Starting Date: {{ today|date:"F d, Y" }}</h2>
         <table>
             <thead>
               
