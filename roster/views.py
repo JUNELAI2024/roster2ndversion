@@ -12,9 +12,7 @@ from django import forms
 import logging
 logger = logging.getLogger(__name__)
 
-class RosterForm(forms.Form):
-    week_start_date = forms.DateField()
-    work_date = forms.DateField()
+
     # Define other fields as necessary
 
 # Original views for rendering templates
@@ -23,75 +21,53 @@ def staff_list(request):
     return render(request, 'roster/staff_list.html', {'staff_list': active_staff})
 
 def roster_create(request):
-    logger.debug("Roster create view accessed.")
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
-    today = timezone.now().date()  # Get today's date
-    week_start_date = today  # Initialize week_start_date to today
+    week_start_date = timezone.now().date()  # Default to today's date
+    time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
+     # Format time slots for dropdowns (HH:MM)
+    formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]
+    duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
     if request.method == 'POST':
-        logger.debug("Form submitted")
-        week_start_date_str = request.POST.get('week_start_date')
-
-        if week_start_date_str:
-            week_start_date = timezone.datetime.strptime(week_start_date_str, "%Y-%m-%d").date()
-        else:
-            messages.error(request, "Week starting date is required.")
-            return render(request, 'roster/roster_create.html', {
-                'staff_list': active_staff,
-                'days': days_of_week,
-                'today': today,
-                'time_slots': [],
-                'duty_roles': [],
-            })
-
         for staff in active_staff:
             for day in days_of_week:
                 shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
                 shift_end = request.POST.get(f"shift_end_{staff.id}_{day}")
-                duty_role = request.POST.get(f"duty_role_{staff.id}_{day}")
+                duty_role_id = request.POST.get(f"duty_role_{staff.id}_{day}")  # Get duty role ID
 
                 if shift_start and shift_end:
+                    # Calculate the work date based on the week start date and day
                     work_date = week_start_date + timedelta(days=days_of_week.index(day))
 
-                    # Check if a roster entry already exists
-                    if Roster.objects.filter(staff_name=staff.name, day=day, work_date=work_date).exists():
+                    # Check for existing entries to prevent duplicates
+                    if Roster.objects.filter(staff=staff, day=day, work_date=work_date).exists():
                         messages.error(request, f"Shift for {staff.name} on {day} already exists.")
                         continue
 
-                    shift_start_time = timezone.datetime.strptime(shift_start, "%H:%M").time()
-                    shift_end_time = timezone.datetime.strptime(shift_end, "%H:%M").time()
-                    no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
-                                            timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
-
-                    # Create the roster entry
+                    # Create roster entry
                     Roster.objects.create(
-                        staff_name=staff.name,
+                        staff=staff,
                         day=day,
-                        shift_start=shift_start_time,
-                        shift_end=shift_end_time,
-                        duty_role=duty_role,
+                        shift_start=shift_start,
+                        shift_end=shift_end,
+                        duty_role_id=duty_role_id,  # Store the duty role ID
                         week_start_date=week_start_date,
-                        work_date=work_date,
-                        no_of_work_hr=no_of_work_hr
+                        work_date=work_date  # Store the calculated work date
                     )
-                    logger.debug(f"Roster created for {staff.name} on {day}.")
-        
+
         messages.success(request, "Roster created successfully!")
         return redirect('roster_list')
-
-    # If not POST, prepare data for the form
-    time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
-    formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]
-    duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
     return render(request, 'roster/roster_create.html', {
         'staff_list': active_staff,
         'days': days_of_week,
-        'today': today,  # Pass today's date to the template
-        'time_slots': formatted_time_slots,
-        'duty_roles': duty_roles,
+        'week_start_date': week_start_date,
+'time_slots': formatted_time_slots, # Pass time slots to the template
+        'duty_roles': duty_roles,  # Pass duty roles to the template
     })
+
+
 
 def roster_list(request):
     rosters = Roster.objects.all()

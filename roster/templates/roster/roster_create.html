@@ -6,16 +6,16 @@
     <title>Saint Germain Roster</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-       body {
-            font-family: Arial, sans-serif;
-            margin: 0; /* Remove default margin */
-            padding: 20px;
-            background-color: #f9f9f9;
-            height: 100vh; /* Full viewport height */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden; /* Prevent body overflow */
+        body {
+             font-family: Arial, sans-serif;
+             margin: 0; /* Remove default margin */
+             padding: 20px;
+             background-color: #f9f9f9;
+             height: 100vh; /* Full viewport height */
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             overflow: hidden; /* Prevent body overflow */
         }
         h1 {
             color: #333;
@@ -62,28 +62,18 @@
             margin-top: 5px;
         }
         button {
-            position: sticky; /* Makes the button sticky */
-            bottom: 20px; /* Distance from the bottom */
-            left: 20px; /* Distance from the left */
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007BFF;
+            background-color: #5cb85c;
             color: white;
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            width: calc(100% - 40px); /* Full width minus padding */
-            z-index: 1000; /* Keep it above other elements */
+            width: 100%; /* Full width button */
+            font-size: 16px; /* Larger button text */
+            margin-top: 20px; /* Space above the button */
         }
-
         button:hover {
-            background-color: #0056b3;
-        }
-
-        /* Ensure the container is tall enough to allow scrolling */
-        .container {
-            min-height: 100vh; /* Full height of the viewport */
-            padding-bottom: 60px; /* Space for the button */
+            background-color: #4cae4c;
         }
     </style>
    
@@ -92,15 +82,11 @@
 
     <h1>Create Roster</h1>
 
-    <form id="rosterForm" form method="post" action="{% url 'roster_create' %}">
+    <form method="post">
         {% csrf_token %}
-       <!-- Hidden input for week start date -->
-       <input type="hidden" name="week_start_date" value="{{ today }}">
-
-       <h2>Week Starting Date: {{ today|date:"F d, Y" }}</h2>
+        <h2>Week Starting: {{ week_start_date }}</h2>
         <table>
             <thead>
-              
                 <tr>
                     <th style="width: 20%;">Staff Member</th>
                     <th style="width: 11.43%;">Mon</th>
@@ -256,33 +242,19 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Sun">
-                                <option value="">Start</option>
-                                {% for slot in time_slots %}
-                                    <option value="{{ slot }}">{{ slot }}</option>
+                            <select name="duty_role_{{ staff.id }}_Sun">
+                                <option value="">Select Duty Role</option>
+                                {% for role in duty_roles %}
+                                    <option value="{{ role.id }}">{{ role.duty_role }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Sun">
-                                <option value="">End</option>
-                                {% for slot in time_slots %}
-                                    <option value="{{ slot }}">{{ slot }}</option>
-                                {% endfor %}
-                            </select>
-                            <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Sun">
-        <option value="">Select Duty Role</option>
-        {% for role in duty_roles %}
-            <option value="{{ role.id }}">{{ role.duty_role }}</option>
-        {% endfor %}
-    </select>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <form method="post" onsubmit="console.log('Form submitted');"></form> <!--log to the console whenever the form is submitted-->
-        <button type="submit">Create Roster</button>
-    </form>
-</body>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <button type="submit">Create Roster</button>
+                            </form>
+                            </body>
 </html>
