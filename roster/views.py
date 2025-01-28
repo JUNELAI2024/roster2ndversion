@@ -19,14 +19,14 @@ def staff_list(request):
 
 def roster_create(request):
     logger.debug("Roster create view accessed.")
+    week_start_date = timezone.now().date()  # Initialize week_start_date
     if request.method == 'POST':
         logger.debug("Form submitted")
         active_staff = Staff.objects.filter(is_active=True)  # Get active staff
         days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
-
-        # Get week_start_date directly as a date object
         week_start_date_str = request.POST.get('week_start_date')
-        week_start_date = timezone.datetime.strptime(week_start_date_str, "%Y-%m-%d").date()
+        if week_start_date_str:
+            week_start_date = timezone.datetime.strptime(week_start_date_str, "%Y-%m-%d").date()
 
         for staff in active_staff:
             for day in days_of_week:

@@ -126,14 +126,13 @@
 
     <form id="rosterForm" form method="post" action="{% url 'roster_create' %}">
         {% csrf_token %}
-        <!-- Date Picker for Week Starting -->
-        <label for="week_start_date">Please select Week Starting date:</label>
-        <input type="text" id="week_start_date" name="week_start_date" placeholder="YYYY-MM-DD" required><br>
-        
-        <h2>Week Starting: </h2> <!-- Updated to show the selected date -->
+        <label for="week_start_date">Week Starting Date:</label>
+        <input type="date" id="week_start_date" name="week_start_date" value="{{ today }}" required><br>
+
+        <h2>Week Starting: <span id="display_week_start_date">{{ today }}</span></h2>
         <table>
             <thead>
-                <tr>
+               <!--<tr>
                     <th style="width: 20%;">Work Date</th>
                     <th style="width: 11.43%;">
                         <input type="text" class="work-date" name="work_date_mon" placeholder="YYYY-MM-DD" required>
@@ -156,7 +155,7 @@
                     <th style="width: 11.43%;">
                         <input type="text" class="work-date" name="work_date_sun" placeholder="YYYY-MM-DD">
                     </th>
-                </tr>
+                </tr>-->
                 <tr>
                     <th style="width: 20%;">Staff Member</th>
                     <th style="width: 11.43%;">Mon</th>
