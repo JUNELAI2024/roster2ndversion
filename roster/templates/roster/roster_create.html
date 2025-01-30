@@ -270,7 +270,7 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                               <!-- Total Hours Row -->
+ <!-- Total Hours Row -->
 <h3>Total Hours</h3>
 <table>
     <thead>
@@ -283,7 +283,11 @@
         {% for day in days %}
         <tr>
             <td>{{ day }}</td>
-            <td>{{ total_hours[day] }}</td>  <!-- Display total hours -->
+            <td>
+                {% with hours=total_hours|get_item:day %}
+                    {{ hours }}
+                {% endwith %}
+            </td>  <!-- Correct dictionary access -->
         </tr>
         {% endfor %}
     </tbody>
