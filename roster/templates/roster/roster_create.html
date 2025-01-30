@@ -270,24 +270,24 @@
                                         {% endfor %}
                                     </tbody>
                                 </table>
-                                <!-- Total Hours Row -->
-    <h3>Total Hours</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Day</th>
-                <th>Total Hours</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for day in days %}
-            <tr>
-                <td>{{ day }}</td>
-                <td>{{ total_hours[day]|floatformat:2 }}</td>  <!-- Show total hours with 2 decimal places -->
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                               <!-- Total Hours Row -->
+<h3>Total Hours</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Day</th>
+            <th>Total Hours</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for day in days %}
+        <tr>
+            <td>{{ day }}</td>
+            <td>{{ total_hours[day]|floatformat:2 }}</td>  <!-- Display total hours -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
                                 <button type="submit">Create Roster</button>
                             </form>
                             <script>

@@ -59,8 +59,7 @@ def roster_create(request):
                     no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
                                             timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
  # Calculate hours worked
-                    hours_worked = (shift_end_time - shift_end_time).seconds / 3600.0  # Convert seconds to hours
-                    total_hours[day] += hours_worked  # Accumulate total hours
+                    total_hours[day] += no_of_work_hr  # Accumulate total hours
 
                     # Create roster entry
                     Roster.objects.create(
