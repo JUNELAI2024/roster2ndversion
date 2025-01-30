@@ -283,7 +283,7 @@
             {% for day in days %}
             <tr>
                 <td>{{ day }}</td>
-                <td>{{ total_hours[day]|floatformat:1 }}</td>  <!-- Show total hours with 1 decimal places -->
+                <td>{{ total_hours[day]|floatformat:2 }}</td>  <!-- Show total hours with 2 decimal places -->
             </tr>
             {% endfor %}
         </tbody>
