@@ -24,9 +24,12 @@ def roster_create(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
     week_start_date = None  # Initialize week_start_date
-    time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
+    time_slots = RosterConfig.objects.values_list('time_slot', flat=True).order_by('time_slot')  # Fetch time slots
     formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]  # Format to HH:MM:SS
     duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
+
+  # Initialize total hours for each day
+    total_hours = {day: 0 for day in days_of_week}
 
     if request.method == 'POST':
         # Get the week starting date from the form input
@@ -55,6 +58,9 @@ def roster_create(request):
                     shift_end_time = timezone.datetime.strptime(shift_end, "%H:%M").time()
                     no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
                                             timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
+ # Calculate hours worked
+                    hours_worked = (shift_end_time - shift_end_time).seconds / 3600.0  # Convert seconds to hours
+                    total_hours[day] += hours_worked  # Accumulate total hours
 
                     # Create roster entry
                     Roster.objects.create(
@@ -77,6 +83,7 @@ def roster_create(request):
         'week_start_date': week_start_date,
         'time_slots': formatted_time_slots ,  # Pass time slots directly
         'duty_roles': duty_roles,  # Pass duty roles to the template
+         'total_hours': total_hours,  # Pass total hours to the template
     })
 
 def roster_list(request):
