@@ -85,8 +85,9 @@
     <form method="post">
         {% csrf_token %}
         <label for="week_start_date">Week Starting Date:</label>
-    <input type="date" id="week_start_date" name="week_start_date" required>
-        <h2>Week Starting: {{ week_start_date }}</h2>
+        <input type="date" id="week_start_date" name="week_start_date" required onchange="updateWeekStartDate()">
+    
+        <h2 id="week-start-display">Week Starting: {{ week_start_date }}</h2>  <!-- Display the week starting date -->
         <table>
             <thead>
                 <tr>
@@ -271,5 +272,12 @@
                                 </table>
                                 <button type="submit">Create Roster</button>
                             </form>
+                            <script>
+                                function updateWeekStartDate() {
+                                    const dateInput = document.getElementById('week_start_date').value;
+                                    const display = document.getElementById('week-start-display');
+                                    display.textContent = 'Week Starting: ' + new Date(dateInput).toLocaleDateString(); // Format the date as needed
+                                }
+                            </script>
                             </body>
 </html>
