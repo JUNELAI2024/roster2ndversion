@@ -84,6 +84,8 @@
 
     <form method="post">
         {% csrf_token %}
+        <label for="week_start_date">Week Starting Date:</label>
+    <input type="date" id="week_start_date" name="week_start_date" required>
         <h2>Week Starting: {{ week_start_date }}</h2>
         <table>
             <thead>

@@ -23,12 +23,18 @@ def staff_list(request):
 def roster_create(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
-    week_start_date = timezone.now().date()  # Default to today's date
+    week_start_date = None  # Initialize week_start_date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
     formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]  # Format to HH:MM:SS
     duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
     if request.method == 'POST':
+        # Get the week starting date from the form input
+        week_start_date_str = request.POST.get('week_start_date')
+        if week_start_date_str:  # If the user provided a date
+            week_start_date = datetime.strptime(week_start_date_str, '%Y-%m-%d').date()  # Convert to date
+        else:
+            week_start_date = timezone.now().date()  # Fallback to today's date if not provided
         for staff in active_staff:
             for day in days_of_week:
                 shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
