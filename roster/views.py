@@ -25,6 +25,7 @@ def roster_create(request):
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
     week_start_date = timezone.now().date()  # Default to today's date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True)  # Fetch time slots
+    formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]  # Format to HH:MM:SS
     duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
     if request.method == 'POST':
@@ -68,7 +69,7 @@ def roster_create(request):
         'staff_list': active_staff,
         'days': days_of_week,
         'week_start_date': week_start_date,
-        'time_slots': time_slots,  # Pass time slots directly
+        'time_slots': formatted_time_slots ,  # Pass time slots directly
         'duty_roles': duty_roles,  # Pass duty roles to the template
     })
 
