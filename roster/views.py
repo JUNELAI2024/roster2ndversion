@@ -7,13 +7,14 @@ from rest_framework.response import Response
 from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
-from datetime import datetime, timedelta
+from datetime import  timedelta
 from django import forms
 import logging
 logger = logging.getLogger(__name__)
 
 
-    # Define other fields as necessary
+def home(request):
+    return render(request, 'roster/home.html')  # Make sure the path matches your template location
 
 # Original views for rendering templates
 def staff_list(request):
@@ -28,8 +29,6 @@ def roster_create(request):
     formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]  # Format to HH:MM:SS
     duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
 
-  # Initialize total hours for each day
-    total_hours = {day: 0 for day in days_of_week}
 
     if request.method == 'POST':
         # Get the week starting date from the form input
@@ -58,8 +57,7 @@ def roster_create(request):
                     shift_end_time = timezone.datetime.strptime(shift_end, "%H:%M").time()
                     no_of_work_hr = round((timezone.datetime.combine(work_date, shift_end_time) - 
                                             timezone.datetime.combine(work_date, shift_start_time)).seconds / 3600.0, 1)
- # Calculate hours worked
-                    total_hours[day] += no_of_work_hr  # Accumulate total hours
+
 
                     # Create roster entry
                     Roster.objects.create(
@@ -82,7 +80,6 @@ def roster_create(request):
         'week_start_date': week_start_date,
         'time_slots': formatted_time_slots ,  # Pass time slots directly
         'duty_roles': duty_roles,  # Pass duty roles to the template
-         'total_hours': total_hours,  # Pass total hours to the template
     })
 
 def roster_list(request):
