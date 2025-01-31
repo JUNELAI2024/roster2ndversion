@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'your_css_file.css' %}">  <!-- Link to your CSS file -->
+</head>
+<body>
+    <h1>Welcome to the Home Page!</h1>
+    <p>This is the landing page of your application.</p>
+    <a href="{% url 'roster_create' %}">Create Roster</a>
+    <a href="{% url 'staff_list' %}">Staff List</a>
+    <a href="{% url 'statistics_view' %}">Statistics</a>
+</body>
+</html>
