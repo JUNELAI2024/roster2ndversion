@@ -6,12 +6,50 @@
     <title>HOMEPAGE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav ul {
+            list-style-type: none;  /* Remove bullet points */
+            padding: 0;  /* Remove padding */
+            display: flex;  /* Use flexbox for horizontal layout */
+            justify-content: center;  /* Center the navigation */
+        }
+        nav ul li {
+            margin: 0 15px;  /* Space between links */
+        }
+        nav ul li a {
+            text-decoration: none;  /* Remove underline */
+            color: #007bff;  /* Link color */
+            font-weight: bold;  /* Bold text */
+            padding: 10px 15px;  /* Padding for clickable area */
+            border-radius: 5px;  /* Rounded corners */
+            transition: background-color 0.3s;  /* Smooth transition for hover */
+        }
+        nav ul li a:hover {
+            background-color: #007bff;  /* Background color on hover */
+            color: white;  /* Text color on hover */
+        }
     </style>
-   
 </head>
 <body>
-
     <h1>HOMEPAGE</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
+            <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
+            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            <li><a href="{% url 'roster' %}"><i class="fas fa-list"></i> Roster List</a></li>  <!-- Updated link -->
+        </ul>
+    </nav>
 </body>
-    </html>
+</html>
