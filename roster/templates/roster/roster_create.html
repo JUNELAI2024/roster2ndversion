@@ -111,13 +111,13 @@
                     <td>{{ staff.name }}</td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Mon" onchange="calculateHours('Mon', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Mon" onchange="calculateHours('Mon')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Mon" onchange="calculateHours('Mon', {{ staff.id }})">
+                            <select name="shift_end_{{ staff.id }}_Mon" onchange="calculateHours('Mon')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -134,13 +134,13 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Tue" onchange="calculateHours('Tue', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Tue" onchange="calculateHours('Tue')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Tue" onchange="calculateHours('Tue', {{ staff.id }})">
+                            <select name="shift_end_{{ staff.id }}_Tue" onchange="calculateHours('Tue')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -157,13 +157,13 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Wed" onchange="calculateHours('Wed', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Wed" onchange="calculateHours('Wed')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Wed" onchange="calculateHours('Wed', {{ staff.id }})">
+                            <select name="shift_end_{{ staff.id }}_Wed" onchange="calculateHours('Wed')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -180,13 +180,13 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Thu" onchange="calculateHours('Thu', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Thu" onchange="calculateHours('Thu')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Thu" onchange="calculateHours('Thu', {{ staff.id }})">
+                            <select name="shift_end_{{ staff.id }}_Thu" onchange="calculateHours('Thu')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -203,13 +203,13 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Fri" onchange="calculateHours('Fri', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Fri" onchange="calculateHours('Fri')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Fri" onchange="calculateHours('Fri', {{ staff.id }})">
+                            <select name="shift_end_{{ staff.id }}_Fri" onchange="calculateHours('Fri')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -226,13 +226,13 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Sat" onchange="calculateHours('Sat', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Sat" onchange="calculateHours('Sat')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Sat" onchange="calculateHours('Sat', {{ staff.id }})"> 
+                            <select name="shift_end_{{ staff.id }}_Sat" onchange="calculateHours('Sat')"> 
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -249,13 +249,13 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Sun" onchange="calculateHours('Sun', {{ staff.id }})">
+                            <select name="shift_start_{{ staff.id }}_Sun" onchange="calculateHours('Sun')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Sun" onchange="calculateHours('Sun', {{ staff.id }})">
+                            <select name="shift_end_{{ staff.id }}_Sun" onchange="calculateHours('Sun')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
@@ -294,60 +294,54 @@
                                     const display = document.getElementById('week-start-display');
                                     display.textContent = 'Week Starting: ' + new Date(dateInput).toLocaleDateString(); // Format the date as needed
                                 }
-                                function calculateHours(day, staffId) {
-        const startSelect = document.querySelector(`select[name="shift_start_${staffId}_${day}"]`);
-        const endSelect = document.querySelector(`select[name="shift_end_${staffId}_${day}"]`);
-        const startTime = startSelect.value;
-        const endTime = endSelect.value;
+                                function calculateHours(day) {
+            const staffIds = Array.from(document.querySelectorAll(`select[name^="shift_start_"][name*="_${day}"]`))
+                                  .map(select => select.name.split('_')[2]); // Extract staff IDs
+            const dayTotalCell = document.getElementById(`total${day}`);
+            let dayTotalHours = 0;
 
-        const totalHoursCell = document.getElementById(`total${day}`);
-        let hoursWorked = 0;
+            staffIds.forEach(staffId => {
+                const startSelect = document.querySelector(`select[name="shift_start_${staffId}_${day}"]`);
+                const endSelect = document.querySelector(`select[name="shift_end_${staffId}_${day}"]`);
+                const startTime = startSelect.value;
+                const endTime = endSelect.value;
 
-        if (startTime && endTime) {
-            const [startHour, startMinute] = startTime.split(':').map(Number);
-            const [endHour, endMinute] = endTime.split(':').map(Number);
-            
-            // Calculate total start and end minutes
-            const startTotalMinutes = (startHour * 60) + startMinute;
-            const endTotalMinutes = (endHour * 60) + endMinute;
+                let hoursWorked = 0;
 
-            hoursWorked = (endTotalMinutes - startTotalMinutes) / 60; // Convert minutes to hours
+                if (startTime && endTime) {
+                    const [startHour, startMinute] = startTime.split(':').map(Number);
+                    const [endHour, endMinute] = endTime.split(':').map(Number);
+                    
+                    const startTotalMinutes = (startHour * 60) + startMinute;
+                    const endTotalMinutes = (endHour * 60) + endMinute;
 
-            if (hoursWorked < 0) {
-                hoursWorked = 0; // Handle negative hours
-            }
+                    hoursWorked = (endTotalMinutes - startTotalMinutes) / 60;
+
+                    if (hoursWorked < 0) {
+                        hoursWorked = 0; // Handle negative hours
+                    }
+
+                    dayTotalHours += hoursWorked; // Accumulate hours for the day
+                }
+            });
+
+            dayTotalCell.innerText = `${day}: ${dayTotalHours.toFixed(1)} hrs`;
+            updateTotalWeeklyHours();
         }
 
-        totalHoursCell.innerText = `${day}: ${hoursWorked.toFixed(1)} hrs`; // Show one decimal point
-        updateTotalHours();
-    }
-
-    function updateTotalHours() {
+        function updateTotalWeeklyHours() {
             const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-            let totals = {
-                Mon: 0,
-                Tue: 0,
-                Wed: 0,
-                Thu: 0,
-                Fri: 0,
-                Sat: 0,
-                Sun: 0,
-            };
+            let totalWeekly = 0;
 
             days.forEach(day => {
                 const totalCell = document.getElementById(`total${day}`);
                 const hours = parseFloat(totalCell.innerText.split(': ')[1]);
                 if (!isNaN(hours)) {
-                    totals[day] += hours;
+                    totalWeekly += hours;
                 }
             });
 
-            for (const day of days) {
-                document.getElementById(`total${day}`).innerText = `${day}: ${totals[day].toFixed(1)} hrs`; // Show one decimal point
-            }
-
-            const totalWeekly = Object.values(totals).reduce((sum, hours) => sum + hours, 0);
-            document.getElementById('totalWeekly').innerText = `Total: ${totalWeekly.toFixed(1)} hrs`; // Show one decimal point
+            document.getElementById('totalWeekly').innerText = `Total: ${totalWeekly.toFixed(1)} hrs`;
         }
 </script>
                             </body>
