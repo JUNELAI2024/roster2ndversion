@@ -89,7 +89,7 @@
     <form method="post">
         {% csrf_token %}
         <label for="week_start_date">Week Starting Date:</label>
-        <input type="date" id="week_start_date" name="week_start_date" required onchange="updateWeekStartDate()">
+        <input type="date" id="week_start_date" name="week_start_date" required onchange="updateWeekStartDate() ; updateWeekDays()">
     
         <h2 id="week-start-display">Week Starting: {{ week_start_date }}</h2>  <!-- Display the week starting date -->
         <table>
@@ -288,12 +288,60 @@
                                 <div id="totalWeekly">Total: 0.0 hrs</div>
                                 <button type="submit">Create Roster</button>
                             </form>
+                            
                             <script>
                                 function updateWeekStartDate() {
                                     const dateInput = document.getElementById('week_start_date').value;
                                     const display = document.getElementById('week-start-display');
                                     display.textContent = 'Week Starting: ' + new Date(dateInput).toLocaleDateString(); // Format the date as needed
                                 }
+
+                                function updateWeekDays() {
+        const selectedDate = new Date(document.getElementById('week_start_date').value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time for comparison
+
+        // Loop through each day of the week (Monday to Sunday)
+        for (let i = 0; i < 7; i++) {
+            const currentDay = new Date(selectedDate);
+            currentDay.setDate(selectedDate.getDate() + i); // Get each day of the week
+
+            // Check if the day is earlier than today
+            if (currentDay < today) {
+                // Disable fields for that day
+                disableFieldsForDay(i);
+            } else {
+                // Enable fields if the day is today or later
+                enableFieldsForDay(i);
+            }
+        }
+    }
+
+    function disableFieldsForDay(dayIndex) {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const staffIds = Array.from(document.querySelectorAll('select[name*="_' + days[dayIndex] + '"]'))
+            .map(select => select.name.split('_')[2]); // Extract staff IDs
+        
+        staffIds.forEach(staffId => {
+            document.querySelector(`select[name="duty_role_${staffId}_${days[dayIndex]}"]`).disabled = true;
+            document.querySelector(`select[name="shift_start_${staffId}_${days[dayIndex]}"]`).disabled = true;
+            document.querySelector(`select[name="shift_end_${staffId}_${days[dayIndex]}"]`).disabled = true;
+        });
+    }
+
+    function enableFieldsForDay(dayIndex) {
+        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+        const staffIds = Array.from(document.querySelectorAll('select[name*="_' + days[dayIndex] + '"]'))
+            .map(select => select.name.split('_')[2]); // Extract staff IDs
+        
+        staffIds.forEach(staffId => {
+            document.querySelector(`select[name="duty_role_${staffId}_${days[dayIndex]}"]`).disabled = false;
+            document.querySelector(`select[name="shift_start_${staffId}_${days[dayIndex]}"]`).disabled = false;
+            document.querySelector(`select[name="shift_end_${staffId}_${days[dayIndex]}"]`).disabled = false;
+        });
+    }
+
+
                                 function calculateHours(day) {
             const staffIds = Array.from(document.querySelectorAll(`select[name^="shift_start_"][name*="_${day}"]`))
                                   .map(select => select.name.split('_')[2]); // Extract staff IDs
@@ -366,7 +414,7 @@
 
             // Validation to ensure end time is not earlier than start time
             if (endTotalMinutes < startTotalMinutes) {
-                alert(`End time cannot be earlier than start time for ${staffId} on ${day}.`);
+                alert(`End time cannot be earlier than start time!`);
                 endSelect.value = ''; // Reset end time
             } else {
                 calculateHours(day); // Only calculate hours if validation passes
