@@ -12,7 +12,7 @@ urlpatterns = [
     path('create/', roster_create, name='roster_create'),
     path('list/', staff_list, name='staff_list'),
     path('statistics/', statistics_view, name='statistics_view'),
-    path('rosters/', roster_list, name='roster_list'), 
+    path('roster/', roster_list, name='roster_list'), 
     path('api/', include(router.urls)),
     path('api/shift-counts/', views.api_shift_counts, name='api_shift_counts'),  # New API endpoint
     
