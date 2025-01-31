@@ -323,29 +323,32 @@
     }
 
     function updateTotalHours() {
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-        let totals = {
-            Mon: 0,
-            Tue: 0,
-            Wed: 0,
-            Thu: 0,
-            Fri: 0,
-            Sat: 0,
-            Sun: 0,
-        };
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            let totals = {
+                Mon: 0,
+                Tue: 0,
+                Wed: 0,
+                Thu: 0,
+                Fri: 0,
+                Sat: 0,
+                Sun: 0,
+            };
 
-        days.forEach(day => {
-            const totalCell = document.getElementById(`total${day}`);
-            const hours = parseFloat(totalCell.innerText.split(': ')[1]);
-            if (!isNaN(hours)) {
-                totals[day] += hours;
+            days.forEach(day => {
+                const totalCell = document.getElementById(`total${day}`);
+                const hours = parseFloat(totalCell.innerText.split(': ')[1]);
+                if (!isNaN(hours)) {
+                    totals[day] += hours;
+                }
+            });
+
+            for (const day of days) {
+                document.getElementById(`total${day}`).innerText = `${day}: ${totals[day].toFixed(1)} hrs`; // Show one decimal point
             }
-        });
 
-        for (const day of days) {
-            document.getElementById(`total${day}`).innerText = `${day}: ${totals[day].toFixed(1)} hrs`; // Show one decimal point
+            const totalWeekly = Object.values(totals).reduce((sum, hours) => sum + hours, 0);
+            document.getElementById('totalWeekly').innerText = `Total: ${totalWeekly.toFixed(1)} hrs`; // Show one decimal point
         }
-    }
 </script>
                             </body>
 </html>
