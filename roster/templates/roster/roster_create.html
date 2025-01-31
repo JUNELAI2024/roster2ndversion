@@ -111,20 +111,20 @@
                     <td>{{ staff.name }}</td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Mon" onchange="calculateHours('Mon')">
+                            <select name="shift_start_{{ staff.id }}_Mon" onchange="updateFieldColor(this); calculateHours('Mon')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Mon" onchange="calculateHours('Mon')">
+                            <select name="shift_end_{{ staff.id }}_Mon" onchange="updateFieldColor(this); calculateHours('Mon')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                             <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Mon">
+    <select name="duty_role_{{ staff.id }}_Mon" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -134,20 +134,20 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Tue" onchange="calculateHours('Tue')">
+                            <select name="shift_start_{{ staff.id }}_Tue" onchange="updateFieldColor(this); calculateHours('Tue')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Tue" onchange="calculateHours('Tue')">
+                            <select name="shift_end_{{ staff.id }}_Tue" onchange="updateFieldColor(this); calculateHours('Tue')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                             <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Tue">
+    <select name="duty_role_{{ staff.id }}_Tue" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -157,20 +157,20 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Wed" onchange="calculateHours('Wed')">
+                            <select name="shift_start_{{ staff.id }}_Wed" onchange="updateFieldColor(this); calculateHours('Wed')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Wed" onchange="calculateHours('Wed')">
+                            <select name="shift_end_{{ staff.id }}_Wed" onchange="updateFieldColor(this); calculateHours('Wed')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                             <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Wed">
+    <select name="duty_role_{{ staff.id }}_Wed" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -180,20 +180,20 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Thu" onchange="calculateHours('Thu')">
+                            <select name="shift_start_{{ staff.id }}_Thu" onchange="updateFieldColor(this); calculateHours('Thu')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Thu" onchange="calculateHours('Thu')">
+                            <select name="shift_end_{{ staff.id }}_Thu" onchange="updateFieldColor(this); calculateHours('Thu')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                             <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Thu">
+    <select name="duty_role_{{ staff.id }}_Thu" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -203,20 +203,20 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Fri" onchange="calculateHours('Fri')">
+                            <select name="shift_start_{{ staff.id }}_Fri" onchange="updateFieldColor(this); calculateHours('Fri')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Fri" onchange="calculateHours('Fri')">
+                            <select name="shift_end_{{ staff.id }}_Fri" onchange="updateFieldColor(this); calculateHours('Fri')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                             <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Fri">
+    <select name="duty_role_{{ staff.id }}_Fri" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -226,20 +226,20 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Sat" onchange="calculateHours('Sat')">
+                            <select name="shift_start_{{ staff.id }}_Sat" onchange="updateFieldColor(this); calculateHours('Sat')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Sat" onchange="calculateHours('Sat')"> 
+                            <select name="shift_end_{{ staff.id }}_Sat" onchange="updateFieldColor(this); calculateHours('Sat')"> 
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                             <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Sat">
+    <select name="duty_role_{{ staff.id }}_Sat" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -249,20 +249,20 @@
                     </td>
                     <td>
                         <div>
-                            <select name="shift_start_{{ staff.id }}_Sun" onchange="calculateHours('Sun')">
+                            <select name="shift_start_{{ staff.id }}_Sun" onchange="updateFieldColor(this); calculateHours('Sun')">
                                 <option value="">Start</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
-                            <select name="shift_end_{{ staff.id }}_Sun" onchange="calculateHours('Sun')">
+                            <select name="shift_end_{{ staff.id }}_Sun" onchange="updateFieldColor(this); calculateHours('Sun')">
                                 <option value="">End</option>
                                 {% for slot in time_slots %}
                                     <option value="{{ slot }}">{{ slot }}</option>
                                 {% endfor %}
                             </select>
                      <!-- Duty role dropdown populated from RosterConfig -->
-    <select name="duty_role_{{ staff.id }}_Sun">
+    <select name="duty_role_{{ staff.id }}_Sun" onchange="updateFieldColor(this)">
         <option value="">Select Duty Role</option>
         {% for role in duty_roles %}
             <option value="{{ role.id }}">{{ role.duty_role }}</option>
@@ -343,6 +343,13 @@
 
             document.getElementById('totalWeekly').innerText = `Total: ${totalWeekly.toFixed(1)} hrs`;
         }
+        function updateFieldColor(field) {
+        if (field.value) {
+            field.style.backgroundColor = '#c8e6c9'; // Light green for filled fields
+        } else {
+            field.style.backgroundColor = ''; // Reset to default if empty
+        }
+    }
 </script>
                             </body>
 </html>
