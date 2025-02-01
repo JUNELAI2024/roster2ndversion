@@ -27,7 +27,7 @@ def roster_create(request):
     week_start_date = None  # Initialize week_start_date
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True).order_by('time_slot')  # Fetch time slots
     formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]  # Format to HH:MM:SS
-    duty_roles = RosterConfig.objects.all()  # Fetch all duty roles
+    duty_roles = RosterConfig.objects.values_list('duty_role', flat=True).distinct().order_by('duty_role')
 
 
     if request.method == 'POST':
