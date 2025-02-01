@@ -83,8 +83,23 @@ def roster_create(request):
     })
 
 def roster_list(request):
-    rosters = Roster.objects.all()
-    return render(request, 'roster/roster_list.html', {'rosters': rosters})
+    active_staff = Staff.objects.filter(is_active=True)  # Fetch only active staff
+    roster_list = Roster.objects.all()  # Initial query
+
+    staff_id = request.GET.get('staff_id')
+    month = request.GET.get('month')
+
+    if staff_id:
+        roster_list = roster_list.filter(staff_name=staff_id)  # Adjust if using ForeignKey
+
+    if month:
+        roster_list = roster_list.filter(work_date__month=month)  # Assuming work_date is a DateField
+
+    context = {
+        'active_staff': active_staff,
+        'roster_list': roster_list,
+    }
+    return render(request, 'roster_list.html', context)
 
 # New view for displaying shift statistics
 def statistics_view(request):
