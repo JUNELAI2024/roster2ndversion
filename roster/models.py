@@ -15,7 +15,7 @@ class RosterConfig(models.Model):
     time_slot = models.TimeField()
 
     def __str__(self):
-        return f"{self.duty_role} - {self.time_slot}"  # Keep the original time format
+        return f"{self.duty_role} - {self.time_slot.strftime('%H:%M')}"  # Keep the original time format
 
 
 
@@ -41,7 +41,7 @@ class Roster(models.Model):
     day = models.CharField(max_length=3, choices=DAY_CHOICES)
     shift_start = models.TimeField()
     shift_end = models.TimeField()
-    duty_role = models.CharField(max_length=50)  # Store duty role as a string
+    duty_role = models.ForeignKey(RosterConfig, on_delete=models.CASCADE)  # ForeignKey to RosterConfig
     week_start_date = models.DateField()  # No default value
     work_date = models.DateField()
     no_of_work_hr = models.FloatField(default=0.0)  # Store working hours with one decimal precision
