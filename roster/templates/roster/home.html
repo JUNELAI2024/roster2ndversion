@@ -9,47 +9,57 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            text-align: center;
-            padding: 50px;
+            margin: 0;  /* Remove default margin */
+            display: flex;  /* Use flexbox to position nav and main content */
         }
         h1 {
             color: #333;
+            text-align: center;
+            flex: 1;  /* Allow main content to take remaining space */
         }
         nav {
-            margin: 20px 0;
+            background-color: #007bff;  /* Navigation bar background color */
+            width: 200px;  /* Fixed width for the sidebar */
+            padding: 20px;  /* Padding inside the nav */
+            height: 100vh;  /* Full height */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);  /* Shadow effect */
         }
         nav ul {
             list-style-type: none;  /* Remove bullet points */
             padding: 0;  /* Remove padding */
-            display: flex;  /* Use flexbox for horizontal layout */
-            justify-content: center;  /* Center the navigation */
         }
         nav ul li {
-            margin: 0 15px;  /* Space between links */
+            margin: 20px 0;  /* Space between links */
         }
         nav ul li a {
             text-decoration: none;  /* Remove underline */
-            color: #007bff;  /* Link color */
+            color: white;  /* Link color */
             font-weight: bold;  /* Bold text */
             padding: 10px 15px;  /* Padding for clickable area */
             border-radius: 5px;  /* Rounded corners */
+            display: block;  /* Make links block elements */
             transition: background-color 0.3s;  /* Smooth transition for hover */
         }
         nav ul li a:hover {
-            background-color: #007bff;  /* Background color on hover */
-            color: white;  /* Text color on hover */
+            background-color: #0056b3;  /* Darker background on hover */
+        }
+        .main-content {
+            flex: 1;  /* Allow main content to take remaining space */
+            padding: 20px;  /* Padding for the main content */
         }
     </style>
 </head>
 <body>
-    <h1>HOMEPAGE</h1>
     <nav>
         <ul>
             <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
             <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
             <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
-            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>  <!-- Updated link -->
+            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>
         </ul>
     </nav>
+    <div class="main-content">
+        <h1>HOMEPAGE</h1>
+    </div>
 </body>
 </html>
