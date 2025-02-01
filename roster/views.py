@@ -99,7 +99,7 @@ def roster_list(request):
         'active_staff': active_staff,
         'roster_list': roster_list,
     }
-    return render(request, 'roster_list.html', context)
+    return render(request, 'roster/roster_list.html', context)
 
 # New view for displaying shift statistics
 def statistics_view(request):
