@@ -4,10 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roster List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .search-form {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;  /* Space between form elements */
+        }
+        .search-form select,
+        .search-form input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .search-form button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-form button:hover {
+            background-color: #0056b3;
         }
         table {
             width: 100%;
@@ -15,32 +42,47 @@
             margin-top: 20px;
         }
         th, td {
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 8px;
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
-        }
-        button {
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-        a {
-            display: inline-block;
-            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
         }
     </style>
 </head>
 <body>
     <h1>Roster List</h1>
-    
-    <!-- Button to go to Statistics Page -->
-    <a href="{% url 'statistics_view' %}">
-        <button>View Shift Statistics</button>
-    </a>
 
+    <form class="search-form" method="GET" action="{% url 'roster_list' %}">
+        <select name="staff_id">
+            <option value="">Select Staff</option>
+            {% for staff in active_staff %}
+                <option value="{{ staff.id }}">{{ staff.name }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="month">
+            <option value="">Select Month</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+
+        <button type="submit"><i class="fas fa-search"></i> Search</button>
+    </form>
+
+    <!-- Display the roster list here -->
     <table>
         <thead>
             <tr>
@@ -48,25 +90,30 @@
                 <th>Day</th>
                 <th>Shift Start</th>
                 <th>Shift End</th>
+                <th>Duty Role</th>
+                <th>Week Start Date</th>
+                <th>Work Date</th>
+                <th>Hours Worked</th>
             </tr>
         </thead>
         <tbody>
-            {% for roster in rosters %}
+            {% for roster in roster_list %}
                 <tr>
                     <td>{{ roster.staff_name }}</td>
                     <td>{{ roster.day }}</td>
                     <td>{{ roster.shift_start }}</td>
                     <td>{{ roster.shift_end }}</td>
+                    <td>{{ roster.duty_role }}</td>
+                    <td>{{ roster.week_start_date }}</td>
+                    <td>{{ roster.work_date }}</td>
+                    <td>{{ roster.no_of_work_hr }}</td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="4">No roster entries found.</td>
+                    <td colspan="8">No results found.</td>  <!-- Adjust colspan based on the number of columns -->
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    <a href="{% url 'roster_create' %}">Create New Roster Entry</a>
-    <a href="{% url 'staff_list' %}">Back to Staff List</a>
 </body>
 </html>
