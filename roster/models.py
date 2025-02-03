@@ -44,7 +44,8 @@ class Roster(models.Model):
     duty_role = models.CharField(max_length=50)
     week_start_date = models.DateField()  # No default value
     work_date = models.DateField()
-   
+    no_of_work_hr = models.FloatField(default=0.0)  # Store working hours with one decimal precision
+
 
     def save(self, *args, **kwargs):
         # Calculate the number of work hours before saving
