@@ -79,11 +79,45 @@
             margin-top: 20px;
             font-weight: bold;
         }
+        .sidebar {
+            width: 250px; /* Fixed width for sidebar */
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            color: #ecf0f1;
+        }
+        .sidebar ul {
+            list-style-type: none; /* Remove default list styling */
+            padding: 0; /* Remove default padding */
+        }
+        .sidebar ul li {
+            margin: 15px 0; /* Space between items */
+        }
+        .sidebar ul li a {
+            color: white; /* Link color */
+            text-decoration: none; /* Remove underline */
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
     </style>
    
 </head>
 <body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
+            <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
+            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>
+        </ul>
+    </div>
 
+   
     <h1>Create Roster</h1>
 
     <form method="post">
