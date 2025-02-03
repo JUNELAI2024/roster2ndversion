@@ -69,6 +69,7 @@ def roster_create(request):
                         week_start_date=week_start_date,
                         work_date=work_date,
                         no_of_work_hr=no_of_work_hr  # Store the calculated working hours
+                        duty_role_new=duty_role,  # Pass duty_role to the new field
                     )
 
         messages.success(request, "Roster created successfully!")
