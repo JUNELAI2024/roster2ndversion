@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
             old_name='duty_role_id',
             new_name='duty_role',
         ),
-        migrations.RemoveField(
-            model_name='roster',
-            name='no_of_work_hr',
-        ),
+        #migrations.RemoveField(
+        #    model_name='roster',
+        #    name='no_of_work_hr',
+        #),
     ]
