@@ -41,7 +41,7 @@ class Roster(models.Model):
     day = models.CharField(max_length=3, choices=DAY_CHOICES)
     shift_start = models.TimeField()
     shift_end = models.TimeField()
-    
+    duty_role = models.CharField(max_length=50)
     week_start_date = models.DateField()  # No default value
     work_date = models.DateField()
     no_of_work_hr = models.FloatField(default=0.0)  # Store working hours with one decimal precision
