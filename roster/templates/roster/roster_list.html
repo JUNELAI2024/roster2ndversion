@@ -98,10 +98,10 @@
     <h1>Roster Record</h1>
 
     <form class="search-form" method="GET" action="{% url 'roster_list' %}">
-        <select name="staff_id">
+        <select name="staff_name">
             <option value="">Select Staff</option>
             {% for staff in active_staff %}
-                <option value="{{ staff.id }}">{{ staff.name }}</option>
+                <option value="{{ staff.name }}">{{ staff.name }}</option>
             {% endfor %}
         </select>
 
