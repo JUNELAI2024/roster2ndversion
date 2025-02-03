@@ -87,11 +87,11 @@ def roster_list(request):
     active_staff = Staff.objects.filter(is_active=True)  # Fetch only active staff
     roster_list = Roster.objects.all()  # Initial query
 
-    staff_id = request.GET.get('staff_id')
+    staff_name = request.GET.get('staff_name') 
     month = request.GET.get('month')
 
-    if staff_id:
-        roster_list = roster_list.filter(staff_name=staff_id)  # Adjust if using ForeignKey
+    if staff_name:  # Adjusted to use staff_name
+        roster_list = roster_list.filter(staff_name__iexact=staff_name)  # Filter by staff name (case-insensitive)
 
     if month:
         roster_list = roster_list.filter(work_date__month=month)  # Assuming work_date is a DateField
