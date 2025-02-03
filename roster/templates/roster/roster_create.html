@@ -103,6 +103,12 @@
         .sidebar ul li a:hover {
             text-decoration: underline; /* Underline on hover */
         }
+        .content {
+            flex: 1; /* Take up remaining space */
+            padding: 20px;
+            background-color: #f9f9f9;
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+        }
     </style>
    
 </head>
@@ -117,7 +123,7 @@
         </ul>
     </div>
 
-   
+    <div class="content">
     <h1>Create Roster</h1>
 
     <form method="post">
@@ -459,5 +465,6 @@
     }
 
 </script>
+</div>
                             </body>
 </html>
