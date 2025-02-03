@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
 from .models import Staff, Roster, RosterConfig
+from django.db.models import Sum
 from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -104,30 +105,23 @@ def roster_list(request):
 
 # New view for displaying shift statistics
 def statistics_view(request):
-    # Fetch data for each staff and their shift counts
-    staff_shift_counts = (
+    total_weekly_hours = 40  # Example: Total working hours in a week
+    staff_hours = (
         Roster.objects
-        .values('staff__name')
-        .annotate(
-            am_count=Count('id', filter=Q(shift_start='09:00:00')),
-            pm_count=Count('id', filter=Q(shift_start='14:00:00')),
-            full_count=Count('id', filter=Q(shift_start='09:00:00', shift_end='19:00:00'))
-        )
+        .values('staff_name')  # Assuming 'staff_name' is the correct field
+        .annotate(total_hours=Sum('no_of_work_hr'))  # Assuming 'no_of_work_hr' is the field for hours worked
     )
 
-    # Prepare data for the bar chart
-    staff_names = [item['staff__name'] for item in staff_shift_counts]
-    am_counts = [item['am_count'] for item in staff_shift_counts]
-    pm_counts = [item['pm_count'] for item in staff_shift_counts]
-    full_counts = [item['full_count'] for item in staff_shift_counts]
+    staff_names = [item['staff_name'] for item in staff_hours]
+    occupied_hours = [item['total_hours'] for item in staff_hours]
+    available_hours = [total_weekly_hours] * len(staff_names)  # Total weekly hours for each staff
 
+    # Render the updated template with the context
     return render(request, 'roster/statistics.html', {
         'staff_names': staff_names,
-        'am_counts': am_counts,
-        'pm_counts': pm_counts,
-        'full_counts': full_counts,
+        'occupied_hours': occupied_hours,
+        'available_hours': available_hours,
     })
-
 # New API view to get shift counts similar to statistics_view
 @api_view(['GET'])
 def api_shift_counts(request):
