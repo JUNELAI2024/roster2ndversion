@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
@@ -34,6 +35,11 @@
         .sidebar ul li a {
             color: white; /* Link color */
             text-decoration: none; /* Remove underline */
+            display: flex; /* Use flexbox for alignment */
+            align-items: center; /* Center items vertically */
+        }
+        .sidebar ul li a i {
+            margin-right: 10px; /* Space between icon and text */
         }
         .sidebar ul li a:hover {
             text-decoration: underline; /* Underline on hover */
@@ -72,10 +78,10 @@
     <div class="sidebar">
         <h2>Menu</h2>
         <ul>
-            <li><a href="{% url 'roster_create' %}" style="color:white;">Create Roster</a></li>
-            <li><a href="{% url 'staff_list' %}" style="color:white;">Staff List</a></li>
-            <li><a href="{% url 'statistics_view' %}" style="color:white;">Statistics</a></li>
-            <li><a href="{% url 'roster_list' %}" style="color:white;">Roster List</a></li>
+            <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
+            <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
+            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-pie"></i> Statistics</a></li>
+            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>
         </ul>
     </div>
 
