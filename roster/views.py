@@ -108,20 +108,26 @@ def statistics_view(request):
     total_weekly_hours = 40  # Example: Total working hours in a week
     staff_hours = (
         Roster.objects
-        .values('staff_name')  # Assuming 'staff_name' is the correct field
-        .annotate(total_hours=Sum('no_of_work_hr'))  # Assuming 'no_of_work_hr' is the field for hours worked
+        .values('staff_name')
+        .annotate(total_hours=Sum('no_of_work_hr'))
     )
 
     staff_names = [item['staff_name'] for item in staff_hours]
     occupied_hours = [item['total_hours'] for item in staff_hours]
-    available_hours = [total_weekly_hours] * len(staff_names)  # Total weekly hours for each staff
 
-    # Render the updated template with the context
+    # Calculate ratios and prepare data for the pie chart
+    ratios = [(hours / total_weekly_hours) * 100 for hours in occupied_hours]  # Percentage of total hours
+
+    # Handle case where staff_names is empty
+    if not staff_names:
+        staff_names = ['No Data']
+        ratios = [100]  # To avoid pie chart error
+
     return render(request, 'roster/statistics.html', {
         'staff_names': staff_names,
-        'occupied_hours': occupied_hours,
-        'available_hours': available_hours,
+        'ratios': ratios,
     })
+
 # New API view to get shift counts similar to statistics_view
 @api_view(['GET'])
 def api_shift_counts(request):
