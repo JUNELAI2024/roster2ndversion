@@ -24,10 +24,24 @@
         .sidebar h2 {
             color: #ecf0f1;
         }
+        .sidebar ul {
+            list-style-type: none; /* Remove default list styling */
+            padding: 0; /* Remove default padding */
+        }
+        .sidebar ul li {
+            margin: 15px 0; /* Space between items */
+        }
+        .sidebar ul li a {
+            color: white; /* Link color */
+            text-decoration: none; /* Remove underline */
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
         .content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+            flex: 1; /* Take up remaining space */
+            padding: 20px; /* Padding for content area */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
         }
         h1 {
             color: #333;
