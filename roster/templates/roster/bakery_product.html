@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bakery Products</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default margin */
+            display: flex; /* Use flexbox for layout */
+            height: 100vh; /* Full viewport height */
+            background-color: #f4f4f4; /* Background color */
+        }
+        .sidebar {
+            width: 250px; /* Fixed width for sidebar */
+            background-color: #2c3e50; /* Sidebar color */
+            color: white; /* Text color */
+            padding: 20px; /* Padding inside sidebar */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow effect */
+        }
+        .sidebar h2 {
+            color: #ecf0f1; /* Sidebar header color */
+        }
+        .sidebar ul {
+            list-style-type: none; /* Remove default list styling */
+            padding: 0; /* Remove default padding */
+        }
+        .sidebar ul li {
+            margin: 15px 0; /* Space between items */
+        }
+        .sidebar ul li a {
+            color: white; /* Link color */
+            text-decoration: none; /* Remove underline */
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+        .content {
+            flex: 1; /* Take up remaining space */
+            padding: 20px; /* Padding for content area */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+        }
+        .hidden {
+            display: none;
+        }
+        .category {
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .product-row {
+            display: none; /* Initially hide product rows */
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
+            <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
+            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>
+            <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Bakery Products</a></li> <!-- New Menu Item -->
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Bakery Products</h1>
+        <div id="product-list">
+            {% for category in categories %}
+            <div class="category" data-category="{{ category }}">
+                {{ category }} >
+            </div>
+            <div class="product-row hidden">
+                {% for product in products %}
+                {% if product.category == category %}
+                <div class="product-item">
+                    <span>{{ product.item_name }}</span>
+                    <button class="decrease">-</button>
+                    <span class="quantity" data-item-name="{{ product.item_name }}" data-quantity="0">0</span>
+                    <button class="increase">+</button>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2>Restock Products</h2>
+        <form id="restockForm">
+            <label for="deliveryDate">Delivery Date:</label>
+            <input type="date" id="deliveryDate" required />
+            <label for="orderBy">Ordered By:</label>
+            <input type="text" id="orderBy" required />
+            <button type="submit">Submit Restock</button>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.category').on('click', function() {
+                $(this).next('.product-row').toggle(); // Toggle visibility of product rows
+            });
+
+            $('.increase').on('click', function() {
+                const quantitySpan = $(this).siblings('.quantity');
+                let quantity = parseInt(quantitySpan.data('quantity'));
+                quantity++;
+                quantitySpan.data('quantity', quantity);
+                quantitySpan.text(quantity);
+            });
+
+            $('.decrease').on('click', function() {
+                const quantitySpan = $(this).siblings('.quantity');
+                let quantity = parseInt(quantitySpan.data('quantity'));
+                if (quantity > 0) {
+                    quantity--;
+                    quantitySpan.data('quantity', quantity);
+                    quantitySpan.text(quantity);
+                }
+            });
+
+            $('#restockForm').on('submit', function(event) {
+                event.preventDefault();
+                
+                const deliveryDate = $('#deliveryDate').val();
+                const orderBy = $('#orderBy').val();
+                const restockDataArray = [];
+
+                $('.quantity').each(function() {
+                    const quantity = $(this).data('quantity');
+                    if (quantity > 0) {
+                        const itemName = $(this).data('item-name');
+                        restockDataArray.push({
+                            item_name: itemName,
+                            restock_quantity: quantity,
+                            delivery_date: deliveryDate,
+                            order_by: orderBy
+                        });
+                    }
+                });
+
+                if (restockDataArray.length > 0) {
+                    $.ajax({
+                        url: '/restock-product/',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(restockDataArray),
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert(response.message);
+                                // Reset quantities after successful submission
+                                $('.quantity').data('quantity', 0).text(0);
+                            } else {
+                                alert('Error: ' + response.message);
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            alert('Error: ' + error);
+                        }
+                    });
+                } else {
+                    alert('Please add at least one item to restock.');
+                }
+
+                // Reset form fields
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>

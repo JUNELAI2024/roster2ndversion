@@ -57,3 +57,28 @@ class Roster(models.Model):
 
     def __str__(self):
         return f"{self.staff_name} - {self.day} ({self.shift_start} to {self.shift_end})"
+    
+    # Model for maintaining bakery products
+class BakeryProduct(models.Model):
+    item_id = models.CharField(max_length=50, unique=True)  # Custom item ID assigned by the store
+    category = models.CharField(max_length=100)  # Product category
+    item_name = models.CharField(max_length=100)  # Name of the item
+    onsell = models.BooleanField(default=True)  # Whether the product is on sale
+    start_date = models.DateField()  # When the product is available
+    shelved_date = models.DateField(null=True, blank=True)  # When the product was shelved
+    remarks = models.TextField(blank=True)  # Additional remarks
+
+    def __str__(self):
+        return f"{self.item_name} ({self.category})"
+
+# Model for bakery product restocking
+class BakeryProductRestock(models.Model):
+    item_id = models.CharField(max_length=50)  # Custom item ID assigned by the store
+    product_name = models.CharField(max_length=100)  # Name of the product
+    restock_quantity = models.PositiveIntegerField()  # Quantity restocked
+    delivery_date = models.DateField()  # Delivery date for the restock
+    order_by = models.CharField(max_length=100)  # Who placed the order
+    update_date = models.DateTimeField(auto_now=True)  # Timestamp for when the record was updated
+
+    def __str__(self):
+        return f"{self.product_name} - {self.restock_quantity} (Ordered by: {self.order_by})"

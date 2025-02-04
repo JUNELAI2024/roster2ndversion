@@ -13,6 +13,52 @@ from django import forms
 import logging
 logger = logging.getLogger(__name__)
 from datetime import datetime 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import BakeryProduct, BakeryProductRestock
+
+def bakery_product_view(request):
+    products = BakeryProduct.objects.filter(onsell=True)  # Get only products that are on sale
+    categories = products.values_list('category', flat=True).distinct()  # Get unique categories
+
+    context = {
+        'products': products,
+        'categories': categories,
+    }
+    
+    return render(request, 'roster/bakery_product.html', context)
+
+
+@csrf_exempt
+def restock_product(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)  # Load JSON data from the request
+        item_name = data.get('item_name')
+        restock_quantity = data.get('restock_quantity')
+        delivery_date = data.get('delivery_date')
+        order_by = data.get('order_by')
+
+        # Retrieve item_id using item_name
+        try:
+            product = BakeryProduct.objects.get(item_name=item_name)
+            item_id = product.item_id  # Get the item_id from BakeryProduct
+
+            # Create a new restock entry
+            restock_entry = BakeryProductRestock(
+                item_id=item_id,
+                product_name=item_name,
+                restock_quantity=restock_quantity,
+                delivery_date=delivery_date,
+                order_by=order_by
+            )
+            restock_entry.save()
+
+            return JsonResponse({'status': 'success', 'message': 'Product restocked successfully!'})
+        except BakeryProduct.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Product not found.'})
+
+    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
 
 def home(request):
     return render(request, 'roster/home.html')  # Make sure the path matches your template location
