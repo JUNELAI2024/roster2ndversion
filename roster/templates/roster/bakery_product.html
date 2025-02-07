@@ -69,7 +69,7 @@
             <input type="text" id="product_name" name="product_name" required /><br>
 
             <label for="restock_quantity">Restock Quantity:</label>
-            <input type="number" id="restock_quantity" name="restock_quantity" required /><br>
+            <input type="text" id="restock_quantity" name="restock_quantity" placeholder="Restock Quantity" required /><br>
 
             <label for="deliveryDate">Delivery Date:</label>
             <input type="text" id="deliveryDate" name="deliveryDate" placeholder="YYYY-MM-DD" required />
@@ -84,45 +84,36 @@
     <script>
         $(document).ready(function() {
             $('#restockForm').on('submit', function(event) {
-                event.preventDefault();
-                
-                const deliveryDateInput = $('#deliveryDate').val();
-                const orderBy = $('#orderBy').val();
-                const restockDataArray = [];
+    event.preventDefault(); // Prevent the default form submission
 
-                // Validate delivery date and order by fields
-                if (!deliveryDateInput || !orderBy) {
-                    alert('Please fill in all fields.');
-                    return;
-                }
+    const restockData = {
+        item_id: $('#item_id').val(),
+        product_name: $('#product_name').val(),
+        restock_quantity: $('#restock_quantity').val(),
+        delivery_date: $('#deliveryDate').val(),  // Ensure format is YYYY-MM-DD
+        order_by: $('#orderBy').val(),
+    };
 
-                // Collect restock data
-                restockDataArray.push({
-                    item_id: $('#item_id').val(),
-                    product_name: $('#product_name').val(),
-                    restock_quantity: $('#restock_quantity').val(),
-                    delivery_date: deliveryDateInput,
-                    order_by: orderBy,
-                });
-
-                $.ajax({
-                    url: '/roster/restock-product/', // Ensure this matches your URL pattern
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(restockDataArray),
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            alert(response.message);
-                            $('#restockForm')[0].reset(); // Reset the form fields
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Error: ' + error);
-                    }
-                });
-            });
+    $.ajax({
+        url: '/roster/restock-product/', // Ensure this matches your URL pattern
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(restockData), // Send data as JSON
+        success: function(response) {
+            if (response.status === 'success') {
+                alert(response.message);
+                $('#restockForm')[0].reset(); // Reset the form fields
+            } else {
+                alert('Error: ' + response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText); // Log the full response for debugging
+            alert('Error: ' + error);
+        }
+    });
+});
+             
         });
     </script>
 </body>

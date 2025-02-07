@@ -31,14 +31,11 @@ def bakery_product_view(request):
 
 
 @csrf_exempt
-@csrf_exempt
 def restock_product(request):
     if request.method == 'POST':
         try:
-            # Get JSON data from the request body
             data = json.loads(request.body)
 
-            # Extract values from the JSON data
             item_id = data.get('item_id')
             product_name = data.get('product_name')
             restock_quantity = data.get('restock_quantity')
@@ -53,7 +50,7 @@ def restock_product(request):
                 delivery_date=delivery_date,
                 order_by=order_by
             )
-            restock_entry.save()  # Save to the database
+            restock_entry.save()  # update_date will be set automatically here
 
             return JsonResponse({'status': 'success', 'message': 'Product restocked successfully.'})
         except json.JSONDecodeError:
@@ -61,8 +58,8 @@ def restock_product(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
 
-        return render(request, 'roster/bakery_product.html')
-
+    # Handle GET requests by rendering the template
+        return render(request, 'roster/bakery_product.html')  # Ensure this points to your actual template path
 
 def home(request):
     return render(request, 'roster/home.html')  # Make sure the path matches your template location
