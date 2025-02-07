@@ -93,10 +93,21 @@
 
         <h2>Restock Products</h2>
         <form id="restockForm">
+            <label for="item_id">Item ID:</label>
+            <input type="text" id="item_id" name="item_id" required /><br>
+
+            <label for="product_name">Product Name:</label>
+            <input type="text" id="product_name" name="product_name" required /><br>
+
+            <label for="restock_quantity">Restock Quantity:</label>
+            <input type="number" id="restock_quantity" name="restock_quantity" required /><br>
+
             <label for="deliveryDate">Delivery Date:</label>
-            <input type="date" id="deliveryDate" required />
+            <input type="date" id="deliveryDate" required /><br/>
+
             <label for="orderBy">Ordered By:</label>
-            <input type="text" id="orderBy" required />
+            <input type="text" id="orderBy" required /><br/>
+
             <button type="submit">Submit Restock</button>
         </form>
     </div>
@@ -143,9 +154,10 @@
                     if (quantity > 0) {
                         const itemName = $(this).data('item-name');
                         restockDataArray.push({
-                            item_name: itemName,
+                            item_id: $('#item_id').val(), // Get item ID
+                            product_name: itemName, // Product name from quantity span
                             restock_quantity: quantity,
-                            delivery_date: deliveryDateInput, // Ensure this is YYYY-MM-DD
+                            delivery_date: deliveryDateInput,
                             order_by: orderBy,
                         });
                     }
