@@ -148,7 +148,7 @@
 
                 if (restockDataArray.length > 0) {
                     $.ajax({
-                        url: '/restock-product/',
+                        url: '/roster/restock-product/',
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(restockDataArray),
