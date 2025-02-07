@@ -14,6 +14,7 @@ urlpatterns = [
      path('roster/', roster_list, name='roster_list'), 
     path('statistics/', statistics_view, name='statistics_view'),
       path('bakery/', bakery_product_view, name='bakery_products'),
+      path('restock-product/', views.restock_product, name='restock_product'),
     path('api/', include(router.urls)),
     path('api/shift-counts/', views.api_shift_counts, name='api_shift_counts'),  # New API endpoint
     
