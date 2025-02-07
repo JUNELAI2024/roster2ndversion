@@ -32,33 +32,29 @@ def bakery_product_view(request):
 
 @csrf_exempt
 def restock_product(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)  # Load JSON data from the request
-        item_name = data.get('item_name')
-        restock_quantity = data.get('restock_quantity')
-        delivery_date = data.get('delivery_date')
-        order_by = data.get('order_by')
+     if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        product_name = request.POST.get('product_name')
+        restock_quantity = request.POST.get('restock_quantity')
+        delivery_date = request.POST.get('delivery_date')
+        order_by = request.POST.get('order_by')
 
-        # Retrieve item_id using item_name
-        try:
-            product = BakeryProduct.objects.get(item_name=item_name)
-            item_id = product.item_id  # Get the item_id from BakeryProduct
+        # Create and save the new restock entry
+        restock_entry = BakeryProductRestock(
+            item_id=item_id,
+            product_name=product_name,
+            restock_quantity=restock_quantity,
+            delivery_date=delivery_date,
+            order_by=order_by
+        )
+        restock_entry.save()
 
-            # Create a new restock entry
-            restock_entry = BakeryProductRestock(
-                item_id=item_id,
-                product_name=item_name,
-                restock_quantity=restock_quantity,
-                delivery_date=delivery_date,
-                order_by=order_by
-            )
-            restock_entry.save()
+        return JsonResponse({'status': 'success', 'message': 'Restock entry created!'})
 
-            return JsonResponse({'status': 'success', 'message': 'Product restocked successfully!'})
-        except BakeryProduct.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Product not found.'})
+        return render(request, 'bakery_product.html')
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request.'})
+
+
 
 def home(request):
     return render(request, 'roster/home.html')  # Make sure the path matches your template location

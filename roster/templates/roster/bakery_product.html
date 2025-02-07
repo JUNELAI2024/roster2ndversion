@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -129,9 +128,15 @@
             $('#restockForm').on('submit', function(event) {
                 event.preventDefault();
                 
-                const deliveryDate = $('#deliveryDate').val();
+                const deliveryDateInput = $('#deliveryDate').val();
                 const orderBy = $('#orderBy').val();
                 const restockDataArray = [];
+
+                // Validate delivery date and order by fields
+                if (!deliveryDateInput || !orderBy) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
 
                 $('.quantity').each(function() {
                     const quantity = $(this).data('quantity');
@@ -140,15 +145,15 @@
                         restockDataArray.push({
                             item_name: itemName,
                             restock_quantity: quantity,
-                            delivery_date: deliveryDate,
-                            order_by: orderBy
+                            delivery_date: deliveryDateInput, // Ensure this is YYYY-MM-DD
+                            order_by: orderBy,
                         });
                     }
                 });
 
                 if (restockDataArray.length > 0) {
                     $.ajax({
-                        url: '/roster/restock-product/',
+                        url: '/roster/restock-product/', // Ensure this matches your URL pattern
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(restockDataArray),
@@ -157,6 +162,7 @@
                                 alert(response.message);
                                 // Reset quantities after successful submission
                                 $('.quantity').data('quantity', 0).text(0);
+                                $('#restockForm')[0].reset(); // Reset the form fields
                             } else {
                                 alert('Error: ' + response.message);
                             }
@@ -168,9 +174,6 @@
                 } else {
                     alert('Please add at least one item to restock.');
                 }
-
-                // Reset form fields
-                this.reset();
             });
         });
     </script>
