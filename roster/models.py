@@ -63,6 +63,7 @@ class BakeryProduct(models.Model):
     item_id = models.CharField(max_length=50, unique=True)  # Custom item ID assigned by the store
     category = models.CharField(max_length=100)  # Product category
     item_name = models.CharField(max_length=100)  # Name of the item
+    item_name_CHI = models.CharField(max_length=100, blank=True)  # Name of the item in Chinese
     onsell = models.BooleanField(default=True)  # Whether the product is on sale
     start_date = models.DateField()  # When the product is available
     shelved_date = models.DateField(null=True, blank=True)  # When the product was shelved
