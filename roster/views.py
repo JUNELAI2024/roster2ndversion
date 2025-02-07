@@ -31,29 +31,37 @@ def bakery_product_view(request):
 
 
 @csrf_exempt
+@csrf_exempt
 def restock_product(request):
-     if request.method == 'POST':
-        item_id = request.POST.get('item_id')
-        product_name = request.POST.get('product_name')
-        restock_quantity = request.POST.get('restock_quantity')
-        delivery_date = request.POST.get('delivery_date')
-        order_by = request.POST.get('order_by')
+    if request.method == 'POST':
+        try:
+            # Get JSON data from the request body
+            data = json.loads(request.body)
 
-        # Create and save the new restock entry
-        restock_entry = BakeryProductRestock(
-            item_id=item_id,
-            product_name=product_name,
-            restock_quantity=restock_quantity,
-            delivery_date=delivery_date,
-            order_by=order_by
-        )
-        restock_entry.save()
+            # Extract values from the JSON data
+            item_id = data.get('item_id')
+            product_name = data.get('product_name')
+            restock_quantity = data.get('restock_quantity')
+            delivery_date = data.get('delivery_date')
+            order_by = data.get('order_by')
 
-        return JsonResponse({'status': 'success', 'message': 'Restock entry created!'})
+            # Create a new instance and save it to the database
+            restock_entry = BakeryProductRestock(
+                item_id=item_id,
+                product_name=product_name,
+                restock_quantity=restock_quantity,
+                delivery_date=delivery_date,
+                order_by=order_by
+            )
+            restock_entry.save()  # Save to the database
 
-        return render(request, 'bakery_product.html')
+            return JsonResponse({'status': 'success', 'message': 'Product restocked successfully.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
 
-
+        return render(request, 'roster/bakery_product.html')
 
 
 def home(request):
