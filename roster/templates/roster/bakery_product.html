@@ -45,16 +45,6 @@
             padding: 20px; /* Padding for content area */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
         }
-        .hidden {
-            display: none;
-        }
-        .category {
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .product-row {
-            display: none; /* Initially hide product rows */
-        }
     </style>
 </head>
 <body>
@@ -70,28 +60,7 @@
     </div>
 
     <div class="content">
-        <h1>Bakery Products</h1>
-        <div id="product-list">
-            {% for category in categories %}
-            <div class="category" data-category="{{ category }}">
-                {{ category }} >
-            </div>
-            <div class="product-row hidden">
-                {% for product in products %}
-                {% if product.category == category %}
-                <div class="product-item">
-                    <span>{{ product.item_name }}</span>
-                    <button class="decrease">-</button>
-                    <span class="quantity" data-item-name="{{ product.item_name }}" data-quantity="0">0</span>
-                    <button class="increase">+</button>
-                </div>
-                {% endif %}
-                {% endfor %}
-            </div>
-            {% endfor %}
-        </div>
-
-        <h2>Restock Products</h2>
+        <h1>Restock Bakery Products</h1>
         <form id="restockForm">
             <label for="item_id">Item ID:</label>
             <input type="text" id="item_id" name="item_id" required /><br>
@@ -114,28 +83,6 @@
 
     <script>
         $(document).ready(function() {
-            $('.category').on('click', function() {
-                $(this).next('.product-row').toggle(); // Toggle visibility of product rows
-            });
-
-            $('.increase').on('click', function() {
-                const quantitySpan = $(this).siblings('.quantity');
-                let quantity = parseInt(quantitySpan.data('quantity'));
-                quantity++;
-                quantitySpan.data('quantity', quantity);
-                quantitySpan.text(quantity);
-            });
-
-            $('.decrease').on('click', function() {
-                const quantitySpan = $(this).siblings('.quantity');
-                let quantity = parseInt(quantitySpan.data('quantity'));
-                if (quantity > 0) {
-                    quantity--;
-                    quantitySpan.data('quantity', quantity);
-                    quantitySpan.text(quantity);
-                }
-            });
-
             $('#restockForm').on('submit', function(event) {
                 event.preventDefault();
                 
@@ -149,43 +96,32 @@
                     return;
                 }
 
-                $('.quantity').each(function() {
-                    const quantity = $(this).data('quantity');
-                    if (quantity > 0) {
-                        const itemName = $(this).data('item-name');
-                        restockDataArray.push({
-                            item_id: $('#item_id').val(), // Get item ID
-                            product_name: itemName, // Product name from quantity span
-                            restock_quantity: quantity,
-                            delivery_date: deliveryDateInput,
-                            order_by: orderBy,
-                        });
-                    }
+                // Collect restock data
+                restockDataArray.push({
+                    item_id: $('#item_id').val(),
+                    product_name: $('#product_name').val(),
+                    restock_quantity: $('#restock_quantity').val(),
+                    delivery_date: deliveryDateInput,
+                    order_by: orderBy,
                 });
 
-                if (restockDataArray.length > 0) {
-                    $.ajax({
-                        url: '/roster/restock-product/', // Ensure this matches your URL pattern
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(restockDataArray),
-                        success: function(response) {
-                            if (response.status === 'success') {
-                                alert(response.message);
-                                // Reset quantities after successful submission
-                                $('.quantity').data('quantity', 0).text(0);
-                                $('#restockForm')[0].reset(); // Reset the form fields
-                            } else {
-                                alert('Error: ' + response.message);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            alert('Error: ' + error);
+                $.ajax({
+                    url: '/roster/restock-product/', // Ensure this matches your URL pattern
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(restockDataArray),
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            alert(response.message);
+                            $('#restockForm')[0].reset(); // Reset the form fields
+                        } else {
+                            alert('Error: ' + response.message);
                         }
-                    });
-                } else {
-                    alert('Please add at least one item to restock.');
-                }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error: ' + error);
+                    }
+                });
             });
         });
     </script>
