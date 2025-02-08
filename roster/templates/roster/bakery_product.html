@@ -221,14 +221,32 @@ function toggleItems(category) {
 
     // If quantity is updated, update the product name and quantity input
     if (currentQuantity > 0) {
-        productNameElement.value = $(quantityElement).closest('.item').find('span').first().text(); // Set product name
+        const itemName = $(quantityElement).closest('.item').find('span').first().text(); // Get item name
+        productNameElement.value = itemName; // Set product name
         quantityInputElement.value = currentQuantity; // Set the quantity input
+
+        // Fetch item ID based on the product name
+        $.ajax({
+            url: '/get-item-id/', // Ensure this matches your URL pattern
+            type: 'GET',
+            data: { item_name: itemName },
+            success: function(response) {
+                if (response.item_id) {
+                    $('#item_id').val(response.item_id); // Autofill the item ID
+                } else {
+                    alert('Item ID not found.');
+                }
+            },
+            error: function(xhr) {
+                console.error(xhr.responseText); // Log the full response for debugging
+                alert('Error fetching item ID.');
+            }
+        });
     } else {
         productNameElement.value = ''; // Clear product name if quantity is 0
         quantityInputElement.value = ''; // Clear quantity input if quantity is 0
     }
 }
-
 
 $(document).ready(function() {
     $('#restockForm').on('submit', function(event) {

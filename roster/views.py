@@ -17,6 +17,16 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+def get_item_id(request):
+    if request.method == 'GET':
+        item_name = request.GET.get('item_name', None)
+        if item_name:
+            try:
+                product = BakeryProduct.objects.get(item_name=item_name)
+                return JsonResponse({'item_id': product.item_id})
+            except BakeryProduct.DoesNotExist:
+                return JsonResponse({'error': 'Item not found'}, status=404)
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def bakery_product_view(request):
     products = BakeryProduct.objects.filter(onsell=True)  # Get only products that are on sale
