@@ -194,60 +194,41 @@ function toggleItems(category) {
         }
 
         function changeQuantity(productId, change) {
-    const quantityElement = document.getElementById(`quantity-${productId}`);
-    const quantityInputElement = document.getElementById('quantity'); // Get the quantity input
-    const productNameElement = document.getElementById('product_name'); // Get the product name input
-    const deliveryDate = $('#deliveryDate').val(); // Get the delivery date value
-    const orderBy = $('#orderBy').val(); // Get the order by value
+            const quantityElement = document.getElementById(`quantity-${productId}`);
+            const quantityInputElement = document.getElementById('quantity'); // Get the quantity input
+            const productNameElement = document.getElementById('product_name'); // Get the product name input
+            const deliveryDate = $('#deliveryDate').val(); // Get the delivery date value
+            const orderBy = $('#orderBy').val(); // Get the order by value
 
-    // Check if delivery date and order by fields are filled
-    if (!deliveryDate || !orderBy) {
-        alert('Please fill in the Delivery Date and Ordered By fields before updating the quantity.');
-        return; // Exit if either field is empty
-    }
-
-    if (!quantityElement) {
-        console.error(`Quantity element for product ID ${productId} not found.`);
-        return; // Exit if the element doesn't exist
-    }
-
-    let currentQuantity = parseInt(quantityElement.innerText) || 0;
-    currentQuantity += change;
-
-    // Prevent negative quantity
-    if (currentQuantity < 0) currentQuantity = 0;
-
-    quantityElement.innerText = currentQuantity;
-
-    // If quantity is updated, update the product name and quantity input
-    if (currentQuantity > 0) {
-        const itemName = $(quantityElement).closest('.item').find('span').first().text(); // Get item name
-        productNameElement.value = itemName; // Set product name
-        quantityInputElement.value = currentQuantity; // Set the quantity input
-
-        // Fetch item ID based on the product name
-        $.ajax({
-            url: '/get-item-id/', // Ensure this matches your URL pattern
-            type: 'GET',
-            data: { item_name: itemName },
-            success: function(response) {
-                if (response.item_id) {
-                    $('#item_id').val(response.item_id); // Autofill the item ID
-                } else {
-                    alert('Item ID not found.');
-                }
-            },
-            error: function(xhr) {
-                console.error(xhr.responseText); // Log the full response for debugging
-                alert('Error fetching item ID.');
+            // Check if delivery date and order by fields are filled
+            if (!deliveryDate || !orderBy) {
+                alert('Please fill in the Delivery Date and Ordered By fields before updating the quantity.');
+                return; // Exit if either field is empty
             }
-        });
-    } else {
-        productNameElement.value = ''; // Clear product name if quantity is 0
-        quantityInputElement.value = ''; // Clear quantity input if quantity is 0
-    }
-}
 
+            if (!quantityElement) {
+                console.error(`Quantity element for product ID ${productId} not found.`);
+                return; // Exit if the element doesn't exist
+            }
+
+            let currentQuantity = parseInt(quantityElement.innerText) || 0;
+            currentQuantity += change;
+
+            // Prevent negative quantity
+            if (currentQuantity < 0) currentQuantity = 0;
+
+            quantityElement.innerText = currentQuantity;
+
+            // If quantity is updated, update the product name and quantity input
+            if (currentQuantity > 0) {
+                productNameElement.value = $(quantityElement).closest('.item').find('span').first().text(); // Set product name
+                quantityInputElement.value = currentQuantity; // Set the quantity input
+            } else {
+                productNameElement.value = ''; // Clear product name if quantity is 0
+                quantityInputElement.value = ''; // Clear quantity input if quantity is 0
+            }
+        }
+        
 $(document).ready(function() {
     $('#restockForm').on('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
