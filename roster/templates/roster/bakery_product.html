@@ -9,41 +9,122 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
     <style>
-        body {
+                body {
             font-family: Arial, sans-serif;
-            margin: 0; /* Remove default margin */
-            display: flex; /* Use flexbox for layout */
-            height: 100vh; /* Full viewport height */
-            background-color: #f4f4f4; /* Background color */
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f4f4;
         }
         .sidebar {
-            width: 250px; /* Fixed width for sidebar */
-            background-color: #2c3e50; /* Sidebar color */
-            color: white; /* Text color */
-            padding: 20px; /* Padding inside sidebar */
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Shadow effect */
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar h2 {
-            color: #ecf0f1; /* Sidebar header color */
+            color: #ecf0f1;
         }
         .sidebar ul {
-            list-style-type: none; /* Remove default list styling */
-            padding: 0; /* Remove default padding */
+            list-style-type: none;
+            padding: 0;
         }
         .sidebar ul li {
-            margin: 15px 0; /* Space between items */
+            margin: 15px 0;
         }
         .sidebar ul li a {
-            color: white; /* Link color */
-            text-decoration: none; /* Remove underline */
+            color: white;
+            text-decoration: none;
         }
         .sidebar ul li a:hover {
-            text-decoration: underline; /* Underline on hover */
+            text-decoration: underline;
         }
         .content {
-            flex: 1; /* Take up remaining space */
-            padding: 20px; /* Padding for content area */
-            overflow-y: auto; /* Enable vertical scrolling if content overflows */
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .category {
+            margin-bottom: 5px; /* Smaller margin */
+            background-color: #06121a; 
+            color: white; 
+            padding: 5px 10px; /* Reduced padding */
+            border-radius: 3px; /* Smaller border radius */
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 10px; /* Smaller font size */
+            width: calc(30% - 15px); /* Adjusted width */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        }
+        .category:hover {
+            transform: scale(1.02); /* Slightly enlarge on hover */
+        }
+        .items {
+            display: none; 
+            margin-top: 7px;
+            column-count: 3; 
+            column-gap: 15px; 
+        }
+        .item {
+    break-inside: avoid; 
+    background-color: #fff;
+    padding: 10px; 
+    margin-bottom: 5px; 
+    border: 1px solid #ccc;
+    border-radius: 3px; 
+    font-size: 15px; 
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between; /* Space between item name and quantity controls */
+    align-items: center; /* Center items vertically */
+}
+
+.quantity-controls {
+    display: flex; /* Flexbox for quantity controls */
+    align-items: center; /* Center buttons vertically */
+}
+
+.quantity-controls button {
+    background-color: #0b1014; 
+    color: white; 
+    border: none; 
+    border-radius: 3px; 
+    cursor: pointer; 
+    padding: 5px 10px; 
+    font-size: 10px; 
+    margin: 0 3px; /* Space between buttons */
+}
+        .item:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+        }
+        .expand-icon {
+            margin-left: 10px; 
+            font-weight: bold; 
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            width: calc(100% - 22px); 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            font-size: 16px; 
+        }
+        button {
+            padding: 10px 15px; 
+            background-color: #2980b9; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            height: 40px; 
+            transition: background-color 0.3s; /* Smooth hover effect */
+        }
+        button:hover {
+            background-color: #3498db; 
         }
     </style>
 </head>
@@ -61,7 +142,32 @@
 
     <div class="content">
         <h1>Restock Bakery Products</h1>
+
+        <div class="categories">
+            {% for category in categories %}
+                <div class="category" onclick="toggleItems('{{ category }}')">
+                    <h2 class="category-title">{{ category }}</h2>
+                    <span class="expand-icon">></span>
+                </div>
+                <div class="items" id="{{ category }}">
+                    {% for product in products %}
+                        {% if product.category == category %}
+                            <div class="item">
+                                <span>{{ product.item_name }}</span>
+                                <div class="quantity-controls">
+                                    <button onclick="changeQuantity('{{ product.id }}', -1)">-</button>
+                                    <span id="quantity-{{ product.id }}">0</span>
+                                    <button onclick="changeQuantity('{{ product.id }}', 1)">+</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
         <form id="restockForm">
+
             <label for="item_id">Item ID:</label>
             <input type="text" id="item_id" name="item_id" required /><br>
 
@@ -82,6 +188,25 @@
     </div>
 
     <script>
+
+function toggleItems(category) {
+            const itemsDiv = document.getElementById(category);
+            itemsDiv.style.display = itemsDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function changeQuantity(productId, change) {
+            const quantityElement = document.getElementById(`quantity-${productId}`);
+            let currentQuantity = parseInt(quantityElement.innerText) || 0;
+            currentQuantity += change;
+
+            if (currentQuantity < 0) currentQuantity = 0; // Prevent negative quantity
+            quantityElement.innerText = currentQuantity;
+
+            // Autofill the restock quantity based on total
+            const restockQuantityInput = document.getElementById('restock_quantity');
+            restockQuantityInput.value = currentQuantity;
+        }
+
         $(document).ready(function() {
             $('#restockForm').on('submit', function(event) {
     event.preventDefault(); // Prevent the default form submission

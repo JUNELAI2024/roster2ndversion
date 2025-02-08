@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from rest_framework import viewsets
-from .models import Staff, Roster, RosterConfig
+from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock
 from django.db.models import Sum
 from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
@@ -16,7 +16,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import BakeryProduct, BakeryProductRestock
+
 
 def bakery_product_view(request):
     products = BakeryProduct.objects.filter(onsell=True)  # Get only products that are on sale
@@ -32,6 +32,11 @@ def bakery_product_view(request):
 
 @csrf_exempt
 def restock_product(request):
+     # Fetch all products that are onsell
+    products = BakeryProduct.objects.filter(onsell=True)
+    # Get unique categories
+    categories = products.values_list('category', flat=True).distinct()
+
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -57,9 +62,13 @@ def restock_product(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON.'})
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)})
-
+        
+ # Handle GET requests by rendering the template
+    context = {
+        'categories': categories
+    }
     # Handle GET requests by rendering the template
-        return render(request, 'roster/bakery_product.html')  # Ensure this points to your actual template path
+    return render(request, 'roster/bakery_product.html')  # Ensure this points to your actual template path
 
 def home(request):
     return render(request, 'roster/home.html')  # Make sure the path matches your template location
