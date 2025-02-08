@@ -142,6 +142,11 @@
 
     <div class="content">
         <h1>Restock Bakery Products</h1>
+        <label for="deliveryDate">Delivery Date:</label>
+        <input type="text" id="deliveryDate" name="deliveryDate" placeholder="YYYY-MM-DD" required />
+
+        <label for="orderBy">Ordered By:</label>
+        <input type="text" id="orderBy" required /><br/>
 
         <div class="categories">
             {% for category in categories %}
@@ -177,12 +182,6 @@
     <label for="quantity">Quantity:</label>
     <input type="text" id="quantity" name="quantity" required readonly /><br> <!-- Readonly initially -->
 
-            <label for="deliveryDate">Delivery Date:</label>
-            <input type="text" id="deliveryDate" name="deliveryDate" placeholder="YYYY-MM-DD" required />
-
-            <label for="orderBy">Ordered By:</label>
-            <input type="text" id="orderBy" required /><br/>
-
             <button type="submit">Submit Restock</button>
         </form>
     </div>
@@ -198,6 +197,14 @@ function toggleItems(category) {
     const quantityElement = document.getElementById(`quantity-${productId}`);
     const quantityInputElement = document.getElementById('quantity'); // Get the quantity input
     const productNameElement = document.getElementById('product_name'); // Get the product name input
+    const deliveryDate = $('#deliveryDate').val(); // Get the delivery date value
+    const orderBy = $('#orderBy').val(); // Get the order by value
+
+    // Check if delivery date and order by fields are filled
+    if (!deliveryDate || !orderBy) {
+        alert('Please fill in the Delivery Date and Ordered By fields before updating the quantity.');
+        return; // Exit if either field is empty
+    }
 
     if (!quantityElement) {
         console.error(`Quantity element for product ID ${productId} not found.`);
@@ -221,6 +228,7 @@ function toggleItems(category) {
         quantityInputElement.value = ''; // Clear quantity input if quantity is 0
     }
 }
+
 
 $(document).ready(function() {
     $('#restockForm').on('submit', function(event) {
