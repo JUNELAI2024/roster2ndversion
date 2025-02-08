@@ -41,11 +41,12 @@ def restock_product(request):
         try:
             data = json.loads(request.body)
 
-            item_id = data.get('item_id')
-            product_name = data.get('product_name')
-            restock_quantity = data.get('restock_quantity')
-            delivery_date = data.get('delivery_date')
-            order_by = data.get('order_by')
+            for product in data:
+               item_id = product.get('item_id')
+            product_name = product.get('product_name')
+            restock_quantity = product.get('restock_quantity')
+            delivery_date = product.get('delivery_date')
+            order_by = product.get('order_by')
 
             # Create a new instance and save it to the database
             restock_entry = BakeryProductRestock(

@@ -172,10 +172,10 @@
             <input type="text" id="item_id" name="item_id" required /><br>
 
             <label for="product_name">Product Name:</label>
-            <input type="text" id="product_name" name="product_name" required /><br>
+    <input type="text" id="product_name" name="product_name" required /><br>
 
-            <label for="restock_quantity">Restock Quantity:</label>
-            <input type="text" id="restock_quantity" name="restock_quantity" placeholder="Restock Quantity" required /><br>
+    <label for="quantity">Quantity:</label>
+    <input type="text" id="quantity" name="quantity" required readonly /><br> <!-- Readonly initially -->
 
             <label for="deliveryDate">Delivery Date:</label>
             <input type="text" id="deliveryDate" name="deliveryDate" placeholder="YYYY-MM-DD" required />
@@ -195,51 +195,79 @@ function toggleItems(category) {
         }
 
         function changeQuantity(productId, change) {
-            const quantityElement = document.getElementById(`quantity-${productId}`);
-            let currentQuantity = parseInt(quantityElement.innerText) || 0;
-            currentQuantity += change;
+    const quantityElement = document.getElementById(`quantity-${productId}`);
+    const quantityInputElement = document.getElementById('quantity'); // Get the quantity input
+    const productNameElement = document.getElementById('product_name'); // Get the product name input
 
-            if (currentQuantity < 0) currentQuantity = 0; // Prevent negative quantity
-            quantityElement.innerText = currentQuantity;
+    if (!quantityElement) {
+        console.error(`Quantity element for product ID ${productId} not found.`);
+        return; // Exit if the element doesn't exist
+    }
 
-            // Autofill the restock quantity based on total
-            const restockQuantityInput = document.getElementById('restock_quantity');
-            restockQuantityInput.value = currentQuantity;
+    let currentQuantity = parseInt(quantityElement.innerText) || 0;
+    currentQuantity += change;
+
+    // Prevent negative quantity
+    if (currentQuantity < 0) currentQuantity = 0;
+
+    quantityElement.innerText = currentQuantity;
+
+    // If quantity is updated, update the product name and quantity input
+    if (currentQuantity > 0) {
+        productNameElement.value = $(quantityElement).closest('.item').find('span').first().text(); // Set product name
+        quantityInputElement.value = currentQuantity; // Set the quantity input
+    } else {
+        productNameElement.value = ''; // Clear product name if quantity is 0
+        quantityInputElement.value = ''; // Clear quantity input if quantity is 0
+    }
+}
+
+$(document).ready(function() {
+    $('#restockForm').on('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        const products = [];
+        const itemId = $('#item_id').val(); // Get the manually inputted item ID
+        const productName = $('#product_name').val(); // Get the product name from the input
+        const quantity = $('#quantity').val(); // Get the quantity from the input
+
+        // Only include products with a quantity greater than 0
+        if (quantity > 0) {
+            products.push({
+                item_id: itemId,                // Include the item ID
+                product_name: productName,       // Use the product name from the input
+                restock_quantity: quantity,      // Use the quantity from the input
+                delivery_date: $('#deliveryDate').val(), // Get the delivery date from the input
+                order_by: $('#orderBy').val(),   // Get the orderer name from the input
+            });
         }
 
-        $(document).ready(function() {
-            $('#restockForm').on('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission
-
-    const restockData = {
-        item_id: $('#item_id').val(),
-        product_name: $('#product_name').val(),
-        restock_quantity: $('#restock_quantity').val(),
-        delivery_date: $('#deliveryDate').val(),  // Ensure format is YYYY-MM-DD
-        order_by: $('#orderBy').val(),
-    };
-
-    $.ajax({
-        url: '/roster/restock-product/', // Ensure this matches your URL pattern
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(restockData), // Send data as JSON
-        success: function(response) {
-            if (response.status === 'success') {
-                alert(response.message);
-                $('#restockForm')[0].reset(); // Reset the form fields
-            } else {
-                alert('Error: ' + response.message);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText); // Log the full response for debugging
-            alert('Error: ' + error);
+        // Send data to the server if there are products to restock
+        if (products.length > 0) {
+            $.ajax({
+                url: '/roster/restock-product/', // Ensure this matches your URL pattern
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(products), // Send array of products as JSON
+                success: function(response) {
+                    console.log('Response:', response); // Debugging log
+                    if (response.status === 'success') {
+                        alert(response.message);
+                        $('#restockForm')[0].reset(); // Reset the form fields
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText); // Log the full response for debugging
+                    alert('Error: ' + error);
+                }
+            });
+        } else {
+            alert('Please select at least one product to restock.');
         }
     });
 });
-             
-        });
     </script>
 </body>
 </html>
