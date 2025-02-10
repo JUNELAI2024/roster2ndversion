@@ -285,12 +285,19 @@ function toggleItems(category) {
         // Remove row from order summary if quantity is 0
         const existingRow = Array.from(orderSummaryBody.rows).find(row => row.cells[2].innerText === itemId);
         if (existingRow) {
-            orderSummaryBody.deleteRow(existingRow.rowIndex);
+            const rowIndex = existingRow.rowIndex; // Get the row index
+            if (rowIndex >= 0) { // Check if the index is valid
+                orderSummaryBody.deleteRow(rowIndex);
+            } else {
+                console.error(`Invalid row index: ${rowIndex}`);
+            }
+        } else {
+            console.error(`Row for item ID ${itemId} not found in order summary.`);
         }
 
         // Clear inputs if quantity is 0
-        productNameElement.value = '';
-        quantityInputElement.value = '';
+        productNameElement.value = ''; 
+        quantityInputElement.value = ''; 
         itemIdInputElement.value = '';
     }
 }
