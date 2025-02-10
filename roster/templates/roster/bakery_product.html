@@ -125,6 +125,28 @@
         }
         button:hover {
             background-color: #3498db; 
+            .order-summary {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.order-summary table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.order-summary th, .order-summary td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.order-summary th {
+    background-color: #f2f2f2;
+}
         }
     </style>
 </head>
@@ -158,11 +180,11 @@
                     {% for product in products %}
                         {% if product.category == category %}
                             <div class="item">
-                                <span>{{ product.item_name }}</span>
+                                <span>{{ product.item_id }} - {{ product.item_name }}</span> <!-- Display item_id and item_name -->
                                 <div class="quantity-controls">
-                                    <button onclick="changeQuantity('{{ product.id }}', -1)">-</button>
+                                    <button type="button" onclick="changeQuantity('{{ product.id }}', -1, '{{ product.item_id }}')">-</button>
                                     <span id="quantity-{{ product.id }}">0</span>
-                                    <button onclick="changeQuantity('{{ product.id }}', 1)">+</button>
+                                    <button type="button" onclick="changeQuantity('{{ product.id }}', 1, '{{ product.item_id }}')">+</button>
                                 </div>
                             </div>
                         {% endif %}
@@ -181,11 +203,30 @@
 
     <label for="quantity">Quantity:</label>
     <input type="text" id="quantity" name="quantity" required readonly /><br> <!-- Readonly initially -->
-
-            <button type="submit">Submit Restock</button>
+    <button type="submit">Submit Restock</button>
+    <div class="order-summary">
+        <h2>Order Summary</h2>
+        <table id="orderSummaryTable">
+            <thead>
+                <tr>
+                    <th>Delivery Date</th>
+                    <th>Ordered By</th>
+                    <th>Item ID</th>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="orderSummaryBody">
+                <!-- New rows will be added here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+    
         </form>
     </div>
 
+    
     <script>
 
 function toggleItems(category) {
@@ -193,12 +234,14 @@ function toggleItems(category) {
             itemsDiv.style.display = itemsDiv.style.display === 'none' ? 'block' : 'none';
         }
 
-        function changeQuantity(productId, change) {
+        function changeQuantity(productId, change, itemId) {
             const quantityElement = document.getElementById(`quantity-${productId}`);
             const quantityInputElement = document.getElementById('quantity'); // Get the quantity input
             const productNameElement = document.getElementById('product_name'); // Get the product name input
+            const itemIdInputElement = document.getElementById('item_id'); // Get the item ID input field
             const deliveryDate = $('#deliveryDate').val(); // Get the delivery date value
             const orderBy = $('#orderBy').val(); // Get the order by value
+            const orderSummaryBody = document.getElementById('orderSummaryBody');
 
             // Check if delivery date and order by fields are filled
             if (!deliveryDate || !orderBy) {
@@ -221,13 +264,36 @@ function toggleItems(category) {
 
             // If quantity is updated, update the product name and quantity input
             if (currentQuantity > 0) {
+                 // Set the product name and quantity input
+        const productName = $(quantityElement).closest('.item').find('span').first().text().split(' - ')[1]; // Extract product name
                 productNameElement.value = $(quantityElement).closest('.item').find('span').first().text(); // Set product name
                 quantityInputElement.value = currentQuantity; // Set the quantity input
-            } else {
-                productNameElement.value = ''; // Clear product name if quantity is 0
-                quantityInputElement.value = ''; // Clear quantity input if quantity is 0
-            }
+                itemIdInputElement.value = itemId; // Autofeed the item ID input
+  // Update or add to order summary
+  const existingRow = Array.from(orderSummaryBody.rows).find(row => row.cells[2].innerText === itemId);
+        if (existingRow) {
+            existingRow.cells[4].innerText = currentQuantity; // Update existing row quantity
+        } else {
+            const newRow = orderSummaryBody.insertRow();
+            newRow.insertCell(0).innerText = deliveryDate;
+            newRow.insertCell(1).innerText = orderBy;
+            newRow.insertCell(2).innerText = itemId;
+            newRow.insertCell(3).innerText = productName;
+            newRow.insertCell(4).innerText = currentQuantity;
         }
+    } else {
+        // Remove row from order summary if quantity is 0
+        const existingRow = Array.from(orderSummaryBody.rows).find(row => row.cells[2].innerText === itemId);
+        if (existingRow) {
+            orderSummaryBody.deleteRow(existingRow.rowIndex);
+        }
+
+        // Clear inputs if quantity is 0
+        productNameElement.value = '';
+        quantityInputElement.value = '';
+        itemIdInputElement.value = '';
+    }
+}
         
 $(document).ready(function() {
     $('#restockForm').on('submit', function(event) {
@@ -260,6 +326,10 @@ $(document).ready(function() {
                     console.log('Response:', response); // Debugging log
                     if (response.status === 'success') {
                         alert(response.message);
+
+                        // Clear the order summary
+                        $('#orderSummaryBody').empty();
+
                         $('#restockForm')[0].reset(); // Reset the form fields
                     } else {
                         alert('Error: ' + response.message);
