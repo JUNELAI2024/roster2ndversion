@@ -194,38 +194,34 @@
         </div>
 
         <form id="restockForm">
+            <input type="text" id="item_id" name="item_id" required style="display: none;" /> <!-- Hidden input -->
+            <input type="text" id="product_name" name="product_name" required style="display: none;" /> <!-- Hidden input -->
+            <input type="text" id="quantity" name="quantity" required readonly style="display: none;" /> <!-- Hidden input -->
 
-            <label for="item_id">Item ID:</label>
-            <input type="text" id="item_id" name="item_id" required /><br>
-
-            <label for="product_name">Product Name:</label>
-    <input type="text" id="product_name" name="product_name" required /><br>
-
-    <label for="quantity">Quantity:</label>
-    <input type="text" id="quantity" name="quantity" required readonly /><br> <!-- Readonly initially -->
-    <button type="submit">Submit Restock</button>
-</form>
-
-<div class="order-summary">
-    <h2>Order Summary</h2>
-    <table id="orderSummaryTable">
-        <thead>
-            <tr>
-                <th>Delivery Date</th>
-                <th>Ordered By</th>
-                <th>Item ID</th>
-                <th>Item Name</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-        <tbody id="orderSummaryBody">
-            <!-- New rows will be added here -->
-        </tbody>
-    </table>
-</div>
-</div>
+            <div class="order-summary">
+                <h2>Order Summary</h2>
+                <table id="orderSummaryTable">
+                    <thead>
+                        <tr>
+                            <th>Delivery Date</th>
+                            <th>Ordered By</th>
+                            <th>Item ID</th>
+                            <th>Item Name</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orderSummaryBody">
+                        <!-- New rows will be added here -->
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit">Submit Restock</button>
+        </form>
+    </div>
     
     <script>
+           let orderItems = []; // Temporary array to store order details
+
 
 function toggleItems(category) {
             const itemsDiv = document.getElementById(category);
@@ -239,7 +235,7 @@ function toggleItems(category) {
             const itemIdInputElement = document.getElementById('item_id'); // Get the item ID input field
             const deliveryDate = $('#deliveryDate').val(); // Get the delivery date value
             const orderBy = $('#orderBy').val(); // Get the order by value
-            const orderSummaryBody = document.getElementById('orderSummaryBody');
+            
 
             // Check if delivery date and order by fields are filled
             if (!deliveryDate || !orderBy) {
@@ -267,27 +263,47 @@ function toggleItems(category) {
                 productNameElement.value = $(quantityElement).closest('.item').find('span').first().text(); // Set product name
                 quantityInputElement.value = currentQuantity; // Set the quantity input
                 itemIdInputElement.value = itemId; // Autofeed the item ID input
-  // Update or add to order summary
-  const existingRow = Array.from(orderSummaryBody.rows).find(row => row.cells[2].innerText === itemId);
-        if (existingRow) {
-            existingRow.cells[4].innerText = currentQuantity; // Update existing row quantity
-        } else {
-            const newRow = orderSummaryBody.insertRow();
-            newRow.insertCell(0).innerText = deliveryDate;
-            newRow.insertCell(1).innerText = orderBy;
-            newRow.insertCell(2).innerText = itemId;
-            newRow.insertCell(3).innerText = productName;
-            newRow.insertCell(4).innerText = currentQuantity;
-        }
-    } else {
-        // Clear inputs if quantity is 0
-        productNameElement.value = ''; 
-        quantityInputElement.value = ''; 
-        itemIdInputElement.value = '';
+  
+  
+            // Update the temporary orderItems array
+            const existingItemIndex = orderItems.findIndex(item => item.item_id === itemId);
+                if (existingItemIndex !== -1) {
+                    orderItems[existingItemIndex].quantity = currentQuantity; // Update existing item quantity
+                } else {
+                    orderItems.push({
+                        item_id: itemId,
+                        item_name: productName,
+                        quantity: currentQuantity,
+                        delivery_date: deliveryDate,
+                        ordered_by: orderBy
+                    });
+                }
+            } else {
+                // Clear inputs if quantity is 0
+                productNameElement.value = ''; 
+                quantityInputElement.value = ''; 
+                itemIdInputElement.value = '';
 
-        
-    }
-}
+                // Remove the item from orderItems if quantity is 0
+                orderItems = orderItems.filter(item => item.item_id !== itemId);
+            }
+
+            // Update Order Summary Display
+            updateOrderSummaryDisplay();
+        }
+        function updateOrderSummaryDisplay() {
+            const orderSummaryBody = document.getElementById('orderSummaryBody');
+            orderSummaryBody.innerHTML = ''; // Clear existing rows
+
+            orderItems.forEach(item => {
+                const newRow = orderSummaryBody.insertRow();
+                newRow.insertCell(0).innerText = item.delivery_date;
+                newRow.insertCell(1).innerText = item.ordered_by;
+                newRow.insertCell(2).innerText = item.item_id;
+                newRow.insertCell(3).innerText = item.item_name;
+                newRow.insertCell(4).innerText = item.quantity;
+            });
+        }
 
 
 $(document).ready(function() {
@@ -324,6 +340,12 @@ $(document).ready(function() {
 
                         // Clear the order summary
                         $('#orderSummaryBody').empty();
+
+              // Reset all displayed quantities to 0
+        $('.quantity-controls span').each(function() {
+            $(this).text('0'); // Set displayed quantity to 0
+        });
+
 
                         $('#restockForm')[0].reset(); // Reset the form fields
                     } else {
