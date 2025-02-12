@@ -9,41 +9,53 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
     <style>
-                body {
+           body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            background-color: #f4f4f4;
+            margin: 0; /* Remove default margin */
+            display: flex; /* Use flexbox for layout */
+            height: 100vh; /* Full viewport height */
+            background-color: #f9f9f9; /* Light background for the entire page */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px; /* Space below the title */
         }
         .sidebar {
-            width: 250px;
-            background-color: #2c3e50;
-            color: white;
-            padding: 20px;
+            width: 200px; /* Reduced width for sidebar */
+            background-color: white; /* White background for sidebar */
+            color: #333; /* Change text color */
+            padding: 15px; /* Reduced padding */
+            border-right: 2px solid #bdc3c7; /* Grey border on the right */
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar h2 {
-            color: #ecf0f1;
+            color: #2980b9; /* Blue color for the heading */
+            margin-bottom: 15px; /* Space below the heading */
         }
         .sidebar ul {
-            list-style-type: none;
-            padding: 0;
+            list-style-type: none; /* Remove default list styling */
+            padding: 0; /* Remove default padding */
         }
         .sidebar ul li {
-            margin: 15px 0;
+            margin: 10px 0; /* Space between items */
         }
         .sidebar ul li a {
-            color: white;
-            text-decoration: none;
+            color: #2980b9; /* Link color */
+            text-decoration: none; /* Remove underline */
+            padding: 8px; /* Adjusted padding */
+            display: block; /* Make the link fill the entire list item */
+            border-radius: 4px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth background change */
         }
         .sidebar ul li a:hover {
-            text-decoration: underline;
+            background-color: #ecf0f1; /* Light grey background on hover */
+            text-decoration: none; /* No underline on hover */
         }
         .content {
-            flex: 1;
+            flex: 1; /* Take up remaining space */
             padding: 20px;
-            overflow-y: auto;
+            background-color: #f9f9f9; /* Background color for content area */
+            overflow-y: auto; /* Enable vertical scrolling if content overflows */
         }
         .category {
             margin-bottom: 5px; /* Smaller margin */
