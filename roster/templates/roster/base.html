@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Site{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default margin */
+            display: flex; /* Use flexbox for layout */
+            height: 100vh; /* Full viewport height */
+            background-color: #f9f9f9; /* Light background for the entire page */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px; /* Space below the title */
+        }
+        .sidebar {
+            width: 200px; /* Reduced width for sidebar */
+            background-color: white; /* White background for sidebar */
+            color: #333; /* Change text color */
+            padding: 15px; /* Reduced padding */
+            border-right: 2px solid #bdc3c7; /* Grey border on the right */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            color: #2980b9; /* Blue color for the heading */
+            margin-bottom: 15px; /* Space below the heading */
+        }
+        .sidebar ul {
+            list-style-type: none; /* Remove default list styling */
+            padding: 0; /* Remove default padding */
+        }
+        .sidebar ul li {
+            margin: 10px 0; /* Space between items */
+            position: relative; /* Positioning for dropdown */
+        }
+        .sidebar ul li a {
+            color: #2980b9; /* Link color */
+            text-decoration: none; /* Remove underline */
+            padding: 8px; /* Adjusted padding */
+            display: block; /* Make the link fill the entire list item */
+            border-radius: 4px; /* Rounded corners */
+            transition: background-color 0.3s; /* Smooth background change */
+        }
+        .sidebar ul li a:hover {
+            background-color: #ecf0f1; /* Light grey background on hover */
+            text-decoration: none; /* No underline on hover */
+        }
+        .dropdown-menu {
+            display: none; /* Hide dropdown by default */
+            position: absolute; /* Position it below the main item */
+            top: 100%; /* Align it below the parent */
+            left: 0; /* Align it to the left */
+            background-color: white; /* White background for dropdown */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for dropdown */
+            z-index: 1000; /* Ensure it appears above other content */
+            min-width: 150px; /* Minimum width for dropdown */
+            padding: 0; /* No padding */
+            margin-left: 20px; /* Indent the submenu */
+        }
+        .sidebar ul li:hover .dropdown-menu {
+            display: block; /* Show dropdown on hover */
+        }
+        .dropdown-menu a {
+            padding: 6px 10px; /* Smaller padding for dropdown items */
+            color: #2980b9; /* Link color for dropdown */
+            font-size: 0.9em; /* Smaller font size */
+        }
+        .dropdown-menu a:hover {
+            background-color: #ecf0f1; /* Light grey background on hover for dropdown */
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <ul>
+            <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
+            <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
+            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>
+            <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Bakery Products</a></li>
+            <li>
+                <a href="#"><i class="fas fa-cogs"></i> Manage Bakery Products</a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'manage_bakery_products' %}">Add Product</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

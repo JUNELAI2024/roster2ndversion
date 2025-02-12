@@ -1,0 +1,121 @@
+{% extends 'roster/base.html' %}
+
+{% block title %}Manage Bakery Products{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background color */
+    }
+    .container {
+        background-color: #fff; /* White container */
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        width: 100%; /* Full width */
+        max-width: none; /* Remove max-width restriction */
+    }
+    h1 {
+        color: #343a40; /* Dark color for the title */
+    }
+    .form-label {
+        font-weight: bold;
+        color: #495057; /* Darker label color */
+    }
+    .form-control {
+        border: 1px solid #ced4da; /* Light border */
+        border-radius: 5px; /* Rounded corners */
+        transition: border-color 0.2s;
+    }
+    .form-control:focus {
+        border-color: #007bff; /* Blue border on focus */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Light blue shadow */
+    }
+    .btn-primary {
+        background-color: #007bff; /* Primary button color */
+        border: none;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+    }
+</style>
+
+<div class="container mt-5">
+    <h1 class="mb-4">Manage Bakery Products</h1>
+
+    <!-- Form to add a new bakery product -->
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="item_id" class="form-label">Item ID:</label>
+            <input type="text" id="item_id" name="item_id" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="category" class="form-label">Category:</label>
+            <input type="text" id="category" name="category" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="item_name" class="form-label">Product Name:</label>
+            <input type="text" id="item_name" name="item_name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="item_name_CHI" class="form-label">Product Name (Chinese):</label>
+            <input type="text" id="item_name_CHI" name="item_name_CHI" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="onsell" class="form-label">On Sale:</label>
+            <select id="onsell" name="onsell" class="form-select" required>
+                <option value="True">Yes</option>
+                <option value="False">No</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="start_date" class="form-label">Start Date:</label>
+            <input type="date" id="start_date" name="start_date" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="shelved_date" class="form-label">Shelved Date:</label>
+            <input type="date" id="shelved_date" name="shelved_date" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="remarks" class="form-label">Remarks:</label>
+            <textarea id="remarks" name="remarks" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Product</button>
+    </form>
+</div>
+
+<!-- Optional JavaScript; choose one of the two! -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+<script>
+    // Example of Bootstrap validation
+    (function () {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+
+{% endblock %}

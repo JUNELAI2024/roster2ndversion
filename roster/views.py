@@ -17,16 +17,35 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-def get_item_id(request):
-    if request.method == 'GET':
-        item_name = request.GET.get('item_name', None)
-        if item_name:
-            try:
-                product = BakeryProduct.objects.get(item_name=item_name)
-                return JsonResponse({'item_id': product.item_id})
-            except BakeryProduct.DoesNotExist:
-                return JsonResponse({'error': 'Item not found'}, status=404)
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+def manage_bakery_products(request):
+    if request.method == 'POST':
+        # Handle the form submission
+        item_id = request.POST.get('item_id')
+        category = request.POST.get('category')
+        item_name = request.POST.get('item_name')
+        item_name_CHI = request.POST.get('item_name_CHI', '')
+        onsell = request.POST.get('onsell') == 'True'
+        start_date = request.POST.get('start_date')
+        shelved_date = request.POST.get('shelved_date') or None
+        remarks = request.POST.get('remarks', '')
+
+        # Create a new BakeryProduct instance
+        new_product = BakeryProduct(
+            item_id=item_id,
+            category=category,
+            item_name=item_name,
+            item_name_CHI=item_name_CHI,
+            onsell=onsell,
+            start_date=start_date,
+            shelved_date=shelved_date,
+            remarks=remarks
+        )
+        new_product.save()  # Save to the database
+
+        return redirect('manage_bakery_products')  # Redirect to the same page after submission
+
+    # Handle GET request to display the form
+    return render(request, 'roster/manage_bakery_products.html')
 
 def bakery_product_view(request):
     products = BakeryProduct.objects.filter(onsell=True)  # Get only products that are on sale
