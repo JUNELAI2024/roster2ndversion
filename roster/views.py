@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets
 from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock
 from django.db.models import Sum
@@ -16,6 +16,29 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+
+def modify_product_info(request):
+    product = None
+    if request.method == "POST":
+        item_id = request.POST.get('item_id')
+        item_name = request.POST.get('item_name')
+
+        # Search for the product based on item_id or item_name
+        if item_id:
+            product = get_object_or_404(BakeryProduct, item_id=item_id)
+        elif item_name:
+            product = BakeryProduct.objects.filter(item_name__icontains=item_name).first()
+
+        # If a product is found and the modify button is pressed
+        if product and 'modify' in request.POST:
+            product.item_name = request.POST.get('item_name', product.item_name)
+            product.item_name_CHI = request.POST.get('item_name_CHI', product.item_name_CHI)
+            product.category = request.POST.get('category', product.category)
+            product.remarks = request.POST.get('remarks', product.remarks)
+            product.save()  # Save updated product information
+            return redirect('modify_product_info')  # Redirect after saving
+
+    return render(request, 'roster/modify_product_info.html', {'product': product})
 
 def manage_bakery_products(request):
     if request.method == 'POST':

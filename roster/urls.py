@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from roster import views 
-from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products
+from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products,modify_product_info
 
 router = DefaultRouter()
 router.register(r'staff', views.StaffViewSet)
@@ -16,6 +16,7 @@ urlpatterns = [
       path('bakery/', bakery_product_view, name='bakery_products'),
       path('restock-product/', views.restock_product, name='restock_product'),
        path('manage-bakery-products/', manage_bakery_products, name='manage_bakery_products'),
+        path('modify-product-info/', modify_product_info, name='modify_product_info'),  # New URL for Modify Product Info
     path('api/', include(router.urls)),
     path('api/shift-counts/', views.api_shift_counts, name='api_shift_counts'),  # New API endpoint
     
