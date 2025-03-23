@@ -16,9 +16,21 @@
             background-color: #f4f4f4; /* Light background for a clean look */
         }
         h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
+    color: #2c3e50; /* Dark color for readability */
+    margin-bottom: 20px;
+    font-size: 28px; /* Adjusted font size */
+    font-weight: 600; /* Semi-bold weight */
+    text-align: center; /* Center the text */
+    padding: 15px 20px; /* Padding for spacing */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #ecf0f1; /* Light background color */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    transition: transform 0.2s; /* Smooth scaling effect on hover */
+}
+
+h1:hover {
+    transform: scale(1.02); /* Slightly enlarges on hover */
+}
         .sidebar {
             width: 250px; /* Slightly wider sidebar */
             background-color: #2c3e50; /* Darker blue-grey for sidebar */
@@ -91,27 +103,88 @@
             padding: 20px;
             background-color: #f9f9f9; /* Background color for content area */
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
-        }
-        .summary {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
+            flex-direction: column; /* Stack content vertically */
+            align-items: center; /* Center content */
         }
-        .card {
-            background-color: white;
-            border-radius: 8px;
+        .total-hours-card {
+            background-color: #ffffff; /* White background for the card */
+            border-radius: 12px; /* Smooth corners */
+            padding: 30px; /* Increased padding for emphasis */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            margin-bottom: 20px; /* Space below the card */
+            text-align: center; /* Center text */
+            width: 100%; /* Full width */
+            max-width: 600px; /* Max width for large screens */
+        }
+        .total-hours-card h2 {
+            font-size: 24px; /* Larger title size */
+            color: #34495e; /* Darker blue for title */
+            font-weight: 600; /* Bold weight for title */
+        }
+        .total-hours-card p {
+            font-size: 32px; /* Larger text for total hours */
+            color: #2c3e50; /* Darker color for total hours */
+            font-weight: 700; /* Bolder total hours */
+        }
+        .chart-and-staff {
+            display: flex; /* Flexbox for side-by-side layout */
+            justify-content: space-between;
+            width: 100%; /* Full width */
+            max-width: 1200px; /* Max width for large screens */
+        }
+        .chart-container {
+            background: white; /* Background color for the chart frame */
+            border-radius: 12px; /* Smooth corners */
             padding: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            flex: 1;
-            margin: 0 10px;
-        }
-        .card h2 {
-            margin: 0 0 10px;
-            font-size: 20px; /* Adjust font size */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Softer shadow */
+            margin-right: 20px; /* Space to separate from staff list */
+            flex: 1; /* Allow chart to take available space */
         }
         canvas {
             max-width: 800px;
             margin: auto;
+        }
+        .top-staff, .top-roles {
+            flex: 0 0 300px; /* Fixed width for staff list */
+            background: white; /* Background color for the top staff frame */
+            border-radius: 12px; /* Smooth corners */
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Softer shadow */
+        }
+        .top-staff h2, .top-roles h2 {
+            margin-bottom: 15px; /* Space below the title */
+            font-size: 20px; /* Title size for staff and roles */
+            color: #34495e; /* Darker blue for section titles */
+            font-weight: 600; /* Bold weight for section titles */
+        }
+        .chart-container h2 {
+            margin-bottom: 15px; /* Space below the title */
+            font-size: 20px; /* Title size for chart */
+            color: #34495e; /* Darker blue for chart titles */
+            font-weight: 600; /* Bold weight for chart titles */
+        }
+        .staff-card, .role-card {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f0f4f8; /* Light background for staff cards */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .staff-card:last-child, .role-card:last-child {
+            margin-bottom: 0; /* Remove margin for the last card */
+        }
+        .staff-name, .role-name {
+            font-weight: bold;
+        }
+        .staff-hours, .role-hours {
+            color: #7f8c8d; /* Grey color for hours */
+        }
+        .staff-and-roles {
+            display: flex; /* Flexbox for staff and roles side by side */
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -131,56 +204,156 @@
     <div class="content">
         <h1>Shift Statistics Dashboard</h1>
         
-        <div class="summary">
-            <div class="card">
-                <h2>Total Hours Worked</h2>
-                <p>{{ total_hours }} hours</p> <!-- Total hours worked -->
+        <div class="total-hours-card">
+            <h2>Total Hours Worked</h2>
+            <p id="totalHours">{{ total_hours_worked }} hours</p> <!-- Total hours worked -->
+        </div>
+
+        <div class="chart-and-staff">
+            <div class="chart-container">
+                <h2>Total Working Hours by Week</h2>
+                <canvas id="weeklyHoursChart" width="800" height="400"></canvas>
             </div>
-            <div class="card">
-                <h2>Average Hours per Staff</h2>
-                <p>{{ average_hours }} hours</p> <!-- Average hours -->
+
+            <div class="top-staff">
+                <h2>Top 5 Staff by Total Working Hours</h2>
+                <div id="topStaffList">
+                    <!-- Top staff will be populated here -->
+                </div>
             </div>
         </div>
 
-        <h2>Occupancy Ratio by Staff</h2>
-        <canvas id="shiftChart" width="800" height="400"></canvas>
+        <div class="staff-and-roles">
+            <div class="chart-container">
+                <h2>Total Working Hours by Staff</h2>
+                <canvas id="staffHoursChart" width="800" height="400"></canvas>
+            </div>
+
+            <div class="top-roles">
+                <h2>Top 3 Roles by Total Working Hours</h2>
+                <div id="topRolesList">
+                    <!-- Top roles will be populated here -->
+                </div>
+            </div>
+        </div>
 
         <script>
-            const ctx = document.getElementById('shiftChart').getContext('2d');
+            // Example data, replace with actual data from your backend
+            const totalHours = 300; // Total hours worked by the store
+            const weeklyHours = [80, 75, 90, 55]; // Total hours worked each week
+            const staffNames = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
+            const staffHoursData = {
+                'Alice': [20, 25, 30, 18],
+                'Bob': [22, 20, 25, 15],
+                'Charlie': [18, 22, 20, 25],
+                'David': [15, 18, 20, 30],
+                'Eve': [25, 20, 22, 28]
+            };
 
-            // Data from the view
-            const staffNames = {{ staff_names|safe }};
-            const ratios = {{ ratios|safe }};  // Ratios as percentages
+            // Display total hours
+            document.getElementById('totalHours').innerText = `${totalHours} hours`;
 
-            // Create the pie chart
-            const myChart = new Chart(ctx, {
-                type: 'pie',
+            // Chart for Total Working Hours by Week (Line Chart)
+            const ctxWeekly = document.getElementById('weeklyHoursChart').getContext('2d');
+            const weeklyChart = new Chart(ctxWeekly, {
+                type: 'line', // Change to line chart
                 data: {
-                    labels: staffNames,
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
                     datasets: [{
-                        data: ratios,
-                        backgroundColor: [
-                            'rgba(75, 192, 192, 0.5)',
-                            'rgba(255, 206, 86, 0.5)',
-                            'rgba(153, 102, 255, 0.5)',
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
-                            'rgba(255, 159, 64, 0.5)',
-                        ],
-                        borderColor: [
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 159, 64, 1)',
-                        ],
-                        borderWidth: 1
+                        label: 'Total Working Hours',
+                        data: weeklyHours,
+                        fill: false,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        tension: 0.1, // Smooth curve
+                        borderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Hours'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        }
+                    }
                 }
+            });
+
+            // Chart for Total Working Hours by Staff
+            const ctxStaff = document.getElementById('staffHoursChart').getContext('2d');
+            const staffDatasets = staffNames.map((staff, index) => ({
+                label: staff,
+                data: staffHoursData[staff],
+                fill: false,
+                borderColor: `hsl(${index * 60}, 70%, 50%)`, // Different color for each staff
+                tension: 0.1 // Smooth curve
+            }));
+
+            const staffChart = new Chart(ctxStaff, {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: staffDatasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Total Working Hours'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Top 5 Staff by Total Working Hours
+            const topStaff = [
+                { name: 'Alice', hours: 93 },
+                { name: 'Bob', hours: 82 },
+                { name: 'Charlie', hours: 80 },
+                { name: 'David', hours: 78 },
+                { name: 'Eve', hours: 85 }
+            ];
+
+            const topStaffList = document.getElementById('topStaffList');
+            topStaff.forEach(staff => {
+                const staffCard = document.createElement('div');
+                staffCard.classList.add('staff-card');
+                staffCard.innerHTML = `<span class="staff-name">${staff.name}</span><span class="staff-hours">${staff.hours} hours</span>`;
+                topStaffList.appendChild(staffCard);
+            });
+
+            // Top 3 Roles by Total Working Hours
+            const topRoles = [
+                { role: 'Manager', hours: 250 },
+                { role: 'Baker', hours: 200 },
+                { role: 'Cashier', hours: 150 }
+            ];
+
+            const topRolesList = document.getElementById('topRolesList');
+            topRoles.forEach(role => {
+                const roleCard = document.createElement('div');
+                roleCard.classList.add('role-card');
+                roleCard.innerHTML = `<span class="role-name">${role.role}</span><span class="role-hours">${role.hours} hours</span>`;
+                topRolesList.appendChild(roleCard);
             });
         </script>
     </div>

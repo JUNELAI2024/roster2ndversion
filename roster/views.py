@@ -214,6 +214,8 @@ def roster_list(request):
 
 # New view for displaying shift statistics
 def statistics_view(request):
+    # Calculate total hours worked by summing the no_of_work_hr field
+    total_hours_worked = Roster.objects.aggregate(total_hours=Sum('no_of_work_hr'))['total_hours'] or 0.0
     total_weekly_hours = 40  # Example: Total working hours in a week
     staff_hours = (
         Roster.objects
@@ -235,6 +237,7 @@ def statistics_view(request):
     return render(request, 'roster/statistics.html', {
         'staff_names': staff_names,
         'ratios': ratios,
+        'total_hours_worked': total_hours_worked,
     })
 
 # New API view to get shift counts similar to statistics_view
