@@ -211,8 +211,8 @@ h1:hover {
 
         <div class="chart-and-staff">
             <div class="chart-container">
-                <h2>Total Working Hours by Week</h2>
-                <canvas id="weeklyHoursChart" width="800" height="400"></canvas>
+                <h2>Total Working Hours by Day</h2>
+                <canvas id="dailyHoursChart" width="800" height="400"></canvas> <!-- Updated ID -->
             </div>
 
             <div class="top-staff">
@@ -229,6 +229,9 @@ h1:hover {
                 <canvas id="staffHoursChart" width="800" height="400"></canvas>
             </div>
 
+        
+          
+
             <div class="top-roles">
                 <h2>Top 3 Roles by Total Working Hours</h2>
                 <div id="topRolesList">
@@ -238,108 +241,101 @@ h1:hover {
         </div>
 
         <script>
-            // Example data, replace with actual data from your backend
-            const totalHours = 300; // Total hours worked by the store
-            const weeklyHours = [80, 75, 90, 55]; // Total hours worked each week
-            const staffNames = ['Alice', 'Bob', 'Charlie', 'David', 'Eve'];
-            const staffHoursData = {
-                'Alice': [20, 25, 30, 18],
-                'Bob': [22, 20, 25, 15],
-                'Charlie': [18, 22, 20, 25],
-                'David': [15, 18, 20, 30],
-                'Eve': [25, 20, 22, 28]
-            };
+            const totalHours = parseFloat("{{ total_hours_worked }}"); // Ensure this variable is set correctly
+           const dailyHours = {{ total_daily_hours|safe }}; // Total hours worked each day
+           const dates = {{ dates|safe }}; // Dates formatted as strings
+    
+        
+        console.log('Total Hours:', totalHours); // Debugging line
+        document.getElementById('totalHours').innerText = `${totalHours} hours`; // Display total hours
 
-            // Display total hours
-            document.getElementById('totalHours').innerText = `${totalHours} hours`;
+  // Prepare staff hours data from Django
+  const staffHoursData = {{ staff_hours|safe }}; // Assuming this is a list of objects with staff_name and total_hours
 
-            // Chart for Total Working Hours by Week (Line Chart)
-            const ctxWeekly = document.getElementById('weeklyHoursChart').getContext('2d');
-            const weeklyChart = new Chart(ctxWeekly, {
-                type: 'line', // Change to line chart
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    datasets: [{
-                        label: 'Total Working Hours',
-                        data: weeklyHours,
-                        fill: false,
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        tension: 0.1, // Smooth curve
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Hours'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Weeks'
-                            }
-                        }
-                    }
-                }
-            });
+// Extract staff names and total hours
+const staffNames = staffHoursData.map(staff => staff.staff_name);
+const totalStaffHours = staffHoursData.map(staff => staff.total_hours);
 
-            // Chart for Total Working Hours by Staff
-            const ctxStaff = document.getElementById('staffHoursChart').getContext('2d');
-            const staffDatasets = staffNames.map((staff, index) => ({
-                label: staff,
-                data: staffHoursData[staff],
+            // Chart for Total Working Hours by Day (Line Chart)
+    const ctxDaily = document.getElementById('dailyHoursChart').getContext('2d');
+    const dailyChart = new Chart(ctxDaily, {
+        type: 'line',
+        data: {
+            labels: dates,  // Use the date labels
+            datasets: [{
+                label: 'Total Working Hours',
+                data: dailyHours,  // Use daily hours data
                 fill: false,
-                borderColor: `hsl(${index * 60}, 70%, 50%)`, // Different color for each staff
-                tension: 0.1 // Smooth curve
-            }));
-
-            const staffChart = new Chart(ctxStaff, {
-                type: 'line',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                    datasets: staffDatasets
+                borderColor: 'rgba(54, 162, 235, 1)',
+                tension: 0.1, // Smooth curve
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Hours'
+                    }
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Total Working Hours'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Weeks'
-                            }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Dates'
+                    }
+                }
+            }
+        }
+    });
+
+
+        // Chart for Total Working Hours by Staff
+        const ctxStaff = document.getElementById('staffHoursChart').getContext('2d');
+        const staffChart = new Chart(ctxStaff, {
+            type: 'bar', // Bar chart for better visibility
+            data: {
+                labels: staffNames, // Use staff names as labels
+                datasets: [{
+                    label: 'Total Working Hours',
+                    data: totalStaffHours, // Total hours data
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Color for the bars
+                    borderColor: 'rgba(54, 162, 235, 1)', // Border color for the bars
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Total Working Hours'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Staff'
                         }
                     }
                 }
-            });
+            }
+        });
 
-            // Top 5 Staff by Total Working Hours
-            const topStaff = [
-                { name: 'Alice', hours: 93 },
-                { name: 'Bob', hours: 82 },
-                { name: 'Charlie', hours: 80 },
-                { name: 'David', hours: 78 },
-                { name: 'Eve', hours: 85 }
-            ];
+        // Top 5 Staff by Total Working Hours
+        const topStaffData = {{ top_staff|safe }}; // Fetching top staff from Django context
 
-            const topStaffList = document.getElementById('topStaffList');
-            topStaff.forEach(staff => {
-                const staffCard = document.createElement('div');
-                staffCard.classList.add('staff-card');
-                staffCard.innerHTML = `<span class="staff-name">${staff.name}</span><span class="staff-hours">${staff.hours} hours</span>`;
-                topStaffList.appendChild(staffCard);
-            });
+        const topStaffList = document.getElementById('topStaffList');
+        topStaffData.forEach(staff => {
+            const staffCard = document.createElement('div');
+            staffCard.classList.add('staff-card');
+            staffCard.innerHTML = `<strong>${staff.staff_name}</strong>: ${staff.total_hours} hours`;
+            topStaffList.appendChild(staffCard);
+        });
 
             // Top 3 Roles by Total Working Hours
             const topRoles = [

@@ -16,6 +16,7 @@ from datetime import datetime
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.db.models.functions import TruncDate
 
 def modify_product_info(request):
     product = None
@@ -216,28 +217,40 @@ def roster_list(request):
 def statistics_view(request):
     # Calculate total hours worked by summing the no_of_work_hr field
     total_hours_worked = Roster.objects.aggregate(total_hours=Sum('no_of_work_hr'))['total_hours'] or 0.0
-    total_weekly_hours = 40  # Example: Total working hours in a week
-    staff_hours = (
+     # Calculate total working hours by day
+    daily_hours = (
         Roster.objects
-        .values('staff_name')
-        .annotate(total_hours=Sum('no_of_work_hr'))
+        .annotate(date=TruncDate('work_date'))  # Group by day
+        .values('date')  # Get date values
+        .annotate(total_hours=Sum('no_of_work_hr'))  # Sum hours for each day
+        .order_by('date')  # Order by date
     )
 
-    staff_names = [item['staff_name'] for item in staff_hours]
-    occupied_hours = [item['total_hours'] for item in staff_hours]
+    # Prepare data for chart
+    dates = [entry['date'].strftime('%Y-%m-%d') for entry in daily_hours]  # Format dates
+    total_daily_hours = [entry['total_hours'] for entry in daily_hours]  # Get total hours for each day
 
-    # Calculate ratios and prepare data for the pie chart
-    ratios = [(hours / total_weekly_hours) * 100 for hours in occupied_hours]  # Percentage of total hours
 
-    # Handle case where staff_names is empty
-    if not staff_names:
-        staff_names = ['No Data']
-        ratios = [100]  # To avoid pie chart error
+     # Calculate total working hours by staff
+    staff_hours = (
+        Roster.objects
+        .values('staff_name')  # Group by staff name
+        .annotate(total_hours=Sum('no_of_work_hr'))  # Sum hours for each staff
+        .order_by('-total_hours')  # Order by total hours descending
+    )
+
+    # Convert staff_hours to a list of dictionaries for easier access in the template
+    staff_hours_list = list(staff_hours)
+ # Get the top 5 staff by total working hours
+    top_staff = staff_hours[:5]  # Get the top 5 staff members
+
 
     return render(request, 'roster/statistics.html', {
-        'staff_names': staff_names,
-        'ratios': ratios,
         'total_hours_worked': total_hours_worked,
+        'total_daily_hours': total_daily_hours,
+        'dates': json.dumps(dates),  # Convert dates to JSON
+        'staff_hours': json.dumps(staff_hours_list),  # Convert staff hours to JSON
+        'top_staff': json.dumps(list(top_staff)),  # Convert top staff to JSON
     })
 
 # New API view to get shift counts similar to statistics_view
