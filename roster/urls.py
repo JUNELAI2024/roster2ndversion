@@ -19,5 +19,6 @@ urlpatterns = [
         path('modify-product-info/', modify_product_info, name='modify_product_info'),  # New URL for Modify Product Info
     path('api/', include(router.urls)),
     path('api/shift-counts/', views.api_shift_counts, name='api_shift_counts'),  # New API endpoint
+     path('manage_staff/', views.manage_staff, name='manage_staff'),  # Add this line
     
 ]

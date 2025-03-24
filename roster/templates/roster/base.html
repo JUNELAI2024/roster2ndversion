@@ -97,21 +97,25 @@
     <div class="sidebar">
         <h2>Menu</h2>
         <ul>
-            <li><a href="{% url 'roster_create' %}"><i class="fas fa-plus"></i> Create Roster</a></li>
-            <li><a href="{% url 'staff_list' %}"><i class="fas fa-users"></i> Staff List</a></li>
-            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
-            <li><a href="{% url 'roster_list' %}"><i class="fas fa-list"></i> Roster List</a></li>
-            <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Bakery Products</a></li>
             <li>
-                <a href="#"><i class="fas fa-cogs"></i> Manage Bakery Products</a>
+                <a href="#"><i class="fas fa-plus"></i> Roster</a>
                 <ul class="dropdown-menu">
-                    <li><a href="{% url 'manage_bakery_products' %}">Add Product</a></li>
-                    <li><a href="{% url 'modify_product_info' %}">Modify Product Info</a></li> <!-- New submenu item -->
+                    <li><a href="{% url 'roster_create' %}">Create Roster</a></li> <!-- Link to create roster -->
+                    <li><a href="{% url 'roster_list' %}">Roster List</a></li> <!-- Link to roster list -->
+                </ul>
+            </li>
+            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Bakery Products</a></li>
+            <li><a href="{% url 'manage_bakery_products' %}"><i class="fas fa-cogs"></i> Manage Bakery Products</a></li>
+            <li>
+                <a href="#"><i class="fas fa-users"></i> Staff Management</a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'staff_list' %}">Staff List</a></li>
+                    <li><a href="{% url 'manage_staff' %}">Manage Staff</a></li>
                 </ul>
             </li>
         </ul>
     </div>
-
     <div class="content">
         {% block content %}{% endblock %}
     </div>

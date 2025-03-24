@@ -276,3 +276,6 @@ class StaffViewSet(viewsets.ModelViewSet):
 class RosterViewSet(viewsets.ModelViewSet):
     queryset = Roster.objects.all()
     serializer_class = RosterSerializer
+
+def manage_staff(request):
+    return render(request, 'manage_staff.html')  # Point to your blank HTML page
