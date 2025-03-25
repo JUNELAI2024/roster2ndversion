@@ -2,6 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from roster import views 
 from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products,modify_product_info
+from django.conf import settings
+from django.conf.urls.static import static
 
 router = DefaultRouter()
 router.register(r'staff', views.StaffViewSet)
@@ -22,3 +24,7 @@ urlpatterns = [
      path('manage_staff/', views.manage_staff, name='manage_staff'),  # Add this line
     
 ]
+
+# Serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

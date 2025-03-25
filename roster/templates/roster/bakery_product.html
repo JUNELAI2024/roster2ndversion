@@ -97,8 +97,8 @@
         }
         .category {
     margin-bottom: 8px; /* Spacing between categories */
-    background-color: #071342; /* Dark background */
-    color: white; /* White text for contrast */
+    background-color: #eeeff6; /* Dark background */
+    color: rgb(8, 33, 65); /* White text for contrast */
     padding: 4px 10px; /* Comfortable padding */
     border-radius: 8px; /* Rounded corners */
     cursor: pointer; 
@@ -107,17 +107,17 @@
     align-items: center; 
     font-size: 10px; /* Readable font size */
     width: calc(20% - 8px); /* Adjusted width */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    box-shadow: 0 2px 5px rgba(219, 217, 230, 0.1); /* Soft shadow */
     transition: background-color 0.3s; /* Smooth background transition */
 }
 
 .category:hover {
-    background-color: #0a2b3e; /* Darker shade on hover */
+    background-color: #a1bdce; /* Darker shade on hover */
 }
 
 .expand-icon {
     font-size: 16px; /* Size of the arrow icon */
-    color: #4caf50; /* Green color for the arrow */
+    color: #161816; /* Green color for the arrow */
     transition: transform 0.3s; /* Smooth transition for the icon */
 }
 
@@ -143,7 +143,11 @@
     justify-content: space-between; /* Space between item name and quantity controls */
     align-items: center; /* Center items vertically */
 }
-
+.item-image {
+    width: 50px;  /* Adjust the width as needed */
+    height: auto; /* Keeps the aspect ratio */
+    margin-right: 10px; /* Space between image and text */
+}
 .quantity-controls {
     display: flex; /* Flexbox for quantity controls */
     align-items: center; /* Center buttons vertically */
@@ -253,7 +257,7 @@
                     {% for product in products %}
                         {% if product.category == category %}
                             <div class="item">
-                                <img src="{{ MEDIA_URL }}{{ product.image_url }}" alt="{{ product.item_name }}" class="item-image"> <!-- Use MEDIA_URL -->
+                                <img src="{{ MEDIA_URL }}{{ product.image_url }}" alt="{{ product.item_name }}" class="item-image">
                                 <span>{{ product.item_id }} - {{ product.item_name }}</span> <!-- Display item_id and item_name -->
                                 <div class="quantity-controls">
                                     <button type="button" onclick="changeQuantity('{{ product.id }}', -1, '{{ product.item_id }}')">-</button>
