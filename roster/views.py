@@ -90,6 +90,8 @@ def restock_product(request):
     # Get unique categories
     categories = products.values_list('category', flat=True).distinct()
 
+    
+
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -119,7 +121,8 @@ def restock_product(request):
         
  # Handle GET requests by rendering the template
     context = {
-        'categories': categories
+        'categories': categories,
+         'products': products  # Pass products to the template, including image URLs
     }
     # Handle GET requests by rendering the template
     return render(request, 'roster/bakery_product.html')  # Ensure this points to your actual template path

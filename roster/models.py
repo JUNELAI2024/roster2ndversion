@@ -68,6 +68,7 @@ class BakeryProduct(models.Model):
     start_date = models.DateField()  # When the product is available
     shelved_date = models.DateField(null=True, blank=True)  # When the product was shelved
     remarks = models.TextField(blank=True)  # Additional remarks
+    image_url = models.URLField(max_length=200, blank=True)  # URL of the product image
 
     def __str__(self):
         return f"{self.item_name} ({self.category})"

@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,22 +96,34 @@
             border-left: 2px solid #34495e; /* Add left border */
         }
         .category {
-            margin-bottom: 5px; /* Smaller margin */
-            background-color: #06121a; 
-            color: white; 
-            padding: 5px 10px; /* Reduced padding */
-            border-radius: 3px; /* Smaller border radius */
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            font-size: 10px; /* Smaller font size */
-            width: calc(30% - 15px); /* Adjusted width */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-        }
-        .category:hover {
-            transform: scale(1.02); /* Slightly enlarge on hover */
-        }
+    margin-bottom: 8px; /* Spacing between categories */
+    background-color: #071342; /* Dark background */
+    color: white; /* White text for contrast */
+    padding: 4px 10px; /* Comfortable padding */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-size: 10px; /* Readable font size */
+    width: calc(20% - 8px); /* Adjusted width */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.category:hover {
+    background-color: #0a2b3e; /* Darker shade on hover */
+}
+
+.expand-icon {
+    font-size: 16px; /* Size of the arrow icon */
+    color: #4caf50; /* Green color for the arrow */
+    transition: transform 0.3s; /* Smooth transition for the icon */
+}
+
+.category:hover .expand-icon {
+    transform: translateX(5px); /* Move the arrow slightly on hover */
+}
         .items {
             display: none; 
             margin-top: 7px;
@@ -211,7 +224,7 @@
                 </ul>
             </li>
             <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
-            <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Bakery Products</a></li>
+            <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Reorder Bakery Products</a></li>
             <li><a href="{% url 'manage_bakery_products' %}"><i class="fas fa-cogs"></i> Manage Bakery Products</a></li>
             <li>
                 <a href="#"><i class="fas fa-users"></i> Staff Management</a>
@@ -240,6 +253,7 @@
                     {% for product in products %}
                         {% if product.category == category %}
                             <div class="item">
+                                <img src="{{ MEDIA_URL }}{{ product.image_url }}" alt="{{ product.item_name }}" class="item-image"> <!-- Use MEDIA_URL -->
                                 <span>{{ product.item_id }} - {{ product.item_name }}</span> <!-- Display item_id and item_name -->
                                 <div class="quantity-controls">
                                     <button type="button" onclick="changeQuantity('{{ product.id }}', -1, '{{ product.item_id }}')">-</button>
