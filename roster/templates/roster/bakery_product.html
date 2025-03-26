@@ -292,7 +292,7 @@
                     {% for product in products %}
                         {% if product.category == category %}
                             <div class="item">
-                                <img src="{{ MEDIA_URL }}{{ product.image_url }}" alt="{{ product.item_name }}" class="item-image">
+                                <img src="{{ product.image_url }}" alt="{{ product.item_name }}" class="item-image">
                                 <span>{{ product.item_id }} - {{ product.item_name }}</span> <!-- Display item_id and item_name -->
                                 <div class="quantity-controls">
                                     <button type="button" onclick="changeQuantity('{{ product.id }}', -1, '{{ product.item_id }}')">-</button>
