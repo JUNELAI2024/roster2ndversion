@@ -285,7 +285,6 @@
         <div class="categories">
             {% for category in categories %}
                 <div class="category" onclick="toggleItems('{{ category }}')">
-                    <img src="{{ MEDIA_URL }}{{ product.image_url_cat }}" alt="{{ product.category }}" class="category-image">
                     <h2 class="category-title">{{ category }}</h2>
                     <span class="expand-icon">></span>
                 </div>
