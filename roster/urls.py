@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from roster import views 
-from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products,modify_product_info
+from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products,modify_product_info,submit_revenue
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/shift-counts/', views.api_shift_counts, name='api_shift_counts'),  # New API endpoint
      path('manage_staff/', views.manage_staff, name='manage_staff'),  # Add this line
+     path('submit-revenue/', submit_revenue, name='submit_revenue'),
     
 ]
 

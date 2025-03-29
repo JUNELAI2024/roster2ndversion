@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets
-from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock
+from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock, DailyRevenue
 from django.db.models import Sum
 from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
@@ -282,3 +282,43 @@ class RosterViewSet(viewsets.ModelViewSet):
 
 def manage_staff(request):
     return render(request, 'manage_staff.html')  # Point to your blank HTML page
+
+def submit_revenue(request):
+    if request.method == 'POST':
+        business_date = request.POST.get('businessDate')
+        business_time = request.POST.get('businessTime')
+        amex = request.POST.get('amex', 0)
+        debit_card = request.POST.get('debit', 0)
+        visa = request.POST.get('visa', 0)
+        mastercard = request.POST.get('mastercard', 0)
+        cash = request.POST.get('cash', 0)
+        unionpay = request.POST.get('unionpay', 0)
+        wonderful_card = request.POST.get('wonderfulCard', 0)
+        gift_card = request.POST.get('giftCard', 0)
+        pst = request.POST.get('pst', 0)
+        redeem_points = request.POST.get('redeemPoints', 0)
+
+        # Calculate total
+        total = (float(amex) + float(debit_card) + float(visa) + float(mastercard) +
+                 float(cash) + float(unionpay) + float(wonderful_card))
+
+        # Create and save the revenue record
+        DailyRevenue.objects.create(
+            business_date=business_date,
+            business_time=business_time,
+            amex=amex,
+            debit_card=debit_card,
+            visa=visa,
+            mastercard=mastercard,
+            cash=cash,
+            unionpay=unionpay,
+            wonderful_card=wonderful_card,
+            gift_card=gift_card,
+            pst=pst,
+            redeem_points=redeem_points,
+            total=total
+        )
+
+        return JsonResponse({'status': 'success', 'message': 'Revenue submitted successfully!'})
+
+    return render(request, 'roster/submit_revenue.html')  # Adjust to your template name

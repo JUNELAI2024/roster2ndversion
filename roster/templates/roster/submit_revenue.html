@@ -1,0 +1,152 @@
+{% extends 'roster/base.html' %}
+
+{% block title %}Daily Revenue Input{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f4f4; /* Light background for a clean look */
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    .container {
+        background-color: #ffffff; /* White container for contrast */
+        border-radius: 12px; /* Softer corners */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        max-width: 600px; /* Set a max-width for better readability */
+        margin: 2rem auto; /* Center the container */
+    }
+    h1 {
+        color: #2c3e50; /* Darker color for the title */
+        text-align: center; /* Center the title */
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem; /* Larger font size */
+    }
+    .form-label {
+        font-weight: normal; /* Normal weight for a cleaner look */
+        color: #34495e; /* Slightly darker label color */
+    }
+    .form-control {
+        border: 1px solid #bdc3c7; /* Light border */
+        border-radius: 8px; /* Rounded corners */
+        transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+        padding: 0.75rem; /* More padding for comfort */
+        margin-bottom: 1rem; /* Space between inputs */
+    }
+    .form-control:focus {
+        border-color: #3498db; /* Blue border on focus */
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Light blue shadow */
+        outline: none; /* Remove default outline */
+    }
+    .btn-primary {
+        background-color: #2980b9; /* Primary button color */
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem; /* More padding */
+        color: white; /* White text */
+        transition: background-color 0.3s; /* Smooth transition */
+        font-size: 1.1rem; /* Button font size */
+    }
+    .btn-primary:hover {
+        background-color: #3498db; /* Darker blue on hover */
+    }
+    .total {
+        font-weight: bold;
+        font-size: 1.2rem;
+        margin-top: 1rem;
+        text-align: right; /* Align total to the right */
+    }
+</style>
+
+<div class="container">
+    <h1>Daily Revenue Input</h1>
+    <form id="revenueForm" method="post" action="{% url 'submit_revenue' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="businessDate" class="form-label">Business Date (YYYY-MM-DD):</label>
+            <input type="date" id="businessDate" name="businessDate" class="form-control" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="businessTime" class="form-label">Time:</label>
+            <input type="time" id="businessTime" name="businessTime" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="amex" class="form-label">American Express:</label>
+            <input type="number" id="amex" name="amex" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="mb-3">
+            <label for="debit" class="form-label">Debit Card:</label>
+            <input type="number" id="debit" name="debit" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="mb-3">
+            <label for="visa" class="form-label">Visa:</label>
+            <input type="number" id="visa" name="visa" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="mb-3">
+            <label for="mastercard" class="form-label">Mastercard:</label>
+            <input type="number" id="mastercard" name="mastercard" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="mb-3">
+            <label for="cash" class="form-label">Cash:</label>
+            <input type="number" id="cash" name="cash" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="mb-3">
+            <label for="unionpay" class="form-label">UnionPay:</label>
+            <input type="number" id="unionpay" name="unionpay" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="mb-3">
+            <label for="wonderfulCard" class="form-label">WonderfulCard:</label>
+            <input type="number" id="wonderfulCard" name="wonderfulCard" class="form-control" placeholder="Amount" oninput="calculateTotal()">
+        </div>
+
+        <div class="total" id="totalAmount">Total: $0.00</div>
+
+        <div class="mb-3">
+            <label for="giftCard" class="form-label">Gift Card Amount:</label>
+            <input type="number" id="giftCard" name="giftCard" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="pst" class="form-label">PST:</label>
+            <input type="number" id="pst" name="pst" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label for="redeemPoints" class="form-label">Redeem Points:</label>
+            <input type="number" id="redeemPoints" name="redeemPoints" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<script>
+    function calculateTotal() {
+        const amex = parseFloat(document.getElementById('amex').value) || 0;
+        const debit = parseFloat(document.getElementById('debit').value) || 0;
+        const visa = parseFloat(document.getElementById('visa').value) || 0;
+        const mastercard = parseFloat(document.getElementById('mastercard').value) || 0;
+        const cash = parseFloat(document.getElementById('cash').value) || 0;
+        const unionpay = parseFloat(document.getElementById('unionpay').value) || 0;
+        const wonderfulCard = parseFloat(document.getElementById('wonderfulCard').value) || 0;
+
+        const total = amex + debit + visa + mastercard + cash + unionpay + wonderfulCard;
+        document.getElementById('totalAmount').innerText = 'Total: $' + total.toFixed(2);
+    }
+
+    document.getElementById('revenueForm').onsubmit = function(event) {
+        event.preventDefault();
+        alert('Revenue submitted successfully!');
+        // You can add AJAX call here to submit the form data
+    };
+</script>
+
+{% endblock %}

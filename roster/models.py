@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Staff(models.Model):
     name = models.CharField(max_length=100)
@@ -85,3 +86,23 @@ class BakeryProductRestock(models.Model):
 
     def __str__(self):
         return f"{self.product_name} - {self.restock_quantity} (Ordered by: {self.order_by})"
+    
+class DailyRevenue(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    business_date = models.DateField()
+    business_time = models.TimeField()
+    amex = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    debit_card = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    visa = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    mastercard = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    cash = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    unionpay = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    wonderful_card = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    gift_card = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    pst = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    redeem_points = models.IntegerField(default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    updated_at = models.DateTimeField(auto_now=True)  # Automatically set on update
+
+    def __str__(self):
+        return f"Revenue for {self.business_date} at {self.business_time} by {self.user.username}"
