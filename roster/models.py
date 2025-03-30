@@ -88,7 +88,7 @@ class BakeryProductRestock(models.Model):
         return f"{self.product_name} - {self.restock_quantity} (Ordered by: {self.order_by})"
     
 class DailyRevenue(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_input = models.CharField(max_length=255)  # Adjust field type as necessary
     business_date = models.DateField()
     business_time = models.TimeField()
     amex = models.DecimalField(max_digits=10, decimal_places=2, default=0)

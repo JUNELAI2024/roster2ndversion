@@ -10,10 +10,10 @@
     }
     .container {
         background-color: #ffffff; /* White container for contrast */
-        border-radius: 12px; /* Softer corners */
+        border-radius: 10px; /* Softer corners */
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         padding: 2rem;
-        max-width: 600px; /* Set a max-width for better readability */
+        max-width: 800px; /* Set a max-width for better readability */
         margin: 2rem auto; /* Center the container */
     }
     h1 {
@@ -116,13 +116,19 @@
 
         <div class="mb-3">
             <label for="pst" class="form-label">PST:</label>
-            <input type="number" id="pst" name="pst" class="form-control">
+            <input type="number" id="pst" name="pst" class="form-control" placeholder="Amount" step="0.01" min="0">
         </div>
 
         <div class="mb-3">
             <label for="redeemPoints" class="form-label">Redeem Points:</label>
             <input type="number" id="redeemPoints" name="redeemPoints" class="form-control">
         </div>
+
+ 
+<div class="mb-3">
+    <label for="user" class="form-label">User:</label>
+    <input type="text" id="user" name="user" class="form-control" placeholder="Enter user name or ID" required>
+</div>
 
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
@@ -142,11 +148,36 @@
         document.getElementById('totalAmount').innerText = 'Total: $' + total.toFixed(2);
     }
 
-    document.getElementById('revenueForm').onsubmit = function(event) {
-        event.preventDefault();
-        alert('Revenue submitted successfully!');
-        // You can add AJAX call here to submit the form data
-    };
+    document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('revenueForm');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(form); // Collect form data
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}', // Include CSRF token if necessary
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message); // Show success message
+                form.reset(); // Clear all input fields in the form
+            } else {
+                alert('Error: ' + data.message); // Handle errors
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was a problem with the submission.');
+        });
+    });
+});
 </script>
 
 {% endblock %}

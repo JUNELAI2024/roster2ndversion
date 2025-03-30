@@ -17,6 +17,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models.functions import TruncDate
+from decimal import Decimal
 
 def modify_product_info(request):
     product = None
@@ -285,40 +286,48 @@ def manage_staff(request):
 
 def submit_revenue(request):
     if request.method == 'POST':
-        business_date = request.POST.get('businessDate')
-        business_time = request.POST.get('businessTime')
-        amex = request.POST.get('amex', 0)
-        debit_card = request.POST.get('debit', 0)
-        visa = request.POST.get('visa', 0)
-        mastercard = request.POST.get('mastercard', 0)
-        cash = request.POST.get('cash', 0)
-        unionpay = request.POST.get('unionpay', 0)
-        wonderful_card = request.POST.get('wonderfulCard', 0)
-        gift_card = request.POST.get('giftCard', 0)
-        pst = request.POST.get('pst', 0)
-        redeem_points = request.POST.get('redeemPoints', 0)
+        try:
+            user_input = request.POST.get('user')
+            business_date = request.POST.get('businessDate')
+            business_time = request.POST.get('businessTime')
+            amex = Decimal(request.POST.get('amex', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            debit_card = Decimal(request.POST.get('debit', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            visa = Decimal(request.POST.get('visa', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            mastercard = Decimal(request.POST.get('mastercard', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            cash = Decimal(request.POST.get('cash', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            unionpay = Decimal(request.POST.get('unionpay', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            wonderful_card = Decimal(request.POST.get('wonderfulCard', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            gift_card = Decimal(request.POST.get('giftCard', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            pst = Decimal(request.POST.get('pst', 0) or 0).quantize(Decimal('0.01'))  # Standard rounding
+            redeem_points = int(request.POST.get('redeemPoints', 0))
 
-        # Calculate total
-        total = (float(amex) + float(debit_card) + float(visa) + float(mastercard) +
-                 float(cash) + float(unionpay) + float(wonderful_card))
+            # Calculate total
+            total = (amex + debit_card + visa + mastercard + cash + unionpay + wonderful_card).quantize(Decimal('0.01'))  # Standard rounding
 
-        # Create and save the revenue record
-        DailyRevenue.objects.create(
-            business_date=business_date,
-            business_time=business_time,
-            amex=amex,
-            debit_card=debit_card,
-            visa=visa,
-            mastercard=mastercard,
-            cash=cash,
-            unionpay=unionpay,
-            wonderful_card=wonderful_card,
-            gift_card=gift_card,
-            pst=pst,
-            redeem_points=redeem_points,
-            total=total
-        )
+            # Create and save the revenue record
+            DailyRevenue.objects.create(
+                user_input=user_input,  # Make sure this is set correctly
+                business_date=business_date,
+                business_time=business_time,
+                amex=amex,
+                debit_card=debit_card,
+                visa=visa,
+                mastercard=mastercard,
+                cash=cash,
+                unionpay=unionpay,
+                wonderful_card=wonderful_card,
+                gift_card=gift_card,
+                pst=pst,
+                redeem_points=redeem_points,
+                total=total
+            )
 
-        return JsonResponse({'status': 'success', 'message': 'Revenue submitted successfully!'})
+            return JsonResponse({'status': 'success', 'message': 'Revenue submitted successfully!'})
+        
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)})
 
     return render(request, 'roster/submit_revenue.html')  # Adjust to your template name
+
+def revenue_dashboard(request):
+    return render(request, 'roster/revenue_dashboard.html')

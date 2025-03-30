@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Revenue Dashboard{% endblock %}
+
+{% block content %}
+<div class="header">
+    <div>
+        <h2>Total Revenue: $<span id="totalRevenue">0.00</span></h2>
+    </div>
+    <div>
+        <h2>Average Revenue per Day: $<span id="avgRevenue">0.00</span></h2>
+    </div>
+    <div>
+        <h2>Top Payment Method: <span id="topPaymentMethod">N/A</span></h2>
+    </div>
+</div>
+
+<div class="charts">
+    <canvas id="revenueTrendChart"></canvas>
+    <canvas id="paymentMethodTrendChart"></canvas>
+</div>
+
+<script>
+    // Sample data (replace with your actual data)
+    const revenueData = [500, 700, 600, 800, 900, 750, 850]; // Daily revenue
+    const paymentMethods = ['Amex', 'Visa', 'Mastercard', 'Cash'];
+    const paymentMethodData = [3000, 2000, 1500, 1000]; // Corresponding revenue
+
+    // Update dashboard metrics
+    document.getElementById('totalRevenue').innerText = (revenueData.reduce((a, b) => a + b, 0)).toFixed(2);
+    document.getElementById('avgRevenue').innerText = (revenueData.reduce((a, b) => a + b, 0) / revenueData.length).toFixed(2);
+    document.getElementById('topPaymentMethod').innerText = paymentMethods[0]; // Placeholder
+
+    // Revenue Trend Over Time
+    const ctx1 = document.getElementById('revenueTrendChart').getContext('2d');
+    const revenueTrendChart = new Chart(ctx1, {
+        type: 'line',
+        data: {
+            labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+            datasets: [{
+                label: 'Revenue Over Time',
+                data: revenueData,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Payment Method Revenue Trend
+    const ctx2 = document.getElementById('paymentMethodTrendChart').getContext('2d');
+    const paymentMethodTrendChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: paymentMethods,
+            datasets: [{
+                label: 'Revenue by Payment Method',
+                data: paymentMethodData,
+                borderColor: 'rgba(153, 102, 255, 1)',
+                fill: false,
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
