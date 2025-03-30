@@ -330,4 +330,15 @@ def submit_revenue(request):
     return render(request, 'roster/submit_revenue.html')  # Adjust to your template name
 
 def revenue_dashboard(request):
-    return render(request, 'roster/revenue_dashboard.html')
+    # Sample data; replace with your actual data retrieval logic
+    total_revenue = 10000.00
+    average_revenue_per_day = 1428.57
+    top_payment_method = "Credit Card"
+
+    context = {
+        'total_revenue': total_revenue,
+        'average_revenue_per_day': average_revenue_per_day,
+        'top_payment_method': top_payment_method,
+    }
+
+    return render(request, 'roster/revenue_dashboard.html', context)
