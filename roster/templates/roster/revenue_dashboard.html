@@ -63,10 +63,10 @@
 
 <div class="info-container">
     <div>
-        <h2>Total Revenue: $<span id="totalRevenue">0.00</span></h2>
+        <h2>Total Revenue: $<span id="totalRevenue">{{ total_revenue|floatformat:2 }}</span></h2>
     </div>
     <div>
-        <h2>Average Revenue per Day: $<span id="avgRevenue">0.00</span></h2>
+        <h2>Average Revenue per Day: $<span id="avgRevenue">{{ average_revenue_per_day|floatformat:2 }}</span></h2>
     </div>
     <div>
         <h2>Top Payment Method: <span id="topPaymentMethod">N/A</span></h2>
@@ -87,37 +87,41 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Sample data (replace with your actual data)
-    const revenueData = [500, 700, 600, 800, 900, 750, 850]; // Daily revenue
+    const totalRevenue = {{ total_revenue|floatformat:2 }};
+    const averageRevenuePerDay = {{ average_revenue_per_day|floatformat:2 }};
     const paymentMethods = ['Amex', 'Visa', 'Mastercard', 'Cash'];
     const paymentMethodData = [3000, 2000, 1500, 1000]; // Corresponding revenue
 
     // Update dashboard metrics
-    document.getElementById('totalRevenue').innerText = (revenueData.reduce((a, b) => a + b, 0)).toFixed(2);
-    document.getElementById('avgRevenue').innerText = (revenueData.reduce((a, b) => a + b, 0) / revenueData.length).toFixed(2);
+    document.getElementById('totalRevenue').innerText = totalRevenue.toFixed(2);
+    document.getElementById('avgRevenue').innerText = averageRevenuePerDay.toFixed(2);
     document.getElementById('topPaymentMethod').innerText = paymentMethods[0]; // Placeholder
 
-    // Revenue Trend Over Time
-    const ctx1 = document.getElementById('revenueTrendChart').getContext('2d');
-    const revenueTrendChart = new Chart(ctx1, {
-        type: 'line',
-        data: {
-            labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
-            datasets: [{
-                label: 'Revenue Over Time',
-                data: revenueData,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                fill: false,
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+     // Revenue Trend Over Time
+const revenueData = {{ revenue_data|safe }}; // Use safe to ensure proper formatting
+const labels = {{ labels|safe }}; // Use safe to ensure proper formatting
+
+const ctx1 = document.getElementById('revenueTrendChart').getContext('2d');
+const revenueTrendChart = new Chart(ctx1, {
+    type: 'line',
+    data: {
+        labels: labels, // Use labels from the context
+        datasets: [{
+            label: 'Revenue Over Time',
+            data: revenueData, // Use revenue data from the context
+            borderColor: 'rgba(75, 192, 192, 1)',
+            fill: false,
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
             }
         }
-    });
+    }
+});
 
     // Payment Method Revenue Trend
     const ctx2 = document.getElementById('paymentMethodTrendChart').getContext('2d');

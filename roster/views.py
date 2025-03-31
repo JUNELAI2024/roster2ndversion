@@ -337,14 +337,28 @@ def submit_revenue(request):
 
 def revenue_dashboard(request):
     # Sample data; replace with your actual data retrieval logic
-    total_revenue = 10000.00
-    average_revenue_per_day = 1428.57
+    total_revenue = DailyRevenue.objects.aggregate(TotalSum=Sum('total_sum'))['TotalSum'] or 0.00
+    # Count the number of unique business dates
+    number_of_days = DailyRevenue.objects.values('business_date').distinct().count()
+     # Calculate average revenue per day
+    average_revenue_per_day = total_revenue / number_of_days if number_of_days > 0 else 0.00
     top_payment_method = "Credit Card"
+
+    
+    # Unique business dates and their total sums
+    revenue_over_time = DailyRevenue.objects.values('business_date').annotate(total_sum=Sum('total_sum')).order_by('business_date')
+
+     # Prepare labels and data for the chart
+    labels = [entry['business_date'].strftime('%Y-%m-%d') for entry in revenue_over_time]
+    revenue_data = [float(entry['total_sum']) for entry in revenue_over_time]  # Ensure values are floats
+
 
     context = {
         'total_revenue': total_revenue,
         'average_revenue_per_day': average_revenue_per_day,
         'top_payment_method': top_payment_method,
+        'revenue_data': revenue_data,
+        'labels': labels,
     }
 
     return render(request, 'roster/revenue_dashboard.html', context)
