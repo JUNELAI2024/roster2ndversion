@@ -2,6 +2,7 @@ from django.db import models
 from datetime import date
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password, check_password
 
 class Staff(models.Model):
     name = models.CharField(max_length=100)
@@ -103,6 +104,33 @@ class DailyRevenue(models.Model):
     redeem_points = models.IntegerField(default=0)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     updated_at = models.DateTimeField(auto_now=True)  # Automatically set on update
+    total_sum = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # New field for total sum
 
     def __str__(self):
         return f"Revenue for {self.business_date} at {self.business_time} by {self.user.username}"
+    
+class UserAccount(models.Model):
+    ACTIVE = 1
+    INACTIVE = 0
+    STATUS_CHOICES = [
+        (ACTIVE, 'Active'),
+        (INACTIVE, 'Inactive'),
+    ]
+
+    username = models.CharField(max_length=150, unique=True)
+    user_id = models.AutoField(primary_key=True)
+    password = models.CharField(max_length=128)
+    create_date = models.DateField(auto_now_add=True)
+    create_time = models.TimeField(auto_now_add=True)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=ACTIVE)
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+
+    def __str__(self):
+        return self.username
+    
+    

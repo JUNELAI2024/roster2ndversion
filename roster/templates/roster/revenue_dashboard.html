@@ -9,11 +9,19 @@
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
     .header {
-        display: flex;
-        justify-content: space-around; /* Distribute space between items */
+        text-align: center; /* Center the header text */
         margin-bottom: 20px; /* Space below header */
     }
-    .header div {
+    .header h1 {
+        margin: 0; /* Remove default margin */
+        color: #34495e; /* Darker color for readability */
+    }
+    .info-container {
+        display: flex;
+        justify-content: space-around; /* Distribute space between items */
+        margin-bottom: 20px; /* Space below info container */
+    }
+    .info-container div {
         background-color: #ffffff; /* White background for each metric */
         border-radius: 10px; /* Rounded corners */
         padding: 20px; /* Padding for content */
@@ -22,30 +30,38 @@
         flex: 1; /* Allow items to grow */
         margin: 0 10px; /* Space between items */
     }
-    .header h2 {
+    .info-container h2 {
         margin: 0; /* Remove default margin */
         color: #34495e; /* Darker color for readability */
     }
     .charts {
-        display: flex; /* Flexbox for side-by-side charts */
-        justify-content: space-between; /* Space between charts */
-        flex-wrap: nowrap; /* Prevent wrapping */
+        display: flex; /* Use flexbox for alignment */
+        flex-direction: column; /* Stack charts vertically */
+        max-width: calc(100% - 250px); /* Adjust max width considering sidebar width */
+        overflow: hidden; /* Hide overflow */
+        margin: 0 auto; /* Center the charts */
     }
     .chart-container {
-        flex: 1; /* Allow each chart container to grow */
-        margin: 0 10px; /* Space between charts */
-        max-width: 48%; /* Ensure charts stay within 48% of the container */
+        flex: 1; /* Allow each chart to grow */
+        min-width: 300px; /* Minimum width to ensure visibility */
+        max-width: 100%; /* Full width for each chart container */
+        margin: 10px 0; /* Space between charts */
+        background: white; /* Background color for the chart frame */
+        border-radius: 12px; /* Smooth corners */
+        padding: 20px; /* Padding for chart frame */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Softer shadow */
     }
     canvas {
-        background-color: #ffffff; /* White background for charts */
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-        flex: 1; /* Allow canvas to grow */
-        margin: 0 10px; /* Space between charts */
+        width: 100%; /* Fill the container */
+        height: 300px; /* Fixed height for charts */
     }
 </style>
 
 <div class="header">
+    <h1>Revenue Statistics</h1>
+</div>
+
+<div class="info-container">
     <div>
         <h2>Total Revenue: $<span id="totalRevenue">0.00</span></h2>
     </div>
@@ -58,8 +74,14 @@
 </div>
 
 <div class="charts">
-    <canvas id="revenueTrendChart" width="400" height="200"></canvas>
-    <canvas id="paymentMethodTrendChart" width="400" height="200"></canvas>
+    <div class="chart-container">
+        <h2>Revenue Over Time</h2>
+        <canvas id="revenueTrendChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <h2>Revenue by Payment Method</h2>
+        <canvas id="paymentMethodTrendChart"></canvas>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

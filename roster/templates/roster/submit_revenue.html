@@ -132,6 +132,11 @@
             <input type="number" id="redeemPoints" name="redeemPoints" class="form-control">
         </div>
 
+        <div class="mb-3">
+            <label for="totalSum" class="form-label">Total Sum:</label>
+            <input type="text" id="totalSum" name="totalSum" class="form-control readonly" readonly>
+        </div>
+
  
 <div class="mb-3">
     <label for="user" class="form-label">User:</label>
@@ -152,12 +157,33 @@
         const unionpay = parseFloat(document.getElementById('unionpay').value) || 0;
         const wonderfulCard = parseFloat(document.getElementById('wonderfulCard').value) || 0;
 
+
+        const giftCard = parseFloat(document.getElementById('giftCard').value) || 0; // Get gift card value
+        const pst = parseFloat(document.getElementById('pst').value) || 0; // Get PST value
+        const redeemPoints = parseFloat(document.getElementById('redeemPoints').value) || 0; // Get redeem points value
+
         const total = amex + debit + visa + mastercard + cash + unionpay + wonderfulCard;
-        document.getElementById('totalAmount').innerText = 'Total: $' + total.toFixed(2);
+    document.getElementById('totalAmount').innerText = 'Total: $' + total.toFixed(2);
+
+        // Calculate total sum including gift card, PST, and redeem points
+        const totalSum = total + giftCard + pst + redeemPoints;
+
+        // Ensure totalSum is a valid number before calling toFixed
+        document.getElementById('totalSum').value = isNaN(totalSum) ? '0.00' : totalSum.toFixed(2);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('revenueForm');
+        const form = document.getElementById('revenueForm');
+
+        // Add input event listeners to all relevant fields
+        const inputFields = [
+            'amex', 'debit', 'visa', 'mastercard', 'cash', 
+            'unionpay', 'wonderfulCard', 'giftCard', 'pst', 'redeemPoints'
+        ];
+        
+        inputFields.forEach(field => {
+            document.getElementById(field).addEventListener('input', calculateTotal);
+        });
 
     form.addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent default form submission

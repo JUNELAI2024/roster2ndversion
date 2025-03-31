@@ -104,7 +104,13 @@
                     <li><a href="{% url 'roster_list' %}">Roster List</a></li> <!-- Link to roster list -->
                 </ul>
             </li>
-            <li><a href="{% url 'statistics_view' %}"><i class="fas fa-chart-bar"></i> Statistics</a></li>
+            <li>
+                <a href="#"><i class="fas fa-chart-bar"></i> Statistics</a>
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'statistics_view' %}">Operation statistics</a></li>
+                    <li><a href="{% url 'revenue_dashboard' %}">Revenue Statistics</a></li>
+                </ul>
+            </li>
             <li><a href="{% url 'bakery_products' %}"><i class="fas fa-bread-slice"></i> Reorder Bakery Products</a></li>
             <li>
                 <a href="#"><i class="fas fa-plus"></i> Product Management</a>

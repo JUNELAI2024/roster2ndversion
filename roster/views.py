@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets
-from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock, DailyRevenue
+from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock, DailyRevenue, UserAccount
 from django.db.models import Sum
 from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
@@ -8,11 +8,10 @@ from rest_framework.response import Response
 from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
-from datetime import  timedelta
+from datetime import  timedelta, datetime 
 from django import forms
 import logging
 logger = logging.getLogger(__name__)
-from datetime import datetime 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -303,7 +302,13 @@ def submit_revenue(request):
 
             # Calculate total
             total = (amex + debit_card + visa + mastercard + cash + unionpay + wonderful_card).quantize(Decimal('0.01'))  # Standard rounding
-
+            # Calculate total sum
+            total_sum = (float(amex) + float(debit_card) + float(visa) + 
+                     float(mastercard) + float(cash) + 
+                     float(unionpay) + float(wonderful_card) + 
+                     float(gift_card) + float(pst) + 
+                     float(redeem_points))
+            
             # Create and save the revenue record
             DailyRevenue.objects.create(
                 user_input=user_input,  # Make sure this is set correctly
@@ -319,6 +324,7 @@ def submit_revenue(request):
                 gift_card=gift_card,
                 pst=pst,
                 redeem_points=redeem_points,
+                total_sum=total_sum,  # Store the total sum
                 total=total
             )
 
@@ -342,3 +348,20 @@ def revenue_dashboard(request):
     }
 
     return render(request, 'roster/revenue_dashboard.html', context)
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        try:
+            user = UserAccount.objects.get(username=username, status=UserAccount.ACTIVE)
+            if user.check_password(password):
+                # Login successful: redirect to revenue statistics
+                return redirect('revenue_dashboard')
+            else:
+                messages.error(request, 'Invalid username or password.')
+        except UserAccount.DoesNotExist:
+            messages.error(request, 'Invalid username or password, or account is inactive.')
+    
+    return render(request, 'roster/home.html')
