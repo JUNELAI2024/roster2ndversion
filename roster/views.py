@@ -342,8 +342,19 @@ def revenue_dashboard(request):
     number_of_days = DailyRevenue.objects.values('business_date').distinct().count()
      # Calculate average revenue per day
     average_revenue_per_day = total_revenue / number_of_days if number_of_days > 0 else 0.00
-    top_payment_method = "Credit Card"
+    # Calculate total revenue for each payment method
+    payment_methods = [
+        'amex', 'debit_card', 'visa', 'mastercard',
+        'cash', 'unionpay', 'wonderful_card'
+    ]
+    payment_data = {}
+    for method in payment_methods:
+        total = DailyRevenue.objects.aggregate(total_sum=Sum(method))['total_sum'] or 0.0
+        payment_data[method] = float(total)  # Ensure values are floats
 
+     # Prepare data for the chart
+    payment_method_labels = list(payment_data.keys())
+    payment_method_values = list(payment_data.values())
     
     # Unique business dates and their total sums
     revenue_over_time = DailyRevenue.objects.values('business_date').annotate(total_sum=Sum('total_sum')).order_by('business_date')
@@ -356,9 +367,10 @@ def revenue_dashboard(request):
     context = {
         'total_revenue': total_revenue,
         'average_revenue_per_day': average_revenue_per_day,
-        'top_payment_method': top_payment_method,
         'revenue_data': revenue_data,
         'labels': labels,
+        'payment_method_labels': payment_method_labels,
+        'payment_method_values': payment_method_values,
     }
 
     return render(request, 'roster/revenue_dashboard.html', context)
