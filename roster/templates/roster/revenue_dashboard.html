@@ -69,7 +69,8 @@
         <h2>Average Revenue per Day: $<span id="avgRevenue">{{ average_revenue_per_day|floatformat:2 }}</span></h2>
     </div>
     <div>
-        <h2>Top Payment Method: <span id="topPaymentMethod">N/A</span></h2>
+        <h2>Top Payment Method: <span id="topPaymentMethod">{{ top_payment_method|title }}</span></h2>
+        <h2>Revenue: $<span id="topPaymentValue">{{ top_payment_value|floatformat:2 }}</span></h2>
     </div>
 </div>
 

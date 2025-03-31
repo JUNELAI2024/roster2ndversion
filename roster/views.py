@@ -352,10 +352,15 @@ def revenue_dashboard(request):
         total = DailyRevenue.objects.aggregate(total_sum=Sum(method))['total_sum'] or 0.0
         payment_data[method] = float(total)  # Ensure values are floats
 
+ # Find the top payment method
+    top_payment_method = max(payment_data, key=payment_data.get)
+    top_payment_value = payment_data[top_payment_method]
+
      # Prepare data for the chart
     payment_method_labels = list(payment_data.keys())
     payment_method_values = list(payment_data.values())
     
+
     # Unique business dates and their total sums
     revenue_over_time = DailyRevenue.objects.values('business_date').annotate(total_sum=Sum('total_sum')).order_by('business_date')
 
@@ -371,6 +376,8 @@ def revenue_dashboard(request):
         'labels': labels,
         'payment_method_labels': payment_method_labels,
         'payment_method_values': payment_method_values,
+         'top_payment_method': top_payment_method,
+        'top_payment_value': top_payment_value,
     }
 
     return render(request, 'roster/revenue_dashboard.html', context)
