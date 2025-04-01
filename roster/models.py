@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import date
 from django.utils import timezone
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password, check_password
 
 class Staff(models.Model):
@@ -109,7 +109,7 @@ class DailyRevenue(models.Model):
     def __str__(self):
         return f"Revenue for {self.business_date} at {self.business_time} by {self.user.username}"
     
-class UserAccount(models.Model):
+class UserAccount(AbstractBaseUser):
     ACTIVE = 1
     INACTIVE = 0
     STATUS_CHOICES = [
@@ -123,6 +123,10 @@ class UserAccount(models.Model):
     create_date = models.DateField(auto_now_add=True)
     create_time = models.TimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS_CHOICES, default=ACTIVE)
+    last_login = models.DateTimeField(null=True, blank=True)  # Add this line
+
+    USERNAME_FIELD = 'username'  # Field used for authentication
+    REQUIRED_FIELDS = []  # No additional fields required
 
     def set_password(self, raw_password):
         self.password = make_password(raw_password)

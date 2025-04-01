@@ -43,6 +43,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+LOGIN_URL = '/roster/'  # Redirect to this URL if not authenticated
+LOGIN_REDIRECT_URL = '/roster/revenue_dashboard/'  # Redirect here after successful login
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -162,7 +164,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTHENTICATION_BACKENDS = [
+    'roster.backends.CustomUserBackend',  # Replace 'yourapp' with your actual app name
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 

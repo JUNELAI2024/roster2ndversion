@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import viewsets
 from .models import Staff, Roster, RosterConfig, BakeryProduct, BakeryProductRestock, DailyRevenue, UserAccount
-from django.db.models import Sum
+from django.db.models import Sum, Count, Q
 from .serializers import StaffSerializer, RosterSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Count, Q
 from django.utils import timezone
 from django.contrib import messages
 from datetime import  timedelta, datetime 
@@ -17,7 +16,12 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models.functions import TruncDate
 from decimal import Decimal
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
+
+
+@login_required
 def modify_product_info(request):
     product = None
     if request.method == "POST":
@@ -41,6 +45,7 @@ def modify_product_info(request):
 
     return render(request, 'roster/modify_product_info.html', {'product': product})
 
+@login_required
 def manage_bakery_products(request):
     if request.method == 'POST':
         # Handle the form submission
@@ -71,6 +76,7 @@ def manage_bakery_products(request):
     # Handle GET request to display the form
     return render(request, 'roster/manage_bakery_products.html')
 
+@login_required
 def bakery_product_view(request):
     products = BakeryProduct.objects.filter(onsell=True)  # Get only products that are on sale
     categories = products.values_list('category', flat=True).distinct()  # Get unique categories
@@ -82,7 +88,7 @@ def bakery_product_view(request):
     
     return render(request, 'roster/bakery_product.html', context)
 
-
+@login_required
 @csrf_exempt
 def restock_product(request):
      # Fetch all products that are onsell
@@ -127,14 +133,17 @@ def restock_product(request):
     # Handle GET requests by rendering the template
     return render(request, 'roster/bakery_product.html')  # Ensure this points to your actual template path
 
+
 def home(request):
     return render(request, 'roster/home.html')  # Make sure the path matches your template location
 
 # Original views for rendering templates
+@login_required
 def staff_list(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get only active staff
     return render(request, 'roster/staff_list.html', {'staff_list': active_staff})
 
+@login_required
 def roster_create(request):
     active_staff = Staff.objects.filter(is_active=True)  # Get active staff
     days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']  # Define days of the week
@@ -197,7 +206,10 @@ def roster_create(request):
         'duty_roles': duty_roles,  # Pass duty roles to the template
     })
 
+@login_required
 def roster_list(request):
+    logger.info(f"Session ID: {request.session.session_key}")
+    logger.info(f"User is authenticated: {request.user.is_authenticated}")
     active_staff = Staff.objects.filter(is_active=True)  # Fetch only active staff
     roster_list = Roster.objects.all()  # Initial query
 
@@ -216,7 +228,9 @@ def roster_list(request):
     }
     return render(request, 'roster/roster_list.html', context)
 
+
 # New view for displaying shift statistics
+@login_required
 def statistics_view(request):
     # Calculate total hours worked by summing the no_of_work_hr field
     total_hours_worked = Roster.objects.aggregate(total_hours=Sum('no_of_work_hr'))['total_hours'] or 0.0
@@ -280,9 +294,11 @@ class RosterViewSet(viewsets.ModelViewSet):
     queryset = Roster.objects.all()
     serializer_class = RosterSerializer
 
+@login_required
 def manage_staff(request):
     return render(request, 'manage_staff.html')  # Point to your blank HTML page
 
+@login_required
 def submit_revenue(request):
     if request.method == 'POST':
         try:
@@ -335,6 +351,7 @@ def submit_revenue(request):
 
     return render(request, 'roster/submit_revenue.html')  # Adjust to your template name
 
+@login_required
 def revenue_dashboard(request):
     # Sample data; replace with your actual data retrieval logic
     total_revenue = DailyRevenue.objects.aggregate(TotalSum=Sum('total_sum'))['TotalSum'] or 0.00
@@ -382,19 +399,25 @@ def revenue_dashboard(request):
 
     return render(request, 'roster/revenue_dashboard.html', context)
 
+
 def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        
-        try:
-            user = UserAccount.objects.get(username=username, status=UserAccount.ACTIVE)
-            if user.check_password(password):
-                # Login successful: redirect to revenue statistics
-                return redirect('revenue_dashboard')
-            else:
-                messages.error(request, 'Invalid username or password.')
-        except UserAccount.DoesNotExist:
-            messages.error(request, 'Invalid username or password, or account is inactive.')
-    
+
+        logger.info(f"Attempting to log in user: {username}")
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            logger.info(f"User {username} logged in successfully.")
+            return redirect(request.GET.get('next', 'roster/roster_list'))
+        else:
+            messages.error(request, 'Invalid username or password.')
+            logger.warning(f"Failed login attempt for user: {username}")
+
     return render(request, 'roster/home.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')  # Redirect to home after logging out
