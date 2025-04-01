@@ -401,7 +401,10 @@ def revenue_dashboard(request):
 
 
 def login_view(request):
+    next_url = request.GET.get('next') or request.POST.get('next')
+    logger.info(f"Login attempt. Next URL: {next_url}")  # Log the next URL
     if request.method == 'POST':
+        
         username = request.POST.get('username')
         password = request.POST.get('password')
 
@@ -411,12 +414,12 @@ def login_view(request):
         if user is not None:
             login(request, user)
             logger.info(f"User {username} logged in successfully.")
-            return redirect(request.GET.get('next', 'roster/roster_list'))
+            return redirect(request.GET.get('next', 'roster_list'))
         else:
             messages.error(request, 'Invalid username or password.')
             logger.warning(f"Failed login attempt for user: {username}")
 
-    return render(request, 'roster/home.html')
+    return render(request, 'roster/home.html', {'next': next_url})
 
 def logout_view(request):
     logout(request)

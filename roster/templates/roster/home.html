@@ -54,7 +54,7 @@
                     <li><a href="{% url 'roster' %}">Roster</a></li>
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% else %}
-                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'login_view' %}">Login</a></li>
                 {% endif %}
             </ul>
         </nav>
@@ -63,6 +63,7 @@
         <h2>Login</h2>
         <form method="post" action="{% url 'login_view' %}">
             {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
             <div class="form-group">
                 <input type="text" name="username" placeholder="Username" required>
             </div>
