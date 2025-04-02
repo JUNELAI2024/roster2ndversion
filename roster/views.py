@@ -401,25 +401,22 @@ def revenue_dashboard(request):
 
 
 def login_view(request):
-    next_url = request.GET.get('next') or request.POST.get('next')
-    logger.info(f"Login attempt. Next URL: {next_url}")  # Log the next URL
+    # Check if the user is already authenticated
+    if request.user.is_authenticated:
+        return redirect('revenue_dashboard')  # Redirect to the dashboard if already logged in
+
     if request.method == 'POST':
-        
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST['username']
+        password = request.POST['password']
 
-        logger.info(f"Attempting to log in user: {username}")
         user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+        if user:
             login(request, user)
-            logger.info(f"User {username} logged in successfully.")
-            return redirect(request.GET.get('next', 'roster_list'))
+            return redirect('revenue_dashboard')  # Redirect to the dashboard after login
         else:
             messages.error(request, 'Invalid username or password.')
-            logger.warning(f"Failed login attempt for user: {username}")
 
-    return render(request, 'roster/home.html', {'next': next_url})
+    return render(request, 'roster/home.html')
 
 def logout_view(request):
     logout(request)

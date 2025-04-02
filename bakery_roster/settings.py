@@ -165,7 +165,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'roster.backends.CustomUserBackend',  # Replace 'yourapp' with your actual app name
     'django.contrib.auth.backends.ModelBackend',  # Default backend
 ]
 # Internationalization

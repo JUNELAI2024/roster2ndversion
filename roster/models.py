@@ -3,6 +3,7 @@ from datetime import date
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import User
 
 class Staff(models.Model):
     name = models.CharField(max_length=100)

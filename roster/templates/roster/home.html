@@ -46,19 +46,6 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to the Roster Management System</h1>
-        <nav>
-            <ul>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'roster' %}">Roster</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% else %}
-                    <li><a href="{% url 'login_view' %}">Login</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
     <div class="container">
         <h2>Login</h2>
         <form method="post" action="{% url 'login_view' %}">

@@ -84,6 +84,23 @@
                 margin: 10px 0; /* Smaller margins */
             }
         }
+        .logout-btn {
+            background-color: #287771; /* Red logout button */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            display: block;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+            transform: translateX(3px);
+        }
         .content {
             flex: 1; /* Take up remaining space */
             padding: 20px;
@@ -94,6 +111,8 @@
     </style>
 </head>
 <body>
+    
+
     <div class="sidebar">
         <h2>Menu</h2>
         <ul>
@@ -128,6 +147,13 @@
             </li>
             <li><a href="{% url 'submit_revenue' %}"><i class="fas fa-chart-bar"></i> Daily Revenue capture</a></li>
         </ul>
+         <!-- Logout Button -->
+         {% if user.is_authenticated %}
+         <form action="{% url 'logout' %}" method="post">
+             {% csrf_token %}
+             <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+         </form>
+     {% endif %}
     </div>
     <div class="content">
         {% block content %}{% endblock %}
