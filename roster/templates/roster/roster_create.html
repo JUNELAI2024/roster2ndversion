@@ -84,6 +84,23 @@
                 margin: 10px 0; /* Smaller margins */
             }
         }
+        .logout-btn {
+            background-color: #287771; /* Red logout button */
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            display: block;
+            width: 100%;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .logout-btn:hover {
+            background-color: #c0392b;
+            transform: translateX(3px);
+        }
         .content {
             flex: 1; /* Take up remaining space */
             padding: 20px;
@@ -91,9 +108,16 @@
             overflow-y: auto; /* Enable vertical scrolling if content overflows */
         }
         h1 {
-            color: #333;
-            margin-bottom: 20px; /* Space below the title */
-        }
+    font-size: 2.5em; /* Increase font size for prominence */
+    font-weight: 600; /* Use a semi-bold weight for a more professional look */
+    color: #2c3e50; /* Darker color for better contrast */
+    text-align: center; /* Center the header text */
+    margin-bottom: 30px; /* More space below the header */
+    border-bottom: 2px solid #2980b9; /* Add a bottom border for emphasis */
+    padding-bottom: 10px; /* Space between the text and border */
+    text-transform: uppercase; /* Transform text to uppercase for a strong appearance */
+    letter-spacing: 1px; /* Slightly increase letter spacing for clarity */
+}
         form {
             /* Your existing form styles */
             width: 100%; /* Full width */
