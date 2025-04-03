@@ -249,27 +249,45 @@
 .order-summary td {
     background-color: #ffffff; /* White background for table cells */
 }
+.welcome-message {
+    font-size: 18px;
+    margin-bottom: 20px; /* Space below the welcome message */
+    color: #f5f0f0; /* Text color */
+    display: flex; /* Use flexbox for inline alignment */
+    align-items: center; /* Center items vertically */
+}
+
 .logout-btn {
-            background-color: #287771; /* Red logout button */
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            cursor: pointer;
-            text-align: left;
-            display: block;
-            width: 100%;
-            border-radius: 5px;
-            font-size: 1em;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        .logout-btn:hover {
-            background-color: #c0392b;
-            transform: translateX(3px);
-        }
+    background: transparent !important; /* Force background to be transparent */
+    border: none; /* Ensure no border is present */
+    cursor: pointer; /* Change cursor to pointer */
+    color: #eff4ef; /* Icon color */
+    font-size: 20px; /* Adjust icon size */
+    margin-left: 10px; /* Space between username and icon */
+    padding: 0; /* Remove padding to keep the button small */
+    outline: none; /* Remove outline on focus */
+}
+
+.logout-btn:hover {
+    color: #ff0000; /* Change color on hover */
+}
     </style>
 </head>
 <body>
     <div class="sidebar">
+        {% if user.is_authenticated %}
+        <div class="welcome-message">
+            Welcome, {{ user.username }}!
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i> <!-- Logout icon -->
+                </button>
+            </form>
+        </div>
+    {% else %}
+        <a href="{% url 'login_view' %}">Login</a>
+    {% endif %}
         <h2>Menu</h2>
         <ul>
             <li>
@@ -303,13 +321,6 @@
             </li>
             <li><a href="{% url 'submit_revenue' %}"><i class="fas fa-chart-bar"></i> Daily Revenue capture</a></li>
         </ul>
-        <!-- Logout Button -->
-        {% if user.is_authenticated %}
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
-        </form>
-    {% endif %}
     </div>
     <div class="content">
         <h1>Restock Bakery Products</h1>

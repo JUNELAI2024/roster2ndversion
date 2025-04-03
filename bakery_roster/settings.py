@@ -46,6 +46,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/roster/'  # Redirect to this URL if not authenticated
 LOGIN_REDIRECT_URL = '/roster/revenue_dashboard/'  # Redirect here after successful login
 
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 

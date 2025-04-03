@@ -294,9 +294,7 @@ class RosterViewSet(viewsets.ModelViewSet):
     queryset = Roster.objects.all()
     serializer_class = RosterSerializer
 
-@login_required
-def manage_staff(request):
-    return render(request, 'manage_staff.html')  # Point to your blank HTML page
+
 
 @login_required
 def submit_revenue(request):
@@ -421,3 +419,28 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')  # Redirect to home after logging out
+
+
+@login_required
+def manage_staff(request, staff_id=None):
+    if staff_id:
+        staff = get_object_or_404(Staff, id=staff_id)
+    else:
+        staff = Staff()
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        position = request.POST.get('position')
+        is_active = request.POST.get('is_active') == 'on'  # Checkbox returns 'on' when checked
+
+        if staff_id:
+            staff.name = name
+            staff.position = position
+            staff.is_active = is_active
+            staff.save()
+        else:
+            Staff.objects.create(name=name, position=position, is_active=is_active)
+
+        return redirect('manage_staff')  # Redirect to staff management page or list
+
+    return render(request, 'roster/manage_staff.html', {'staff': staff})
