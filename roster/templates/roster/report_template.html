@@ -1,30 +1,55 @@
 <!-- templates/roster/report_template.html -->
 <h1>{{ report_type|capfirst }} Report</h1>
+
+{% if report_type == 'roster' %}
 <table>
     <thead>
         <tr>
             <th>Name</th>
-            <th>Position</th>
-            <th>Start Date</th>
-            <!-- Add other relevant columns -->
+            <th>Shift Start</th>
+            <th>Shift End</th>
+            <th>Working Hours</th>
         </tr>
     </thead>
     <tbody>
         {% for entry in roster_data %}
         <tr>
-            <td>{{ entry.name }}</td>
-            <td>{{ entry.position }}</td>
-            <td>{{ entry.start_date }}</td>
-            <!-- Add other data as needed -->
+            <td>{{ entry.staff_name }}</td>
+            <td>{{ entry.shift_start }}</td>
+            <td>{{ entry.shift_end }}</td>
+            <td>{{ entry.no_of_work_hr }}</td>
         </tr>
         {% endfor %}
+        {% if roster_data|length == 0 %}
+        <tr>
+            <td colspan="4">No data available</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+
+{% elif report_type == 'staff' %}
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Active Status</th>
+        </tr>
+    </thead>
+    <tbody>
         {% for entry in staff_data %}
         <tr>
             <td>{{ entry.name }}</td>
-            <td>{{ entry.role }}</td>
-            <td>{{ entry.hire_date }}</td>
-            <!-- Add other data as needed -->
+            <td>{{ entry.position }}</td>
+            <td>{% if entry.is_active %}Active{% else %}Inactive{% endif %}</td>
         </tr>
         {% endfor %}
+        {% if staff_data|length == 0 %}
+        <tr>
+            <td colspan="3">No data available</td>
+        </tr>
+        {% endif %}
     </tbody>
 </table>
+{% endif %}

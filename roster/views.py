@@ -463,7 +463,11 @@ def export_report(request):
         if report_type == 'roster':
             data = Roster.objects.all()
         elif report_type == 'staff':
-            data = Staff.objects.all()  # Make sure this model exists
+            data = Staff.objects.all()
+
+            # Debugging
+        print("Data fetched for report type:", report_type)
+        print("Data:", list(data))  # Print the data to check its structure
 
         if format_type == 'excel':
             df = pd.DataFrame(list(data.values()))
@@ -473,8 +477,12 @@ def export_report(request):
             return response
 
         elif format_type == 'pdf':
-            template_path = 'roster/report_template.html'  # Create a suitable HTML template
-            context = {f'{report_type}_data': data}
+            template_path = 'roster/report_template.html'
+            context = {
+                'report_type': report_type,
+                'roster_data': data if report_type == 'roster' else [],
+                'staff_data': data if report_type == 'staff' else [],
+            }
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = f'attachment; filename="{report_type}_report.pdf"'
             template = get_template(template_path)
