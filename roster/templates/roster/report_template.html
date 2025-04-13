@@ -1,0 +1,30 @@
+<!-- templates/roster/report_template.html -->
+<h1>{{ report_type|capfirst }} Report</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Start Date</th>
+            <!-- Add other relevant columns -->
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in roster_data %}
+        <tr>
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.position }}</td>
+            <td>{{ entry.start_date }}</td>
+            <!-- Add other data as needed -->
+        </tr>
+        {% endfor %}
+        {% for entry in staff_data %}
+        <tr>
+            <td>{{ entry.name }}</td>
+            <td>{{ entry.role }}</td>
+            <td>{{ entry.hire_date }}</td>
+            <!-- Add other data as needed -->
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -11,14 +11,16 @@ from datetime import  timedelta, datetime
 from django import forms
 import logging
 logger = logging.getLogger(__name__)
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.db.models.functions import TruncDate
 from decimal import Decimal
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-
+import pandas as pd
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 
 @login_required
@@ -368,9 +370,14 @@ def revenue_dashboard(request):
         payment_data[method] = float(total)  # Ensure values are floats
 
  # Find the top payment method
-    top_payment_method = max(payment_data, key=payment_data.get)
-    top_payment_value = payment_data[top_payment_method]
+    # top_payment_method = max(payment_data, key=payment_data.get)
+    # top_payment_value = payment_data[top_payment_method]
 
+    # Get the entry with the highest total_sum
+    top_revenue_entry = DailyRevenue.objects.order_by('-total_sum').first()
+    top_revenue_value = top_revenue_entry.total_sum if top_revenue_entry else 0
+    top_revenue_day_date = top_revenue_entry.business_date if top_revenue_entry else 'N/A'  # Use business_date
+   
      # Prepare data for the chart
     payment_method_labels = list(payment_data.keys())
     payment_method_values = list(payment_data.values())
@@ -391,8 +398,10 @@ def revenue_dashboard(request):
         'labels': labels,
         'payment_method_labels': payment_method_labels,
         'payment_method_values': payment_method_values,
-         'top_payment_method': top_payment_method,
-        'top_payment_value': top_payment_value,
+         #'top_payment_method': top_payment_method,
+        #'top_payment_value': top_payment_value,
+        'top_revenue_value': top_revenue_value,
+        'top_revenue_day_date': top_revenue_day_date,
     }
 
     return render(request, 'roster/revenue_dashboard.html', context)
@@ -444,3 +453,37 @@ def manage_staff(request, staff_id=None):
         return redirect('manage_staff')  # Redirect to staff management page or list
 
     return render(request, 'roster/manage_staff.html', {'staff': staff})
+
+@login_required
+def export_report(request):
+    if request.method == 'POST':
+        report_type = request.POST.get('report_type')
+        format_type = request.POST.get('format')
+
+        if report_type == 'roster':
+            data = Roster.objects.all()
+        elif report_type == 'staff':
+            data = Staff.objects.all()  # Make sure this model exists
+
+        if format_type == 'excel':
+            df = pd.DataFrame(list(data.values()))
+            response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename="{report_type}_report.xlsx"'
+            df.to_excel(response, index=False)
+            return response
+
+        elif format_type == 'pdf':
+            template_path = 'roster/report_template.html'  # Create a suitable HTML template
+            context = {f'{report_type}_data': data}
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename="{report_type}_report.pdf"'
+            template = get_template(template_path)
+            html = template.render(context)
+            pisa_status = pisa.CreatePDF(html, dest=response)
+
+            if pisa_status.err:
+                return HttpResponse('Error generating PDF', status=400)
+
+            return response
+
+    return render(request, 'roster/export_report.html')

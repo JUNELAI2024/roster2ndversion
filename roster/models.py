@@ -138,4 +138,10 @@ class UserAccount(AbstractBaseUser):
     def __str__(self):
         return self.username
     
-    
+class AccessLog(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    page = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.user.username} accessed {self.page} on {self.timestamp}"

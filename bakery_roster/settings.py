@@ -110,6 +110,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'roster.middleware.AccessLogMiddleware',
 ]
 
 ROOT_URLCONF = 'bakery_roster.urls'

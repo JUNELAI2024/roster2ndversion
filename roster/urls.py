@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from roster import views 
-from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products,modify_product_info,submit_revenue, revenue_dashboard, login_view, logout_view
+from roster.views import home, roster_create, staff_list, statistics_view, roster_list, bakery_product_view, manage_bakery_products,modify_product_info,submit_revenue, revenue_dashboard, login_view, logout_view,export_report
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('revenue_dashboard/', revenue_dashboard, name='revenue_dashboard'),
      path('home/', login_view, name='login_view'),
      path('logout/', logout_view, name='logout'),
+      path('export/', export_report, name='export_report'),
     
 ]
 
