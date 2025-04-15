@@ -4,7 +4,6 @@
 
 {% block content %}
 <style>
-    <style>
     body {
         background-color: #f0f0f5; /* Light gray background for a softer look */
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -70,7 +69,7 @@
     <h1 class="mb-4">Manage Bakery Products</h1>
 
     <!-- Form to add a new bakery product -->
-    <form method="post" class="needs-validation" novalidate>
+    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
             <label for="item_id" class="form-label">Item ID:</label>
@@ -115,6 +114,11 @@
             <textarea id="remarks" name="remarks" class="form-control" rows="3"></textarea>
         </div>
 
+        <div class="mb-3">
+            <label for="image_url" class="form-label">Upload Image:</label>
+            <input type="file" id="image_url" name="image_url" class="form-control" accept="image/*" required>
+        </div>
+        
         <button type="submit" class="btn btn-primary">Add Product</button>
     </form>
 </div>

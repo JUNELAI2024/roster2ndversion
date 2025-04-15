@@ -21,6 +21,8 @@ from django.contrib.auth.decorators import login_required
 import pandas as pd
 from django.template.loader import get_template
 from xhtml2pdf import pisa
+import os
+from django.conf import settings
 
 
 @login_required
@@ -59,6 +61,27 @@ def manage_bakery_products(request):
         start_date = request.POST.get('start_date')
         shelved_date = request.POST.get('shelved_date') or None
         remarks = request.POST.get('remarks', '')
+        image_file = request.FILES.get('image_url')  # Get the uploaded image file
+
+         # Save the image to the media directory
+        if image_file:
+            # Define the path to save the image directly in MEDIA_ROOT
+            media_path = settings.MEDIA_ROOT  # Use MEDIA_ROOT directly
+            
+            # Define the image name and full path
+            image_name = image_file.name  # Get the image name
+            image_full_path = os.path.join(media_path, image_name)  # Full path to save the image
+            
+            # Save the image file
+            with open(image_full_path, 'wb+') as destination:
+                for chunk in image_file.chunks():
+                    destination.write(chunk)
+
+            # Generate the URL for the image
+            image_url = f'/roster/media/{image_name}'  # Custom URL format
+
+        else:
+            image_url = ''  # Handle case where no image is uploaded
 
         # Create a new BakeryProduct instance
         new_product = BakeryProduct(
@@ -69,7 +92,8 @@ def manage_bakery_products(request):
             onsell=onsell,
             start_date=start_date,
             shelved_date=shelved_date,
-            remarks=remarks
+            remarks=remarks,
+            image_url=image_url  # Store the generated URL
         )
         new_product.save()  # Save to the database
 
