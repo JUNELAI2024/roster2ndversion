@@ -23,6 +23,8 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 import os
 from django.conf import settings
+from openpyxl import Workbook
+from openpyxl.styles import Alignment, Font, PatternFill
 
 
 @login_required
@@ -177,7 +179,8 @@ def roster_create(request):
     time_slots = RosterConfig.objects.values_list('time_slot', flat=True).order_by('time_slot')  # Fetch time slots
     formatted_time_slots = [slot.strftime('%H:%M') for slot in time_slots]  # Format to HH:MM:SS
     duty_roles = RosterConfig.objects.values_list('duty_role', flat=True).distinct().order_by('duty_role')
-
+ 
+    submitted_data = []  # Initialize here to ensure it's always defined
 
     if request.method == 'POST':
         # Get the week starting date from the form input
@@ -186,7 +189,10 @@ def roster_create(request):
             week_start_date = datetime.strptime(week_start_date_str, '%Y-%m-%d').date()  # Convert to date
         else:
             week_start_date = timezone.now().date()  # Fallback to today's date if not provided
+       
+
         for staff in active_staff:
+            staff_row = [staff.name]  # Store the staff member's name
             for day in days_of_week:
                 shift_start = request.POST.get(f"shift_start_{staff.id}_{day}")
                 shift_end = request.POST.get(f"shift_end_{staff.id}_{day}")
@@ -221,7 +227,22 @@ def roster_create(request):
                        
                     )
 
+ # Collect data for Excel generation
+            # Format for Excel: "Start - End (Role)"
+                    combined_entry = f"{shift_start} - {shift_end} ({duty_role})"
+                    staff_row.append(combined_entry)
+                else:
+                    staff_row.append('')  # Empty cell if no shift
+
+            submitted_data.append(staff_row)
+
+
         messages.success(request, "Roster created successfully!")
+
+          # Generate the Excel file using submitted data
+      # Call the function to generate the roster and send the email
+        generate_roster_excel_file(request, week_start_date, submitted_data)
+
         return redirect('roster_list')
 
     return render(request, 'roster/roster_create.html', {
@@ -231,6 +252,64 @@ def roster_create(request):
         'time_slots': formatted_time_slots ,  # Pass time slots directly
         'duty_roles': duty_roles,  # Pass duty roles to the template
     })
+
+
+
+def generate_roster_excel_file(request, week_start_date, submitted_data):
+    # Create a Workbook and add data
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Roster"
+
+    # Add a main title header
+    main_title = f"Roster - {week_start_date.strftime('%Y-%m-%d')}"
+    ws.append([main_title])  # Add the main title
+    ws.merge_cells(start_row=1, start_column=1, end_row=1, end_column=len(submitted_data[0]) + 1)  # Merge cells for title
+    
+    # Style the main title
+    title_cell = ws.cell(row=1, column=1)
+    title_cell.font = Font(size=14, bold=True)
+    title_cell.alignment = Alignment(horizontal="center")
+
+    # Prepare the header
+    header = ['Staff Member']
+    days_of_week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    for day in days_of_week:
+        header.append(day)  # Single column for combined data
+
+    ws.append(header)
+
+    # Apply styles to the header
+    header_fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")  # Yellow fill
+    for cell in ws[2]:  # Second row is the header
+        cell.font = Font(bold=True)
+        cell.alignment = Alignment(horizontal="center")
+        cell.fill = header_fill  # Apply fill color
+
+    # Add the submitted data to the worksheet
+    for staff_row in submitted_data:
+        ws.append(staff_row)
+
+    # Optional: Apply styling to data rows (e.g., alternate row colors)
+    for row in ws.iter_rows(min_row=3, max_row=ws.max_row, min_col=1, max_col=len(header)):
+        if (row[0].row % 2) == 0:  # Even rows
+            fill = PatternFill(start_color="E6E6E6", end_color="E6E6E6", fill_type="solid")  # Light grey fill
+        else:  # Odd rows
+            fill = PatternFill(start_color="FFFFFF", end_color="FFFFFF", fill_type="solid")  # White fill
+
+        for cell in row:
+            cell.fill = fill  # Apply fill color
+
+    # Set column widths
+    column_widths = [20] + [25] * 7  # Adjust widths as needed
+    for i, width in enumerate(column_widths, 1):
+        ws.column_dimensions[chr(64 + i)].width = width
+
+    # Generate a timestamp for the filename
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    file_path = f'media/roster_{week_start_date.strftime("%Y%m%d")}_{timestamp}.xlsx'
+    wb.save(file_path)
+
 
 @login_required
 def roster_list(request):
