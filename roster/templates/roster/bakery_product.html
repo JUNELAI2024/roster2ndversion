@@ -310,6 +310,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="{% url 'manage_bakery_products' %}">New product</a></li>
                     <li><a href="{% url 'modify_product_info' %}">Modify product</a></li>
+                    <li><a href="{% url 'product_list' %}">View Products</a></li>  <!-- New submenu item -->
                 </ul>
             </li>
             <li>
@@ -321,6 +322,7 @@
             </li>
             <li><a href="{% url 'submit_revenue' %}"><i class="fas fa-chart-bar"></i> Daily Revenue capture</a></li>
             <li><a href="{% url 'export_report' %}"><i class="fas fa-chart-bar"></i> Reporting</a></li>
+            
         </ul>
     </div>
     <div class="content">

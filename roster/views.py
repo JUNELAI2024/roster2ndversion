@@ -598,3 +598,9 @@ def export_report(request):
             return response
 
     return render(request, 'roster/export_report.html')
+
+@login_required
+def product_list(request):
+    # Retrieve all products from the BakeryProduct model
+    products = BakeryProduct.objects.all()  # Retrieve all products without filtering
+    return render(request, 'roster/product_list.html', {'products': products})
