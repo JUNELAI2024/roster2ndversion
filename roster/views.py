@@ -601,6 +601,7 @@ def export_report(request):
 
 @login_required
 def product_list(request):
-    # Retrieve all products from the BakeryProduct model
-    products = BakeryProduct.objects.all()  # Retrieve all products without filtering
+    # Retrieve products with non-empty image_url
+    products = BakeryProduct.objects.exclude(image_url__isnull=True).exclude(image_url__exact='')
+    
     return render(request, 'roster/product_list.html', {'products': products})

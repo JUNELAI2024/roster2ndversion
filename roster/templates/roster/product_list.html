@@ -1,130 +1,74 @@
 {% extends 'roster/base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Product List</h1>
-    <div class="row">
-        <ul class="product-card-list">
-            {% for product in products %}
-                <li class="product-card">
-                    <img src="{{ product.image_url }}" alt="{{ product.item_name }}" class="product-image" onclick="openModal('{{ product.image_url }}', '{{ product.item_name }}', '{{ product.remarks }}')">
-                    <h2>{{ product.item_name }}</h2>
-                    <p>Category: {{ product.category }}</p>
-                    <p>Available From: {{ product.start_date }}</p>
-                    <button class="buy-button" onclick="openModal('{{ product.image_url }}', '{{ product.item_name }}', '{{ product.remarks }}')">Details</button>
-                </li>
-            {% empty %}
-                <li>No products available.</li>
-            {% endfor %}
-        </ul>
+<div class="content">
+    <div class="image-slider">
+        <img id="slider-image" src="" alt="Product Image">
     </div>
 </div>
 
-<!-- Modal -->
-<div id="productModal" class="modal">
-    <div class="modal-content">
-        <span class="close-button" onclick="closeModal()">&times;</span>
-        <img id="modalImage" src="" alt="" class="modal-image">
-        <h2 id="modalTitle"></h2>
-        <p id="modalDescription"></p>
-    </div>
-</div>
-
-{% endblock %}
-
-{% block styles %}
-<style>
-.product-card-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    gap: 20px; /* Space between cards */
-    padding: 20px;
-    list-style-type: none; /* Remove bullet points */
-}
-
-.product-card {
-    background: #fff;
-    border: 1px solid #ddd; /* Border around each card */
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.product-card:hover {
-    transform: scale(1.05);
-}
-
-.product-image {
-    max-width: 100%;
-    border-radius: 12px;
-    cursor: pointer;
-}
-
-.buy-button {
-    background-color: #4CAF50; /* Green */
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.buy-button:hover {
-    background-color: #45a049;
-}
-
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-</style>
-{% endblock %}
-
-{% block scripts %}
 <script>
-function openModal(imageUrl, title, description) {
-    document.getElementById('modalImage').src = imageUrl;
-    document.getElementById('modalTitle').innerText = title;
-    document.getElementById('modalDescription').innerText = description;
-    document.getElementById('productModal').style.display = 'block';
-}
+    const images = [
+        {% for product in products %}
+            {% if product.image_url %}
+                "{{ product.image_url }}"{% if not forloop.last %},{% endif %}
+            {% endif %}
+        {% endfor %}
+    ].filter(Boolean); // This will remove any empty strings from the array
 
-function closeModal() {
-    document.getElementById('productModal').style.display = 'none';
-}
+    // Check if images array is populated
+    console.log(images); // Debugging line to check the output
+
+    let currentIndex = 0;
+
+    function showImage() {
+        if (images.length > 0) {
+            const imgElement = document.getElementById('slider-image');
+            imgElement.src = images[currentIndex];
+            currentIndex = (currentIndex + 1) % images.length; // Loop back to start
+        }
+    }
+
+    setInterval(showImage, 1000); // Change image every 10 seconds
+    window.onload = showImage; // Show first image on load
 </script>
+
+<style>
+    .content {
+        width: 100vw; /* Use full viewport width */
+        margin: 0; 
+        padding: 0; 
+    }
+
+    .image-slider {
+        width: 100%;
+        height: 400px; /* Adjust height as needed */
+        overflow: hidden;
+        position: relative;
+        background-color: #d5e3e8; /* Light background color */
+        border-radius: 12px; /* Rounded corners */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: box-shadow 0.3s ease; /* Smooth shadow transition */
+    }
+
+    .image-slider:hover {
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Slightly deeper shadow on hover */
+    }
+
+    #slider-image {
+        max-width: 100%; /* Ensure image does not exceed slider width */
+        max-height: 100%; /* Ensure image does not exceed slider height */
+        width: auto; /* Maintain aspect ratio */
+        height: auto; /* Maintain aspect ratio */
+        border-radius: 12px; /* Match corners with the slider */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Center the image */
+        transition: opacity 1s ease-in-out;
+    }
+</style>
 {% endblock %}
